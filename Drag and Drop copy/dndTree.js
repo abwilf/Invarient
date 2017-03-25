@@ -53,7 +53,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     // define a d3 diagonal projection for use by the node paths later on.
     var diagonal = d3.svg.diagonal()
         .projection(function(d) {
-            return [d.y, d.x];
+            return [d.x, d.y];
         });
 
     // A recursive helper function for performing some setup by walking through all nodes
@@ -127,7 +127,8 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
 
 
     // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-    var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+    var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom)
+
 
     function initiateDrag(d, domNode) {
         draggingNode = d;
@@ -222,10 +223,10 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
                 }
             }
 
-            d.x0 += d3.event.dy;
-            d.y0 += d3.event.dx;
+            d.x0 += d3.event.dx;
+            d.y0 += d3.event.dy;
             var node = d3.select(this);
-            node.attr("transform", "translate(" + d.y0 + "," + d.x0 + ")");
+            node.attr("transform", "translate(" + d.x0 + "," + d.y0 + ")");
             updateTempConnector();
         }).on("dragend", function(d) {
             if (d == root) {
@@ -305,12 +306,12 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             // have to flip the source coordinates since we did this for the existing connectors on the original tree
             data = [{
                 source: {
-                    x: selectedNode.y0,
-                    y: selectedNode.x0
+                    x: selectedNode.x0,
+                    y: selectedNode.y0
                 },
                 target: {
-                    x: draggingNode.y0,
-                    y: draggingNode.x0
+                    x: draggingNode.x0,
+                    y: draggingNode.y0
                 }
             }];
         }
@@ -330,8 +331,8 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
 
     function centerNode(source) {
         scale = zoomListener.scale();
-        x = -source.y0;
-        y = -source.x0;
+        x = -source.x0;
+        y = -source.y0;
         x = x * scale + viewerWidth / 2;
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
@@ -356,7 +357,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
 
     // Toggle children on click.
 
-    function click(d) {
+    function dblclick(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
         update(d);
@@ -380,7 +381,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             }
         };
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line  
+        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
@@ -406,9 +407,9 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             .call(dragListener)
             .attr("class", "node")
             .attr("transform", function(d) {
-                return "translate(" + source.y0 + "," + source.x0 + ")";
+                return "translate(" + source.x0 + "," + source.y0 + ")";
             })
-            .on('click', click);
+            .on('dblclick', dblclick);
 
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
@@ -468,7 +469,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         var nodeUpdate = node.transition()
             .duration(duration)
             .attr("transform", function(d) {
-                return "translate(" + d.y + "," + d.x + ")";
+                return "translate(" + d.x + "," + d.y + ")";
             });
 
         // Fade the text in
