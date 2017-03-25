@@ -13,16 +13,51 @@ canvas {
 <body onload="treeCanvas.start()">
 <script>
 
+function Node(x, y, data){
+    this.x = x;
+    this.y = y;
+
+
+    this.data = data;
+
+
+    this.depth = null;
+    this.parent = null;
+
+    this.children = [];
+}
+
+function traverseAndDo(node, d){
+    d(node);
+    node.children.forEach(traverseAndDo);
+}
+
+function add(parent, child){
+    child.parent = parent;
+    parent.children.push(child);
+    child = parent.depth + 1;
+}
+
+function remove(node){
+    
+}
 
 var treeCanvas = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 1000;
-        this.canvas.height = 800;
+
+        this.canvas.width = $(document).width();
+        this.canvas.height = $(document).height();
+
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     }
 }
+
+
+var root = Node($(document).width() / 2), 50);
+root.depth = 0;
+
 
 </script>
 
