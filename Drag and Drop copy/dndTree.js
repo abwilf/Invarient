@@ -43,6 +43,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     var duration = 750;
     var root;
 
+    var inputState = -1;
 
     // size of the diagram
     var viewerWidth = $(document).width();
@@ -121,7 +122,6 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     }
 
     // Define the zoom function for the zoomable tree
-
     function zoom() {
         svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     }
@@ -130,6 +130,27 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
     var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
 
+    //Key Listener
+    d3.select("body").on("keypress", keypress);
+
+    function newNode(d) {
+      return null;
+    }
+
+    function keypress(d){
+        if (inputState == -1) {
+            switch (d.key){
+                case "N":
+                case "n":
+                inputState = 0;
+                var temp = newNode(currentObject);
+                centerNode(temp);
+                currentObject = temp;
+                break;
+            }
+        }
+    }
+    
     function initiateDrag(d, domNode) {
         draggingNode = d;
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', 'none');
@@ -359,6 +380,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         currentObject = d;
         update(d);
         centerNode(d);
+        inputState = -1
     }
 
     // Toggle children on dblclick.
