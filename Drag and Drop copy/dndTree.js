@@ -43,6 +43,8 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
     var duration = 750;
     var root;
 
+    var currentObject = null;
+
     // size of the diagram
     var viewerWidth = $(document).width();
     var viewerHeight = $(document).height();
@@ -353,6 +355,13 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         return d;
     }
 
+    // Select a node
+    function click(d) {
+        currentObject = d;
+        update(d);
+        centerNode(d);
+    }
+
     // Toggle children on click.
 
     function click(d) {
@@ -407,6 +416,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
+            .on('dblclick', dblclick)
             .on('click', click);
 
         nodeEnter.append("circle")
@@ -460,7 +470,12 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
         node.select("circle.nodeCircle")
             .attr("r", 4.5)
             .style("fill", function(d) {
+              if (d == currentObject){
+                  return "red";
+              }
+              else{
                 return d._children ? "lightsteelblue" : "#fff";
+              }
             });
 
         // Transition nodes to their new position.
