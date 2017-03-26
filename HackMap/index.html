@@ -318,20 +318,27 @@ svgContainer.selectAll("circle")
 		d3.select(this).attr('fill', '#302E1C');
 	})
 	.on("mouseout", function() {
-		d3.select(this).attr('fill', 'white');
+		if (currentNode != this) {
+			d3.select(this).attr('fill', 'white');
+		}
 	})
-  .on("click", function() {
-					if (currentNode != this) {
-						// clear last node
-						d3.select(currentNode).attr('fill', 'white');
-					}
-					currentNode = this;
-					d3.select(this).attr('fill', '#302E1C');
+ 	 .on("click", function() {
+		if (currentNode != this) {
+			// clear last node
+			d3.select(currentNode).attr('fill', 'white');
+		}
+		currentNode = this;
+		d3.select(this).attr('fill', '#302E1C');
 	})
 	.on("dblclick", function() {
-					console.log("Holla!");
-					toggleSubtree(this);
-  });
+		if (currentNode != this) {
+			// clear last node
+			d3.select(currentNode).attr('fill', 'white');
+		}
+		currentNode = this;
+		d3.select(this).attr('fill', '#302E1C');
+		toggleSubtree(this);
+	  });
 
 </script>
 
