@@ -10,9 +10,11 @@
 <body>
 <script>
 
+var currentNode;	// yay globals
 var svgContainer = d3.select("body").append("svg")
                                     .attr("width", $(document).width())
                                     .attr("height", $(document).height());
+
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -27,11 +29,30 @@ function keyPressed(e) {
          svgContainer.selectAll("*").remove();
 		     //context.clearRect(0, 0, $(document).width(), $(document).height());
 			   traverseAndDo(root, drawNode);
+			    svgContainer.selectAll("circle")
+			.on("mouseover", function() {
+				this.style.cursor = "pointer";
+				d3.select(this).attr('fill', '#302E1C');
+			})
+			.on("mouseout", function() {
+				if (currentNode != this) {
+					d3.select(this).attr('fill', 'white');
+				}
+			})
+			.on("click", function() {
+				if (currentNode != this) {
+					// clear last node
+					d3.select(currentNode).attr('fill', 'white');
+				}
+				currentNode = this;
+				d3.select(this).attr('fill', '#302E1C');
+				console.log("Holla!");
+			});
 		     return 0;
     		case 69:
     			// 1
 		     console.log("The 'e' key is pressed.");
-		     //context.clearRect(0, 0, $(document).width(), $(document).height());
+		     context.clearRect(0, 0, $(document).width(), $(document).height());
 
 		     return 1;
     		case 82:
@@ -59,8 +80,6 @@ function Node(x, y, data){
 
     this.depth = null;
     this.parent = null;
-    this.width = 0;
-    this.subTreeWidth = 0;
 
     this.children = [];
 }
@@ -102,10 +121,10 @@ function JSONHelper(node_in, string) {
 //Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d){
     d(node);
-    traverseAndDo = function(q){
-      d(q);
-      if (q.children){
-        q.children.forEach(traverseAndDo);
+    traverseAndDo = function(node){
+      d(node);
+      if (node.children){
+        node.children.forEach(traverseAndDo);
       }
     }
     if (node.children){
@@ -116,14 +135,14 @@ function traverseAndDo(node, d){
 //Helper function, iterates through tree and calls d on each node AFTER children
 function postTraverseAndDo(node, d){
 
-  postTraverseAndDo = function(q){
-    if (q.children) {
-      q.children.forEach(postTraverseAndDo);
+  traverseAndDo = function(node){
+    if (node.children) {
+      node.children.forEach(traverseAndDo);
     }
-    d(q);
+    d(node);
   }
   if (node.children) {
-    node.children.forEach(postTraverseAndDo);
+    node.children.forEach(traverseAndDo);
   }
   d(node);
 }
@@ -210,80 +229,32 @@ function toggleSubtree(node){
 
 //from Queue.js by Stephen Morley
 function Queue(){var a=[],b=0;this.getLength=function(){return a.length-b};this.isEmpty=function(){return 0==a.length};this.enqueue=function(b){a.push(b)};this.dequeue=function(){if(0!=a.length){var c=a[b];2*++b>=a.length&&(a=a.slice(b),b=0);return c}};this.peek=function(){return 0<a.length?a[b]:void 0}};
-/*
-function balance(node) {
-
-    console.log("Calculated subTreeWidth")
-
-    traverseAndDo(node, function(d) {
-      offsets = []
-      console.log("balancing node: " + d.data)
-      if(d.children){
-        console.log("has children")
-        for (var i = 0; i < d.children.length; i++){
-          offsets.push(Math.max(d.children[i].width, d.children[i].subtreeWidth));
-        }
-
-        //Leftmost point, the subtree should start at
-        left_boundary = d.x - (d.subtreeWidth)
-
-        for (var i = 0; i < d.children.length; i++){
-            d.children[i].x = left_boundary;
-            left_boundary += offsets[i];
-            d.children[i].y = d.y + 50
-        }
-
-      }
-
-    })
-}
-*/
-function __calculateSubTreeWidths(node, nodeWidthFunctor){
-  node.subtreeWidth = 0;
-  if (node.children){
-    for (var i = 0; i < node.children.length; i++){
-      __calculateSubTreeWidths(node.children[i], nodeWidthFunctor);
-    }
-    for (var i = 0; i < node.children.length; i++){
-        node.subtreeWidth += Math.max(node.children[i].width, node.children[i].subtreeWidth);
-    }
-  }
-  node.width = nodeWidthFunctor(node);
-  node.subtreeWidth = Math.max(node.width, node.subtreeWidth);
-}
-
-function widthFunctor(node) {
-    if (node.data) {
-      return node.data.length + 4; //padfactor
-    }
-    else{
-      return 0;
-    }
-}
 
 function calculateSubtreeWidths(node, nodeWidthFunctor){
-      postTraverseAndDo(node, function(d){
-      console.log(d);
+    postTraverseAndDo(root, function(d){
       var sum = 0;
       if (d.children){
         for (var i = 0; i < d.children.length; i++){
-            sum += Math.max(d.children[i].width, d.children[i].subtreeWidth);
+          if (d.children[i].subtreeWidth > d.children[i].width){
+            sum += d.children[i].subtreeWidth;
+          }
+          else{
+            sum += d.children[i].width;
+          }
         }
       }
+
       d.subtreeWidth = sum;
-      console.log(d.data + ":")
-      console.log(d.subtreeWidth);
       d.width = nodeWidthFunctor(d);
-      console.log(d.subtreeWidth);
 
     })
-    console.log(node.subtreeWidth);
-    console.log(root.subtreeWidth);
 }
 
 //set up tree with empty root node
 var root = new Node($(document).width() / 2, 50, "I'm Root.");
 root.depth = 0;
+
+drawNode(root);
 
 add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
@@ -291,10 +262,7 @@ add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
 add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
 
-__calculateSubTreeWidths(root, widthFunctor);
-console.log(root.subTreeWidth);
-
-
+traverseAndDo(root, drawNode);
 
 saveToJSON(root);
 
@@ -304,27 +272,19 @@ svgContainer.selectAll("circle")
 		d3.select(this).attr('fill', '#302E1C');
 	})
 	.on("mouseout", function() {
-		d3.select(this).attr('fill', 'white');
+		if (currentNode != this) {
+			d3.select(this).attr('fill', 'white');
+		}
+	})
+	.on("click", function() {
+		if (currentNode != this) {
+			// clear last node
+			d3.select(currentNode).attr('fill', 'white');
+		}
+		currentNode = this;
+		d3.select(this).attr('fill', '#302E1C');
+		console.log("Holla!");
 	});
-
-
-
-/*
-console.log("huh.");
-
-drawNode(root);
-console.log(root.subTreeWidth);
-drawNode(root.children[0]);
-console.log(root.children[0].subTreeWidth);
-drawNode(root.children[1]);
-console.log(root.children[0].subTreeWidth);
-drawNode(root.children[0].children[0]);
-console.log(root.children[0].children[0].subTreeWidth);
-*/
-
-//console.log(root.subTreeWidth);
-
-traverseAndDo(root, drawNode);
 
 </script>
 
