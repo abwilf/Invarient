@@ -150,7 +150,7 @@ treeJSON = d3.json("flare.json", function(error, treeData) {
             }
         }
     }
-    
+
     function initiateDrag(d, domNode) {
         draggingNode = d;
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', 'none');
