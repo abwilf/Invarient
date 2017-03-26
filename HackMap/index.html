@@ -2,21 +2,12 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    border: 1px solid #d3d3d3;
-    background-color: #f1f1f1;
-}
-</style>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://d3js.org/d3-path.v1.min.js"></script>
+<script src="https://d3js.org/d3-shape.v1.min.js"></script>
 </head>
 <body>
 <script>
-
-//Init function (e.g. main)
-function start() {
-  treeCanvas.start()
-}
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -148,22 +139,22 @@ function remove(node){
       // TODO: update
 }
 
-function drawNode(node){
+// function drawNode(node){
 
-    context = treeCanvas.getContext()
-    context.fillText(node.data, node.x, node.y)
-    if (node.children) {
-      for (var i = 0; i < node.children.length; ++i) {
-  		    context.beginPath();
-  		    context.moveTo(node.x-10,node.y-5);
-  		    context.lineTo(node.children[i].x-10,node.children[i].y-5);
-  		    context.stroke();
-  	  }
-  	  context.beginPath();
-  	  context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
-  	  context.stroke();
-    }
-}
+//     context = treeCanvas.getContext()
+//     context.fillText(node.data, node.x, node.y)
+//     if (node.children) {
+//       for (var i = 0; i < node.children.length; ++i) {
+//   		    context.beginPath();
+//   		    context.moveTo(node.x-10,node.y-5);
+//   		    context.lineTo(node.children[i].x-10,node.children[i].y-5);
+//   		    context.stroke();
+//   	  }
+//   	  context.beginPath();
+//   	  context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
+//   	  context.stroke();
+//     }
+// }
 var toggle = 0;
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node){
@@ -177,27 +168,6 @@ function toggleSubtree(node){
     node._children = [];
     toggle = 0;
   }
-}
-
-//Creates a canvas for drawing
-var treeCanvas = {
-    canvas : document.createElement("canvas"),
-
-    start : function() {
-
-        this.canvas.width = $(document).width();
-        this.canvas.height = $(document).height();
-
-        this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.context.font = "15px Arial";
-
-
-    },
-
-    getContext : function() {
-        return this.context
-    }
 }
 
 //from Queue.js by Stephen Morley
@@ -226,8 +196,6 @@ function calculateSubtreeWidths(node, nodeWidthFunctor){
 //set up tree with empty root node
 var root = new Node($(document).width() / 2, 50, "I'm Root.");
 root.depth = 0;
-
-treeCanvas.start();
 
 drawNode(root);
 
