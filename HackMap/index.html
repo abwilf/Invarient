@@ -179,6 +179,7 @@ function remove(node){
       // TODO: update
 }
 
+var arr_map = new Array();
 function drawNode(node){
 
     var circle = svgContainer.append("circle")
@@ -188,6 +189,9 @@ function drawNode(node){
                              .attr("fill", "white")
                              .attr("stroke", "black")
                              .attr("stroke-width", 1);
+    
+    arr_map["" + circle] = node;
+    console.log(circle);
 
     var text = svgContainer.append("text")
                            .attr("x", node.x)
@@ -292,7 +296,7 @@ function balance(node){
 }
 
 function update(root){
-
+  arr_map = [];	// clear arr
   svgContainer.selectAll("*").remove();
 
   postTraverseAndDo(root, calculateSubtreeWidths);
