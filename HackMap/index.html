@@ -213,22 +213,6 @@ function drawNode(node){
 	}
 }
 
-// function drawNode(node){
-
-//     context = treeCanvas.getContext()
-//     context.fillText(node.data, node.x, node.y)
-//     if (node.children) {
-//       for (var i = 0; i < node.children.length; ++i) {
-//   		    context.beginPath();
-//   		    context.moveTo(node.x-10,node.y-5);
-//   		    context.lineTo(node.children[i].x-10,node.children[i].y-5);
-//   		    context.stroke();
-//   	  }
-//   	  context.beginPath();
-//   	  context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
-//   	  context.stroke();
-//     }
-// }
 var toggle = 0;
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node){
@@ -329,6 +313,7 @@ function update(root){
   		}
   		currentNode = this;
   		d3.select(this).attr('fill', '#302E1C');
+
   		toggleSubtree(this);
 
       update(root);
