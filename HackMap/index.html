@@ -159,8 +159,17 @@ function drawNode(node){
                            .attr("font-size", "15px")
                            .text( function(d) { return node.data });
 
-
-
+    if (node.children) {
+      for (var i = 0; i < node.children.length; ++i) {
+	    var line = svgContainer.append("line")
+	    					   .attr("x1", node.x-10)
+	    					   .attr("y1", node.y-5)
+	    					   .attr("x2", node.children[i].x-10)
+	    					   .attr("y2", node.children[i].y-5)
+	    					   .attr("stroke-width", 2)
+	    					   .attr("stroke", "black");
+	  }
+	}
 }
 
 // function drawNode(node){
