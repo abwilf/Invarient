@@ -48,7 +48,13 @@ function add(parent, child){
 
 //TODO
 function remove(node){
-
+    for (var i = 0; i < node.parent.children.length; i++) {}
+        if (node.parent.children[i] === node) {
+            node.parent.children.splice(i, 1);
+	        return;
+        }
+    }
+    // TODO: update 
 }
 
 //Hide/Show the subtree of the selected node
