@@ -4,10 +4,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://d3js.org/d3-path.v1.min.js"></script>
+<script src="https://d3js.org/d3-selection.v1.min.js"></script>
 <script src="https://d3js.org/d3-shape.v1.min.js"></script>
 </head>
 <body>
 <script>
+
+var svgContainer = d3.select("body").append("svg")
+                                    .attr("width", $(document).width())
+                                    .attr("height", $(document).height());
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -139,6 +144,24 @@ function remove(node){
       // TODO: update
 }
 
+function drawNode(node){
+
+    var circle = svgContainer.append("circle")
+                             .attr("cx", node.x - 10)
+                             .attr("cy", node.y - 5)
+                             .attr("r", 5);
+
+    var text = svgContainer.append("text")
+                           .attr("x", node.x)
+                           .attr("y", node.y)
+                           .attr("font-family", "sans-serif")
+                           .attr("font-size", "15px")
+                           .text( function(d) { return node.data });
+
+                           
+
+}
+
 // function drawNode(node){
 
 //     context = treeCanvas.getContext()
@@ -208,6 +231,7 @@ add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
 traverseAndDo(root, drawNode);
 
 saveToJSON(root);
+
 
 </script>
 
