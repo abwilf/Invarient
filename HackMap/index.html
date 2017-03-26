@@ -110,6 +110,17 @@ function traverseAndDo(node, d){
     node.children.forEach(traverseAndDo);
 }
 
+//Helper function, iterates through tree and calls d on each node AFTER children
+function postTraverseAndDo(node, d){
+
+  traverseAndDo = function(node){
+    node.children.forEach(traverseAndDo);
+    d(node);
+  }
+  node.children.forEach(traverseAndDo);
+  d(node);
+}
+
 //Given a node pointer, attach a node to it
 function add(parent, child){
     child.parent = parent;
@@ -183,20 +194,8 @@ var treeCanvas = {
 //from Queue.js by Stephen Morley
 function Queue(){var a=[],b=0;this.getLength=function(){return a.length-b};this.isEmpty=function(){return 0==a.length};this.enqueue=function(b){a.push(b)};this.dequeue=function(){if(0!=a.length){var c=a[b];2*++b>=a.length&&(a=a.slice(b),b=0);return c}};this.peek=function(){return 0<a.length?a[b]:void 0}};
 
-//balances the tree
-function balance(d){
-  var q = new Queue();
-  var currLevel = 0;
-
-  var temp = null;
-
-  currLevel.enqueue(d);
-
-  while (currLevel.getLength() > 0) {
-    var temp = currLevel.dequeue();
-
-    temp.children.forEach(nextLevel.enqueue);
-  }
+function calculateSubtreeHeights(d){
+    var sum = 0;
 }
 
 //set up tree with empty root node
