@@ -55,6 +55,10 @@ function JSONHelper(node_in, string) {
 //Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d){
     d(node);
+    traverseAndDo = function(node){
+      d(node);
+      node.children.forEach(traverseAndDo);
+    }
     node.children.forEach(traverseAndDo);
 }
 
@@ -151,6 +155,13 @@ root.depth = 0;
 
 treeCanvas.start();
 drawNode(root);
+add(root, new Node(root.x - 50, 100, "I'm a kid."));
+
+add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
+
+add(root, new Node(root.x, 150, "I'm a Grandkid."));
+
+traverseAndDo(root, drawNode);
 
 </script>
 
