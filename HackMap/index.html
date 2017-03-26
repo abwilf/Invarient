@@ -120,6 +120,9 @@ function JSONHelper(node_in, string) {
 
 //Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d){
+
+    temp = traverseAndDo;
+
     d(node);
     traverseAndDo = function(node){
       d(node);
@@ -130,14 +133,18 @@ function traverseAndDo(node, d){
     if (node.children){
       node.children.forEach(traverseAndDo);
     }
+
+    traverseAndDo = temp;
 }
 
 //Helper function, iterates through tree and calls d on each node AFTER children
 function postTraverseAndDo(node, d){
 
-  traverseAndDo = function(node){
+  temp = postTraverseAndDo;
+
+  postTraverseAndDo = function(node){
     if (node.children) {
-      node.children.forEach(traverseAndDo);
+      node.children.forEach(postTraverseAndDo);
     }
     d(node);
   }
@@ -145,6 +152,8 @@ function postTraverseAndDo(node, d){
     node.children.forEach(traverseAndDo);
   }
   d(node);
+
+  postTraverseAndDo = temp;
 }
 
 //Given a node pointer, attach a node to it
@@ -182,6 +191,8 @@ function drawNode(node){
                            .attr("font-family", "sans-serif")
                            .attr("font-size", "15px")
                            .text( function(d) { return node.data });
+
+    node.textSize = text.getBBox().width;
 
     if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
@@ -230,37 +241,67 @@ function toggleSubtree(node){
 //from Queue.js by Stephen Morley
 function Queue(){var a=[],b=0;this.getLength=function(){return a.length-b};this.isEmpty=function(){return 0==a.length};this.enqueue=function(b){a.push(b)};this.dequeue=function(){if(0!=a.length){var c=a[b];2*++b>=a.length&&(a=a.slice(b),b=0);return c}};this.peek=function(){return 0<a.length?a[b]:void 0}};
 
-function calculateSubtreeWidths(node, nodeWidthFunctor){
-    postTraverseAndDo(root, function(d){
+
+function __calculateSubtreeWidths(node, nodeWidthFunctor){
       var sum = 0;
-      if (d.children){
-        for (var i = 0; i < d.children.length; i++){
-          if (d.children[i].subtreeWidth > d.children[i].width){
-            sum += d.children[i].subtreeWidth;
-          }
-          else{
-            sum += d.children[i].width;
-          }
+      if (node.children){
+        //console.log("Has children: " + node.children.length);
+        for (var i = 0; i < node.children.length; i++){
+          //console.log("child " + i + ": has width: " + node.children[i].width);
+          //console.log("child " + i + ": has subtreeWidth" + node.children[i].subtreeWidth);
+          sum += Math.max(node.children[i].width, node.children[i].subtreeWidth);
         }
       }
 
-      d.subtreeWidth = sum;
-      d.width = nodeWidthFunctor(d);
+      node.subtreeWidth = sum;
+      node.width = nodeWidthFunctor(node);
+      node.subtreeWidth = Math.max(node.subtreeWidth, node.width);
+}
 
-    })
+function nodeWidthFunctor(node) {
+    if (node.data){
+      return node.textSize + 4;
+    }
+}
+
+function calculateSubtreeWidths(node){
+  __calculateSubtreeWidths(node, nodeWidthFunctor);
+}
+
+//Each node uses its subtreeWidth and x,y position to place its children
+function balance(node){
+
+  var textsize = 15;
+
+  elePos = [];
+  elePos.push(node.x - (node.subtreeWidth*textsize)/2)
+  for (var i = 0; i < node.children.length-1; i++) {
+
+    elePos.push(elePos[i] + textsize * Math.max(node.children[i].subtreeWidth, node.children[i].width));
+  }
+
+  for (var i = 0; i < node.children.length; i++) {
+    console.log(elePos[i]);
+    node.children[i].x = elePos[i];
+    node.children[i].y = node.y + 50;
+  }
+
 }
 
 //set up tree with empty root node
 var root = new Node($(document).width() / 2, 50, "I'm Root.");
 root.depth = 0;
 
-drawNode(root);
+//calculateSubtreeWidths(root, nodeWidthFunctor);
 
 add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
 add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
 add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
+
+postTraverseAndDo(root, calculateSubtreeWidths);
+postTraverseAndDo(root, balance);
 
 traverseAndDo(root, drawNode);
 
