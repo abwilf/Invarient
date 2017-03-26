@@ -184,6 +184,18 @@ id = 0;
 var arr_map = new Array();
 function drawNode(node){
 
+	  if (node.children) {
+      for (var i = 0; i < node.children.length; ++i) {
+	    var line = svgContainer.append("line")
+	    					   .attr("x1", node.x-10)
+	    					   .attr("y1", node.y-5)
+	    					   .attr("x2", node.children[i].x-10)
+	    					   .attr("y2", node.children[i].y-5)
+	    					   .attr("stroke-width", 2)
+	    					   .attr("stroke", "black");
+	  }
+	}
+
     var circle = svgContainer.append("circle")
                              .attr("cx", node.x - 10)
                              .attr("cy", node.y - 5)
@@ -203,17 +215,7 @@ function drawNode(node){
                            .attr("font-size", "15px")
                            .text( function(d) { return node.data });
 
-    if (node.children) {
-      for (var i = 0; i < node.children.length; ++i) {
-	    var line = svgContainer.append("line")
-	    					   .attr("x1", node.x-10)
-	    					   .attr("y1", node.y-5)
-	    					   .attr("x2", node.children[i].x-10)
-	    					   .attr("y2", node.children[i].y-5)
-	    					   .attr("stroke-width", 2)
-	    					   .attr("stroke", "black");
-	  }
-	}
+
 }
 
 var toggle = 0;
