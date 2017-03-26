@@ -18,14 +18,47 @@ function start() {
   treeCanvas.start()
 }
 
+window.addEventListener("keydown", keyPressed, false);
+ 
+ // returns 0 if n (comes from) is pressed, 1 if 'e' is pressed, 2 if r, 3 if d, 4 if delete, -1 else
+function keyPressed(e) {
+	console.log(e.keyCode);
+    switch (e.keyCode) {
+    		case 78:
+    			// 0
+		     console.log("The 'n' key is pressed.");
+		     toggleSubtree(root);
+		     context.clearRect(0, 0, $(document).width(), $(document).height());
+			traverseAndDo(root, drawNode);
+		     return 0;
+    		case 69:
+    			// 1
+		     console.log("The 'e' key is pressed.");
+		     context.clearRect(0, 0, $(document).width(), $(document).height());
+
+		     return 1;
+    		case 82:
+	           console.log("The 'r' key is pressed.");
+	           return 2;
+    		case 68:
+			console.log("The 'd' key is pressed.");
+			return 3;
+		case 8:
+			console.log("The 'delete' key is pressed.");
+			return 4;
+    		default:
+    			console.log("Pressed an unrecognized key!");
+    			return -1;
+    }
+}
+
+
 //Constructor for Nodes
 function Node(x, y, data){
     this.x = x;
     this.y = y;
 
-
     this.data = data;
-
 
     this.depth = null;
     this.parent = null;
@@ -58,9 +91,9 @@ function JSONHelper(node_in, string) {
 	}
 
 	for (i = 0; i < node_in.children.length; ++i) {
-    console.log(i);
-    console.log(node_in.children[i]);
-    console.log(JSONHelper(node_in.children[i], ""));
+    //console.log(i);
+    //console.log(node_in.children[i]);
+    //console.log(JSONHelper(node_in.children[i], ""));
 		string += JSONHelper(node_in.children[i], "");	// recursive call
 	}
 
@@ -106,48 +139,25 @@ function drawNode(node){
 		context.moveTo(node.x-10,node.y-5);
 		context.lineTo(node.children[i].x-10,node.children[i].y-5);
 		context.stroke();
-	}	
+	}
 	context.beginPath();
 	context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
 	context.stroke();
-
 }
-
 
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node){
-  if(this.children){
-    this._children = this.children;
-    this.children = null;
+  if(node.children == null){
+  	console.log("Hid Array");
+    node._children = node.children;
+    node.children = null;
   }
   else{
-    this.children = this._children;
-    this._children = null;
+  	console.log("Reveal Array");
+    node.children = node._children;
+    node._children = null;
   }
 }
-/*
-// string info of second ellipse
-function draw_node(x1, y1, rx1, ry1, type, x2, y2, rx2, ry2) {
-
-    <defs>
-       <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
-           <path d="M0,0 L0,6 L9,3 z" fill="#f00" />
-       </marker>
-    </defs>
-
- // calculate B0
-
-  if (type == "def") {
-    // draw line
-    <path d="Mx1 (y1+ry1) L x2 (y2-ry2)" fill="transparent" stroke="black"/>
-  }
-
-  else {
-    // draw arrow
-    <line x1="x1" y1="y1+ry1" x2="x2" y2="y2+ry2" stroke="#000" stroke-width="5" marker-end="url(#arrow)" />
-  }
-}
-*/
 
 //Creates a canvas for drawing
 var treeCanvas = {
@@ -170,11 +180,28 @@ var treeCanvas = {
     }
 }
 
+//from Queue.js by Stephen Morley
+function Queue(){var a=[],b=0;this.getLength=function(){return a.length-b};this.isEmpty=function(){return 0==a.length};this.enqueue=function(b){a.push(b)};this.dequeue=function(){if(0!=a.length){var c=a[b];2*++b>=a.length&&(a=a.slice(b),b=0);return c}};this.peek=function(){return 0<a.length?a[b]:void 0}};
+
+//balances the tree
+function balance(d){
+  var q = new Queue();
+  var currLevel = 0;
+
+  var temp = null;
+
+  currLevel.enqueue(d);
+
+  while (currLevel.getLength() > 0) {
+    var temp = currLevel.dequeue();
+
+    temp.children.forEach(nextLevel.enqueue);
+  }
+}
+
 //set up tree with empty root node
 var root = new Node($(document).width() / 2, 50, "I'm Root.");
 root.depth = 0;
-
-//draw_node(50, 50, 20, 20, "butt", 500, 500, 20, 20)
 
 treeCanvas.start();
 
@@ -184,7 +211,7 @@ add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
 add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
-add(root, new Node(root.x, 150, "I'm a Grandkid."));
+add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
 
 traverseAndDo(root, drawNode);
 
