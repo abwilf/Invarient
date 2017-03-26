@@ -19,7 +19,7 @@ function start() {
 }
 
 window.addEventListener("keydown", keyPressed, false);
- 
+
  // returns 0 if n (comes from) is pressed, 1 if 'e' is pressed, 2 if r, 3 if d, 4 if delete, -1 else
 function keyPressed(e) {
 	console.log(e.keyCode);
@@ -29,7 +29,7 @@ function keyPressed(e) {
 		     console.log("The 'n' key is pressed.");
 		     toggleSubtree(root);
 		     context.clearRect(0, 0, $(document).width(), $(document).height());
-			traverseAndDo(root, drawNode);
+			   traverseAndDo(root, drawNode);
 		     return 0;
     		case 69:
     			// 1
@@ -105,19 +105,27 @@ function traverseAndDo(node, d){
     d(node);
     traverseAndDo = function(node){
       d(node);
+      if (node.children){
+        node.children.forEach(traverseAndDo);
+      }
+    }
+    if (node.children){
       node.children.forEach(traverseAndDo);
     }
-    node.children.forEach(traverseAndDo);
 }
 
 //Helper function, iterates through tree and calls d on each node AFTER children
 function postTraverseAndDo(node, d){
 
   traverseAndDo = function(node){
-    node.children.forEach(traverseAndDo);
+    if (node.children) {
+      node.children.forEach(traverseAndDo);
+    }
     d(node);
   }
-  node.children.forEach(traverseAndDo);
+  if (node.children) {
+    node.children.forEach(traverseAndDo);
+  }
   d(node);
 }
 
@@ -142,31 +150,32 @@ function remove(node){
 
 function drawNode(node){
 
-  context = treeCanvas.getContext()
-  context.fillText(node.data, node.x, node.y)
-
-    for (var i = 0; i < node.children.length; ++i) {
-		context.beginPath();
-		context.moveTo(node.x-10,node.y-5);
-		context.lineTo(node.children[i].x-10,node.children[i].y-5);
-		context.stroke();
-	}
-	context.beginPath();
-	context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
-	context.stroke();
+    context = treeCanvas.getContext()
+    context.fillText(node.data, node.x, node.y)
+    if (node.children) {
+      for (var i = 0; i < node.children.length; ++i) {
+  		    context.beginPath();
+  		    context.moveTo(node.x-10,node.y-5);
+  		    context.lineTo(node.children[i].x-10,node.children[i].y-5);
+  		    context.stroke();
+  	  }
+  	  context.beginPath();
+  	  context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
+  	  context.stroke();
+    }
 }
-
+var toggle = 0;
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node){
-  if(node.children == null){
-  	console.log("Hid Array");
+  if (toggle == 0){
     node._children = node.children;
-    node.children = null;
+    node.children = [];
+    toggle = 1;
   }
   else{
-  	console.log("Reveal Array");
     node.children = node._children;
-    node._children = null;
+    node._children = [];
+    toggle = 0;
   }
 }
 
@@ -194,8 +203,24 @@ var treeCanvas = {
 //from Queue.js by Stephen Morley
 function Queue(){var a=[],b=0;this.getLength=function(){return a.length-b};this.isEmpty=function(){return 0==a.length};this.enqueue=function(b){a.push(b)};this.dequeue=function(){if(0!=a.length){var c=a[b];2*++b>=a.length&&(a=a.slice(b),b=0);return c}};this.peek=function(){return 0<a.length?a[b]:void 0}};
 
-function calculateSubtreeHeights(d){
-    var sum = 0;
+function calculateSubtreeWidths(node, nodeWidthFunctor){
+    postTraverseAndDo(root, function(d){
+      var sum = 0;
+      if (d.children){
+        for (var i = 0; i < d.children.length; i++){
+          if (d.children[i].subtreeWidth > d.children[i].width){
+            sum += d.children[i].subtreeWidth;
+          }
+          else{
+            sum += d.children[i].width;
+          }
+        }
+      }
+
+      d.subtreeWidth = sum;
+      d.width = nodeWidthFunctor(d);
+
+    })
 }
 
 //set up tree with empty root node
