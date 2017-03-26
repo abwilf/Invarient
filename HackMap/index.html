@@ -49,7 +49,7 @@ function add(parent, child){
 //TODO
 function remove(node){
 
-      for (var i = 0; i < node.parent.children.length; i++) {}
+      for (var i = 0; i < node.parent.children.length; i++) {
           if (node.parent.children[i] === node) {
               node.parent.children.splice(i, 1);
             return;
@@ -125,17 +125,13 @@ var treeCanvas = {
 }
 
 //set up tree with empty root node
-var root = new Node($(document).width() / 2, 50, null);
+var root = new Node($(document).width() / 2, 50, "I'm Root.");
 root.depth = 0;
 
 //draw_node(50, 50, 20, 20, "butt", 500, 500, 20, 20)
 
 treeCanvas.start();
-
-ctx = treeCanvas.getContext();
-console.log(ctx);
-
-ctx.fillText("Hello World",10,50);
+drawNode(root);
 
 </script>
 
