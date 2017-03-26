@@ -41,14 +41,29 @@ function saveToJSON(node_in) {
 // call with root
 function JSONHelper(node_in, string) {
 	// loop through root and children, call this on each
-	if (!(typeof node_in.children != "undefined" && node_in.children != null && node_in.children.length > 0)) {
+
+  temp = node_in.parent;
+  node_in.parent = null;
+  temparr = node_in.children;
+  node_in.children = null;
+
+	// write string to JSON
+  string += JSON.stringify(node_in);
+
+  node_in.parent = temp;
+  node_in.children = temparr;
+
+  if (!(typeof node_in.children != "undefined" && node_in.children != null && node_in.children.length > 0)) {
 		return string;
 	}
-	// write string to JSON
-	for (i = 0; i < this.children.length; ++i) {
-		string += JSON.stringify(node_in);
-		string += JSONHelper(this.children[i], string);	// recursive call
+
+	for (i = 0; i < node_in.children.length; ++i) {
+    console.log(i);
+    console.log(node_in.children[i]);
+    console.log(JSONHelper(node_in.children[i], ""));
+		string += JSONHelper(node_in.children[i], "");	// recursive call
 	}
+
 	return string;
 }
 
@@ -66,7 +81,7 @@ function traverseAndDo(node, d){
 function add(parent, child){
     child.parent = parent;
     parent.children.push(child);
-    child = parent.depth + 1;
+    child.depth = parent.depth + 1;
 }
 
 //TODO
@@ -162,7 +177,9 @@ root.depth = 0;
 //draw_node(50, 50, 20, 20, "butt", 500, 500, 20, 20)
 
 treeCanvas.start();
+
 drawNode(root);
+
 add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
 add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
@@ -170,6 +187,8 @@ add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 add(root, new Node(root.x, 150, "I'm a Grandkid."));
 
 traverseAndDo(root, drawNode);
+
+saveToJSON(root);
 
 </script>
 
