@@ -85,6 +85,8 @@ function Node(x, y, data){
     this.parent = null;
 
     this.children = [];
+
+    this.toggle = 0;
 }
 
 
@@ -218,18 +220,17 @@ function drawNode(node){
 
 }
 
-var toggle = 0;
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node){
-  if (toggle == 0){
+  if (node.toggle == 0){
     node._children = node.children;
     node.children = [];
-    toggle = 1;
+    node.toggle = 1;
   }
   else{
     node.children = node._children;
     node._children = [];
-    toggle = 0;
+    node.toggle = 0;
   }
 }
 
