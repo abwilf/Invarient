@@ -245,9 +245,14 @@ traverseAndDo(root, drawNode);
 
 saveToJSON(root);
 
-svgContainer.selectAll("circle").on("mouseover", function() {
-	this.style.cursor = "pointer";
-});
+svgContainer.selectAll("circle")
+	.on("mouseover", function() {
+		this.style.cursor = "pointer";
+		d3.select(this).attr('fill', '#302E1C');
+	})
+	.on("mouseout", function() {
+		d3.select(this).attr('fill', 'white');
+	});
 
 </script>
 
