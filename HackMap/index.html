@@ -55,8 +55,18 @@ function remove(node){
             return;
           }
       }
-      // TODO: update  
+      // TODO: update
 }
+
+function drawNode(node){
+
+  context = treeCanvas.getContext()
+  context.fillText(node.data, node.x, node.y)
+
+  //TODO Draw circle
+
+}
+
 
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node){
