@@ -10,9 +10,15 @@ canvas {
 </style>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 </head>
-<body onload="treeCanvas.start()">
+<body onload="start()">
 <script>
 
+//Init function (e.g. main)
+function start() {
+  treeCanvas.start()
+}
+
+//Constructor for Nodes
 function Node(x, y, data){
     this.x = x;
     this.y = y;
@@ -27,21 +33,60 @@ function Node(x, y, data){
     this.children = [];
 }
 
+//Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d){
     d(node);
     node.children.forEach(traverseAndDo);
 }
 
+//Given a node pointer, attach a node to it
 function add(parent, child){
     child.parent = parent;
     parent.children.push(child);
     child = parent.depth + 1;
 }
 
+//TODO
 function remove(node){
-    
+
 }
 
+//Hide/Show the subtree of the selected node
+function toggleSubtree(node){
+  if(this.children){
+    this._children = this.children;
+    this.children = null;
+  }
+  else{
+    this.children = this._children;
+    this._children = null;
+  }
+}
+/*
+// string info of second ellipse
+function draw_node(x1, y1, rx1, ry1, type, x2, y2, rx2, ry2) {
+
+    <defs>
+       <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+           <path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+       </marker>
+    </defs>
+
+ // calculate B0
+
+  if (type == "def") {
+    // draw line
+    <path d="Mx1 (y1+ry1) L x2 (y2-ry2)" fill="transparent" stroke="black"/>
+  }
+
+  else {
+    // draw arrow
+    <line x1="x1" y1="y1+ry1" x2="x2" y2="y2+ry2" stroke="#000" stroke-width="5" marker-end="url(#arrow)" />
+  }
+}
+*/
+
+//Creates a canvas for drawing
 var treeCanvas = {
     canvas : document.createElement("canvas"),
     start : function() {
@@ -54,9 +99,11 @@ var treeCanvas = {
     }
 }
 
-
-var root = Node($(document).width() / 2), 50);
+//set up tree with empty root node
+var root = new Node($(document).width() / 2, 50, null);
 root.depth = 0;
+
+draw_node(50, 50, 20, 20, "butt", 500, 500, 20, 20)
 
 
 </script>
