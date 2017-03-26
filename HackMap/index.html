@@ -24,7 +24,8 @@ function keyPressed(e) {
     			// 0
 		     console.log("The 'n' key is pressed.");
 		     toggleSubtree(root);
-		     context.clearRect(0, 0, $(document).width(), $(document).height());
+         svgContainer.selectAll("*").remove();
+		     //context.clearRect(0, 0, $(document).width(), $(document).height());
 			   traverseAndDo(root, drawNode);
 		     return 0;
     		case 69:
@@ -158,7 +159,7 @@ function drawNode(node){
                            .attr("font-size", "15px")
                            .text( function(d) { return node.data });
 
-                           
+
 
 }
 
