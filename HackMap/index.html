@@ -86,7 +86,15 @@ function drawNode(node){
   context = treeCanvas.getContext()
   context.fillText(node.data, node.x, node.y)
 
-  //TODO Draw circle
+    for (var i = 0; i < node.children.length; ++i) {
+		context.beginPath();
+		context.moveTo(node.x-10,node.y-5);
+		context.lineTo(node.children[i].x-10,node.children[i].y-5);
+		context.stroke();
+	}	
+	context.beginPath();
+	context.arc(node.x - 10,node.y - 5,5,0,2*Math.PI);
+	context.stroke();
 
 }
 
