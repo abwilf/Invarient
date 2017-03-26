@@ -242,6 +242,10 @@ traverseAndDo(root, drawNode);
 
 saveToJSON(root);
 
+svgContainer.selectAll("circle").on("mouseover", function() {
+	this.style.cursor = "pointer";
+	console.log("holla");
+});
 
 </script>
 
