@@ -10,11 +10,9 @@
 <body>
 <script>
 
-var currentNode;	// yay globals
 var svgContainer = d3.select("body").append("svg")
                                     .attr("width", $(document).width())
                                     .attr("height", $(document).height());
-
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -28,27 +26,32 @@ function keyPressed(e) {
 		     toggleSubtree(root);
          svgContainer.selectAll("*").remove();
 		     //context.clearRect(0, 0, $(document).width(), $(document).height());
-			   traverseAndDo(root, drawNode);
-			    svgContainer.selectAll("circle")
-			.on("mouseover", function() {
-				this.style.cursor = "pointer";
-				d3.select(this).attr('fill', '#302E1C');
-			})
-			.on("mouseout", function() {
-				if (currentNode != this) {
-					d3.select(this).attr('fill', 'white');
-				}
-			})
-			.on("click", function() {
-				if (currentNode != this) {
-					// clear last node
-					d3.select(currentNode).attr('fill', 'white');
-				}
-				currentNode = this;
-				d3.select(this).attr('fill', '#302E1C');
-				console.log("Holla!");
-			});
+
+         traverseAndDo(root, drawNode);
+
+         svgContainer.selectAll("circle")
+         	.on("mouseover", function() {
+         		this.style.cursor = "pointer";
+         		d3.select(this).attr('fill', '#302E1C');
+         	})
+         	.on("mouseout", function() {
+         		d3.select(this).attr('fill', 'white');
+         	})
+          .on("click", function() {
+					if (currentNode != this) {
+						// clear last node
+						d3.select(currentNode).attr('fill', 'white');
+					}
+					currentNode = this;
+					d3.select(this).attr('fill', '#302E1C');
+				})
+				.on("dblclick", function() {
+					console.log("Holla!");
+					toggleSubtree(this);
+
 		     return 0;
+       });
+
     		case 69:
     			// 1
 		     console.log("The 'e' key is pressed.");
@@ -83,6 +86,7 @@ function Node(x, y, data){
 
     this.children = [];
 }
+
 
 function saveToJSON(node_in) {
 	var obj = JSONHelper(root, "");
@@ -149,7 +153,7 @@ function postTraverseAndDo(node, d){
     d(node);
   }
   if (node.children) {
-    node.children.forEach(traverseAndDo);
+    node.children.forEach(postTraverseAndDo);
   }
   d(node);
 
@@ -191,8 +195,6 @@ function drawNode(node){
                            .attr("font-family", "sans-serif")
                            .attr("font-size", "15px")
                            .text( function(d) { return node.data });
-
-    node.textSize = text.getBBox().width;
 
     if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
@@ -260,7 +262,8 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor){
 
 function nodeWidthFunctor(node) {
     if (node.data){
-      return node.textSize + 4;
+
+      return node.data.length + 4;
     }
 }
 
@@ -290,6 +293,8 @@ function balance(node){
 
 //set up tree with empty root node
 var root = new Node($(document).width() / 2, 50, "I'm Root.");
+
+var currentNode; //Yay globals!
 root.depth = 0;
 
 //calculateSubtreeWidths(root, nodeWidthFunctor);
@@ -313,19 +318,20 @@ svgContainer.selectAll("circle")
 		d3.select(this).attr('fill', '#302E1C');
 	})
 	.on("mouseout", function() {
-		if (currentNode != this) {
-			d3.select(this).attr('fill', 'white');
-		}
+		d3.select(this).attr('fill', 'white');
 	})
-	.on("click", function() {
-		if (currentNode != this) {
-			// clear last node
-			d3.select(currentNode).attr('fill', 'white');
-		}
-		currentNode = this;
-		d3.select(this).attr('fill', '#302E1C');
-		console.log("Holla!");
-	});
+  .on("click", function() {
+					if (currentNode != this) {
+						// clear last node
+						d3.select(currentNode).attr('fill', 'white');
+					}
+					currentNode = this;
+					d3.select(this).attr('fill', '#302E1C');
+	})
+	.on("dblclick", function() {
+					console.log("Holla!");
+					toggleSubtree(this);
+  });
 
 </script>
 
