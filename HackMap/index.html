@@ -150,7 +150,10 @@ function drawNode(node){
     var circle = svgContainer.append("circle")
                              .attr("cx", node.x - 10)
                              .attr("cy", node.y - 5)
-                             .attr("r", 5);
+                             .attr("r", 5)
+                             .attr("fill", "white")
+                             .attr("stroke", "black")
+                             .attr("stroke-width", 1);
 
     var text = svgContainer.append("text")
                            .attr("x", node.x)
@@ -244,7 +247,6 @@ saveToJSON(root);
 
 svgContainer.selectAll("circle").on("mouseover", function() {
 	this.style.cursor = "pointer";
-	console.log("holla");
 });
 
 </script>
