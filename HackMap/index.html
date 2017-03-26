@@ -24,7 +24,7 @@ function keyPressed(e) {
     			// 0
 		     console.log("The 'n' key is pressed.");
 		     toggleSubtree(root);
-         svgContainer.selectAll("*").remove();
+
 		     //context.clearRect(0, 0, $(document).width(), $(document).height());
 
          traverseAndDo(root, drawNode);
@@ -55,7 +55,7 @@ function keyPressed(e) {
     		case 69:
     			// 1
 		     console.log("The 'e' key is pressed.");
-		     context.clearRect(0, 0, $(document).width(), $(document).height());
+		     //context.clearRect(0, 0, $(document).width(), $(document).height());
 
 		     return 1;
     		case 82:
@@ -274,7 +274,7 @@ function calculateSubtreeWidths(node){
 //Each node uses its subtreeWidth and x,y position to place its children
 function balance(node){
 
-  var textsize = 15;
+  var textsize = 7;
 
   elePos = [];
   elePos.push(node.x - (node.subtreeWidth*textsize)/2)
@@ -288,6 +288,48 @@ function balance(node){
     node.children[i].x = elePos[i];
     node.children[i].y = node.y + 50;
   }
+
+}
+
+function update(root){
+
+  svgContainer.selectAll("*").remove();
+
+  postTraverseAndDo(root, calculateSubtreeWidths);
+  postTraverseAndDo(root, balance);
+
+  traverseAndDo(root, drawNode);
+
+  svgContainer.selectAll("circle")
+  	.on("mouseover", function() {
+  		this.style.cursor = "pointer";
+  		d3.select(this).attr('fill', '#302E1C');
+  	})
+  	.on("mouseout", function() {
+  		if (currentNode != this) {
+  			d3.select(this).attr('fill', 'white');
+  		}
+  	})
+   	 .on("click", function() {
+  		if (currentNode != this) {
+  			// clear last node
+  			d3.select(currentNode).attr('fill', 'white');
+  		}
+  		currentNode = this;
+  		d3.select(this).attr('fill', '#302E1C');
+  	})
+  	.on("dblclick", function() {
+  		if (currentNode != this) {
+  			// clear last node
+  			d3.select(currentNode).attr('fill', 'white');
+  		}
+  		currentNode = this;
+  		d3.select(this).attr('fill', '#302E1C');
+  		toggleSubtree(this);
+
+      update(root);
+
+  	  });
 
 }
 
@@ -305,6 +347,8 @@ add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
 add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
 
+update(root);
+/*
 postTraverseAndDo(root, calculateSubtreeWidths);
 postTraverseAndDo(root, balance);
 
@@ -339,7 +383,7 @@ svgContainer.selectAll("circle")
 		d3.select(this).attr('fill', '#302E1C');
 		toggleSubtree(this);
 	  });
-
+*/
 </script>
 
 </body>
