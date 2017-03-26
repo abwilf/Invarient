@@ -58,9 +58,9 @@ function JSONHelper(node_in, string) {
 	}
 
 	for (i = 0; i < node_in.children.length; ++i) {
-    console.log(i);
-    console.log(node_in.children[i]);
-    console.log(JSONHelper(node_in.children[i], ""));
+    //console.log(i);
+    //console.log(node_in.children[i]);
+    //console.log(JSONHelper(node_in.children[i], ""));
 		string += JSONHelper(node_in.children[i], "");	// recursive call
 	}
 
