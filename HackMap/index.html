@@ -33,6 +33,25 @@ function Node(x, y, data){
     this.children = [];
 }
 
+function saveToJSON(node_in) {
+	var obj = JSONHelper(root, "");
+	console.log(obj);
+	// write to JSON
+}
+// call with root
+function JSONHelper(node_in, string) {
+	// loop through root and children, call this on each
+	if (!(typeof node_in.children != "undefined" && node_in.children != null && node_in.children.length > 0)) {
+		return string;
+	}
+	// write string to JSON
+	for (i = 0; i < this.children.length; ++i) {
+		string += JSON.stringify(node_in);
+		string += JSONHelper(this.children[i], string);	// recursive call
+	}
+	return string;
+}
+
 //Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d){
     d(node);
