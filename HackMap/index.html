@@ -179,6 +179,8 @@ function remove(node){
       // TODO: update
 }
 
+
+id = 0;
 var arr_map = new Array();
 function drawNode(node){
 
@@ -188,10 +190,11 @@ function drawNode(node){
                              .attr("r", 5)
                              .attr("fill", "white")
                              .attr("stroke", "black")
-                             .attr("stroke-width", 1);
-    
-    arr_map["" + circle] = node;
-    console.log(circle);
+                             .attr("stroke-width", 1)
+                             .attr("id", id++);
+
+    arr_map["" + (id-1)] = node;
+
 
     var text = svgContainer.append("text")
                            .attr("x", node.x)
@@ -280,7 +283,8 @@ function balance(node){
 }
 
 function update(root){
-  arr_map = [];	// clear arr
+  arr_map = new Array();	// clear arr
+  id = 0; //clear id
   svgContainer.selectAll("*").remove();
 
   postTraverseAndDo(root, calculateSubtreeWidths);
@@ -314,7 +318,11 @@ function update(root){
   		currentNode = this;
   		d3.select(this).attr('fill', '#302E1C');
 
-  		toggleSubtree(this);
+      temp = d3.select(this).attr("id");
+
+      console.log(arr_map["" + temp]);
+      console.log(this);
+  		toggleSubtree(arr_map["" + temp]);
 
       update(root);
 
@@ -337,42 +345,7 @@ add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
 
 update(root);
-/*
-postTraverseAndDo(root, calculateSubtreeWidths);
-postTraverseAndDo(root, balance);
 
-traverseAndDo(root, drawNode);
-
-saveToJSON(root);
-
-svgContainer.selectAll("circle")
-	.on("mouseover", function() {
-		this.style.cursor = "pointer";
-		d3.select(this).attr('fill', '#302E1C');
-	})
-	.on("mouseout", function() {
-		if (currentNode != this) {
-			d3.select(this).attr('fill', 'white');
-		}
-	})
- 	 .on("click", function() {
-		if (currentNode != this) {
-			// clear last node
-			d3.select(currentNode).attr('fill', 'white');
-		}
-		currentNode = this;
-		d3.select(this).attr('fill', '#302E1C');
-	})
-	.on("dblclick", function() {
-		if (currentNode != this) {
-			// clear last node
-			d3.select(currentNode).attr('fill', 'white');
-		}
-		currentNode = this;
-		d3.select(this).attr('fill', '#302E1C');
-		toggleSubtree(this);
-	  });
-*/
 </script>
 
 </body>
