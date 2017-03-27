@@ -259,9 +259,9 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor){
 }
 
 function nodeWidthFunctor(node) {
-    if (node.data){
+    if (node.textsize){
 
-      return node.data.length + 4;
+      return node.textsize + 15;
     }
 }
 
@@ -270,22 +270,27 @@ function calculateSubtreeWidths(node){
 }
 
 //Each node uses its subtreeWidth and x,y position to place its children
-function balance(node){
+function balance(node, firstkidstart){
 
-  var textsize = 7;
+  //To balance a subtree
+  //1) balance all child subtrees -starting from left bound
+  //2) Center over all child subtrees (firstkidstart + lastkidstart)/2
 
-  elePos = [];
-  elePos.push(node.x - (node.subtreeWidth*textsize)/2)
-  for (var i = 0; i < node.children.length-1; i++) {
+  var lastkidend = firstkidstart;
+  var lastkidstart = firstkidstart;
 
-    elePos.push(elePos[i] + textsize * Math.max(node.children[i].subtreeWidth, node.children[i].width));
+  for (var i = 0; i < node.children.length; i++){
+    lastkidstart = lastkidend;
+
+    lastkidend = balance(node.children[i], lastkidend) + nodeWidthFunctor(node.children[i]);
+    console.log(lastkidend);
   }
-
-  for (var i = 0; i < node.children.length; i++) {
-    console.log(elePos[i]);
-    node.children[i].x = elePos[i];
-    node.children[i].y = node.y + 50;
-  }
+    if (node != root){
+      node.x = (firstkidstart + lastkidstart)/2;
+      node.y = (node.depth+1) * 50;
+    }
+    console.log(lastkidend);
+    return lastkidend;
 
 }
 
@@ -294,8 +299,16 @@ function update(root){
   id = 0; //clear id
   svgContainer.selectAll("*").remove();
 
+  traverseAndDo(root, drawNode);
+
+  svgContainer.selectAll("*").remove();
+
   postTraverseAndDo(root, calculateSubtreeWidths);
-  postTraverseAndDo(root, balance);
+
+
+  balance(root, root.x - root.subtreeWidth/2);
+
+
 
   traverseAndDo(root, drawNode);
 
@@ -350,19 +363,30 @@ add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
 add(root.children[0], new Node(root.x, 150, "I'm a Grandson."));
 
-add(root.children[0], new Node(root.x, 0, "I'm a Granddaughter."))
+add(root.children[0], new Node(root.x, 200, "I'm a Granddaughter."))
 
-add(root.children[0].children[1], new Node(root.x, 150, "I'm a Great-Grandson."));
+add(root.children[0].children[0], new Node(root.x, 225, "I'm the map."));
 
-add(root.children[0].children[1], new Node(root.x, 0, "I'm a Great-Granddaughter."))
+add(root.children[0].children[0], new Node(root.x, 275, "I'm the map."))
 
-add(root.children[1], new Node(root.x, 150, "I'm a niece."));
+add(root.children[0].children[0], new Node(root.x, 295, "I'm the map."))
 
-add(root.children[1], new Node(root.x, 0, "I'm a nephew."))
 
-add(root.children[1].children[0], new Node(root.x, 150, "I'm a Great-niece."));
+add(root.children[0].children[1], new Node(root.x, 250, "I'm a Great-Grandson."));
 
-add(root.children[1].children[0], new Node(root.x, 0, "I'm a Great-nephew."))
+add(root.children[0].children[1], new Node(root.x, 300, "I'm a Great-Granddaughter."))
+
+add(root.children[1], new Node(root.x, 350, "I'm a niece."));
+
+add(root.children[1], new Node(root.x, 400, "I'm a nephew."))
+
+add(root.children[1].children[0], new Node(root.x, 450, "I'm a Great-niece."));
+
+add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
+
+add(root.children[1].children[1], new Node(root.x, 475, "I'm the map."));
+
+add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
 
 update(root);
 
