@@ -205,9 +205,9 @@ function drawNode(node){
                              .attr("fill", "white")
                              .attr("stroke", "black")
                              .attr("stroke-width", 1)
-                             .attr("id", id++);
+                             .attr("id", id);
 
-    arr_map["" + (id-1)] = node;
+    arr_map["" + id] = node;
 
 
     var text = svgContainer.append("text")
@@ -215,8 +215,12 @@ function drawNode(node){
                            .attr("y", node.y)
                            .attr("font-family", "sans-serif")
                            .attr("font-size", "15px")
+                           .attr("id", "b" + id)
                            .text( function(d) { return node.data });
 
+
+    node.textsize = document.getElementById("b" + id).getComputedTextLength();
+    id++;
 
 }
 
@@ -324,7 +328,6 @@ function update(root){
       temp = d3.select(this).attr("id");
 
       console.log(arr_map["" + temp]);
-      console.log(this);
   		toggleSubtree(arr_map["" + temp]);
 
       update(root);
@@ -345,7 +348,21 @@ add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
 add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
-add(root.children[0], new Node(root.x, 150, "I'm a Grandkid."));
+add(root.children[0], new Node(root.x, 150, "I'm a Grandson."));
+
+add(root.children[0], new Node(root.x, 0, "I'm a Granddaughter."))
+
+add(root.children[0].children[1], new Node(root.x, 150, "I'm a Great-Grandson."));
+
+add(root.children[0].children[1], new Node(root.x, 0, "I'm a Great-Granddaughter."))
+
+add(root.children[1], new Node(root.x, 150, "I'm a niece."));
+
+add(root.children[1], new Node(root.x, 0, "I'm a nephew."))
+
+add(root.children[1].children[0], new Node(root.x, 150, "I'm a Great-niece."));
+
+add(root.children[1].children[0], new Node(root.x, 0, "I'm a Great-nephew."))
 
 update(root);
 
