@@ -276,31 +276,6 @@ function nodeWidthFunctor(node) {
 function calculateSubtreeWidths(node){
   __calculateSubtreeWidths(node, nodeWidthFunctor);
 }
-/*
-//Each node uses its subtreeWidth and x,y position to place its children
-function balance(node, firstkidstart){
-
-  //To balance a subtree
-  //1) balance all child subtrees -starting from left bound
-  //2) Center over all child subtrees (firstkidstart + lastkidstart)/2
-
-  var lastkidend = firstkidstart;
-  var lastkidstart = firstkidstart;
-
-  for (var i = 0; i < node.children.length; i++){
-    lastkidstart = lastkidend;
-
-    lastkidend = balance(node.children[i], lastkidend) + nodeWidthFunctor(node.children[i]);
-    console.log(lastkidend);
-  }
-    if (node != root){
-      node.x = (firstkidstart + lastkidstart)/2;
-      node.y = (node.depth+1) * 50;
-    }
-    console.log(lastkidend);
-    return lastkidend;
-
-}*/
 
 function balance(root){
 
@@ -308,8 +283,14 @@ function balance(root){
 
   function __balance__(node, start){
 
-    node.x = start + node.subtreeWidth/2;
-    node.y = (node.depth+1) * 50;
+    if (node.children.length > 0){
+      node.x = start + node.subtreeWidth/2;
+      node.y = (node.depth+1) * 50;
+    }
+    else{
+      node.x = start;
+      node.y = (node.depth+1) * 50;
+    }
 
     for (var i = 0; i < node.children.length; i++){
       __balance__(node.children[i], start);
