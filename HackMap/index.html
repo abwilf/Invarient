@@ -281,6 +281,11 @@ function balance(root){
 
   calculateSubtreeWidths(root, nodeWidthFunctor);
 
+  //toggling the root or its subtrees can move it around the page
+  //instead we'll find the difference in position and then shift the whole
+  //tree back in the end
+  anchor = root.x
+
   function __balance__(node, start){
     _start = start
 
@@ -290,10 +295,8 @@ function balance(root){
       start += node.children[i].subtreeWidth;
     }
 
-    if(node == root){
-      //do nothing, otherwise the root drifts to the left or right on toggle
-    }
-    else if (node.children.length > 1){ //balance the node between its children
+
+    if (node.children.length > 1){ //balance the node between its children
       node.x = (node.children[0].x + node.children[node.children.length-1].x) /2;
       node.y = (node.depth+1) * 50;
     }
@@ -309,6 +312,12 @@ function balance(root){
   }
 
   __balance__(root, root.x - root.subtreeWidth/2);
+
+  //Now we shift the tree so that the root remains at the same location
+  diff = anchor - root.x
+  traverseAndDo(root, function(node) {
+    node.x = node.x + diff
+  })
 
 }
 
@@ -402,7 +411,7 @@ add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
 
 add(root.children[1].children[1], new Node(root.x, 475, "I'm the map."));
 
-//add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
+add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
 
 update(root);
 
