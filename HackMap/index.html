@@ -217,8 +217,16 @@ function drawNode(node){
                            .attr("font-size", "15px")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
+/*
+     var lbl = svgContainer.append("text")
+                            .attr("x", node.x)
+                            .attr("y", node.y + 20)
+                            .attr("font-family", "sans-serif")
+                            .attr("font-size", "15px")
+                            .attr("id", "b" + id)
+                            .text( function(d) { return node.x + ", " + node.y });
 
-
+*/
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
     id++;
 
@@ -268,7 +276,7 @@ function nodeWidthFunctor(node) {
 function calculateSubtreeWidths(node){
   __calculateSubtreeWidths(node, nodeWidthFunctor);
 }
-
+/*
 //Each node uses its subtreeWidth and x,y position to place its children
 function balance(node, firstkidstart){
 
@@ -292,7 +300,27 @@ function balance(node, firstkidstart){
     console.log(lastkidend);
     return lastkidend;
 
+}*/
+
+function balance(root){
+
+  calculateSubtreeWidths(root, nodeWidthFunctor);
+
+  function __balance__(node, start){
+
+    node.x = start + node.subtreeWidth/2;
+    node.y = (node.depth+1) * 50;
+
+    for (var i = 0; i < node.children.length; i++){
+      __balance__(node.children[i], start);
+      start += node.children[i].subtreeWidth;
+    }
+  }
+
+  __balance__(root, root.x - root.subtreeWidth/2);
+
 }
+
 
 function update(root){
   arr_map = new Array();	// clear arr
@@ -305,10 +333,7 @@ function update(root){
 
   postTraverseAndDo(root, calculateSubtreeWidths);
 
-
   balance(root, root.x - root.subtreeWidth/2);
-
-
 
   traverseAndDo(root, drawNode);
 
