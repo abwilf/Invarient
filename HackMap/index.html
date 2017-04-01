@@ -269,7 +269,7 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor){
 function nodeWidthFunctor(node) {
     if (node.textsize){
 
-      return node.textsize + 15;
+      return node.textsize + 20;
     }
 }
 
@@ -282,20 +282,30 @@ function balance(root){
   calculateSubtreeWidths(root, nodeWidthFunctor);
 
   function __balance__(node, start){
+    _start = start
 
-    if (node.children.length > 0){
-      node.x = start + node.subtreeWidth/2;
-      node.y = (node.depth+1) * 50;
-    }
-    else{
-      node.x = start;
-      node.y = (node.depth+1) * 50;
-    }
-
+    //tree is built from the bottom up, so balance all children first
     for (var i = 0; i < node.children.length; i++){
       __balance__(node.children[i], start);
       start += node.children[i].subtreeWidth;
     }
+
+    if(node == root){
+      //do nothing, otherwise the root drifts to the left or right on toggle
+    }
+    else if (node.children.length > 1){ //balance the node between its children
+      node.x = (node.children[0].x + node.children[node.children.length-1].x) /2;
+      node.y = (node.depth+1) * 50;
+    }
+    else if (node.children.length == 1){ //place node directly above its child
+      node.x = node.children[0].x
+      node.y = (node.depth+1) * 50;
+    }
+    else{ //leaf, just place the node
+      node.x = _start;
+      node.y = (node.depth+1) * 50;
+    }
+
   }
 
   __balance__(root, root.x - root.subtreeWidth/2);
@@ -392,7 +402,7 @@ add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
 
 add(root.children[1].children[1], new Node(root.x, 475, "I'm the map."));
 
-add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
+//add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
 
 update(root);
 
