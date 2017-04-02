@@ -23,34 +23,14 @@ function keyPressed(e) {
     		case 78:
     			// 0
 		     console.log("The 'n' key is pressed.");
-		     toggleSubtree(root);
 
-		     //context.clearRect(0, 0, $(document).width(), $(document).height());
-
-         traverseAndDo(root, drawNode);
-
-         svgContainer.selectAll("circle")
-         	.on("mouseover", function() {
-         		this.style.cursor = "pointer";
-         		d3.select(this).attr('fill', '#302E1C');
-         	})
-         	.on("mouseout", function() {
-         		d3.select(this).attr('fill', 'white');
-         	})
-          .on("click", function() {
-					if (currentNode != this) {
-						// clear last node
-						d3.select(currentNode).attr('fill', 'white');
-					}
-					currentNode = this;
-					d3.select(this).attr('fill', '#302E1C');
-				})
-				.on("dblclick", function() {
-					console.log("Holla!");
-					toggleSubtree(this);
+         //Fetch the node corresponding to the currently selected svg element
+         temp = d3.select(currentNode).attr("id");
+         selected = arr_map["" + temp]
+		     add(selected, new Node(root.x, 0, "I'm adopted."))
+         update(root)
 
 		     return 0;
-       });
 
     		case 69:
     			// 1
@@ -375,7 +355,7 @@ function update(root){
 }
 
 //set up tree with empty root node
-var root = new Node($(document).width() / 2, 50, "I'm Root.");
+var root = new Node($(document).width() / 2, 50, "I am Root.");
 
 var currentNode; //Yay globals!
 root.depth = 0;
