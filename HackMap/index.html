@@ -26,9 +26,10 @@ function keyPressed(e) {
 
          //Fetch the node corresponding to the currently selected svg element
          temp = d3.select(currentNode).attr("id");
-         selected = arr_map["" + temp]
-		     add(selected, new Node(root.x, 0, "I'm adopted."))
-         update(root)
+         selected = arr_map["" + temp];
+         var txt = prompt("Enter new node text.", "Lorem Ipsum");
+		     add(selected, new Node(root.x, 0, txt));
+         update(root);
 
 		     return 0;
 
@@ -36,6 +37,14 @@ function keyPressed(e) {
     			// 1
 		     console.log("The 'e' key is pressed.");
 		     //context.clearRect(0, 0, $(document).width(), $(document).height());
+
+         //Fetch the node corresponding to the currently selected svg element
+         temp = d3.select(currentNode).attr("id");
+         selected = arr_map["" + temp];
+         var txt = prompt("Enter new node text.", selected.data);
+         selected.data = txt;
+
+         update(root);
 
 		     return 1;
     		case 82:
