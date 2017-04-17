@@ -1,9 +1,9 @@
-#What is a hackmap?
+# What is a hackmap?
 Hackmap is a spatially based alternative to the bulleted list.  It is a system of storing information that allows the user to visualize layers and different types of connections in the system they are trying to model.
 
 You can find more information about this system on [this page](http://www-personal.umich.edu/~abwilf/mapping.html).
 
-#Installation
+# Installation
 1. Clone or fork the repository.
 2. cd into the directory and type ```npm install```
 3. Type ```python -m SimpleHTTPServer```
