@@ -129,9 +129,32 @@ function keyPressed(e) {
 
               return 8;
 
+          case 90:
+
+              console.log("The 'z' key is pressed.");
+
+              var revived = null;
+
+              if (removedNodes.length > 0) {
+
+                revived = removedNodes[removedNodes.length - 1]
+                add( revived.parent, revived);
+                update( root );
+                onSelect( revived );
+                removedNodes.pop();
+
+              }
+
+              return 9;
+
 		case 8:
 			console.log("The 'delete' key is pressed.");
-			return 9;
+
+      remove( getCurrentNode() );
+      update( root );
+      onSelect( getCurrentNode().parent );
+
+			return 10;
     		default:
     			console.log("Pressed an unrecognized key!");
     			return -1;
@@ -243,21 +266,28 @@ function postTraverseAndDo(node, d){
 
 //Given a node pointer, attach a node to it
 function add(parent, child){
-    child.parent = parent;
-    parent.children.push(child);
-    child.depth = parent.depth + 1;
+    if (node.toggle == 0) {
+      child.parent = parent;
+      parent.children.push(child);
+      child.depth = parent.depth + 1;
+    }
+    else {
+      child.parent = parent;
+      parent._children.push(child);
+      child.depth = parent.depth + 1;
+    }
 }
 
-//TODO
+
 function remove(node){
 
       for (var i = 0; i < node.parent.children.length; i++) {
           if (node.parent.children[i] === node) {
               node.parent.children.splice(i, 1);
-            return;
+              removedNodes.push( node );
+              return;
           }
       }
-      // TODO: update
 }
 
 
@@ -479,6 +509,7 @@ var root = new Node($(document).width() / 2, 50, "I am Root.");
 
 var currentNode = root; //Yay globals!
 root.depth = 0;
+var removedNodes = [];
 
 
 //calculateSubtreeWidths(root, nodeWidthFunctor);
@@ -516,6 +547,7 @@ add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
 
 update(root);
 onSelect(root);
+
 
 </script>
 
