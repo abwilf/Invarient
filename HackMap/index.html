@@ -24,27 +24,30 @@ function keyPressed(e) {
     			// 0
 		     console.log("The 'n' key is pressed.");
 
-         //Fetch the node corresponding to the currently selected svg element
-         temp = d3.select(currentNode).attr("id");
-         selected = arr_map["" + temp];
+         //Fetch the current active node.
+         curr = getCurrentNode();
          var txt = prompt("Enter new node text.", "Lorem Ipsum");
-		     add(selected, new Node(root.x, 0, txt));
+         var tmp = new Node(root.x, 0, txt);
+
+		     add( curr, tmp );
+
          update(root);
+         setCurrentNode( tmp );
+         onSelect( tmp );
 
 		     return 0;
 
     		case 69:
     			// 1
 		     console.log("The 'e' key is pressed.");
-		     //context.clearRect(0, 0, $(document).width(), $(document).height());
 
          //Fetch the node corresponding to the currently selected svg element
-         temp = d3.select(currentNode).attr("id");
-         selected = arr_map["" + temp];
-         var txt = prompt("Enter new node text.", selected.data);
-         selected.data = txt;
+         curr = getCurrentNode()
+         var txt = prompt("Enter new node text.", curr.data);
+         curr.data = txt;
 
          update(root);
+         onSelect( curr );
 
 		     return 1;
     		case 82:
@@ -53,18 +56,103 @@ function keyPressed(e) {
     		case 68:
 			console.log("The 'd' key is pressed.");
 			return 3;
+        case 32:
+              console.log("The '(space)' key is pressed.");
+              toggleSubtree( getCurrentNode() );
+              update( root );
+
+              onSelect( getCurrentNode() );
+              return 4;
+
+        case 38:
+              console.log("The 'up arrow' key is pressed.");
+
+              if (getCurrentNode().parent != null) {
+
+                onSelect( getCurrentNode().parent );
+
+              }
+              return 5;
+        case 40:
+              console.log("The 'down arrow' key is pressed.");
+
+              if (getCurrentNode().children.length > 0) {
+
+                onSelect( getCurrentNode().children[0] );
+
+              }
+              return 6;
+        case 37:
+              console.log("The 'left arrow' key is pressed.");
+
+              var depth = getCurrentNode().depth;
+
+              var nodesAtDepth = [];
+
+              traverseAndDo(root, function (d) {
+
+                if (d.depth == depth) {
+                  nodesAtDepth.push(d);
+                }
+
+              });
+
+              for (var i = 1; i < nodesAtDepth.length; i++ ) {
+                if (nodesAtDepth[i] == getCurrentNode()) {
+                  onSelect( nodesAtDepth[i-1] );
+                  break;
+                }
+              }
+
+              return 7;
+
+          case 39:
+              console.log("The 'right arrow' key is pressed.");
+
+              var depth = getCurrentNode().depth;
+
+              var nodesAtDepth = [];
+
+              traverseAndDo(root, function (d) {
+
+                if (d.depth == depth) {
+                  nodesAtDepth.push(d);
+                }
+              });
+
+              for (var i = 0; i < nodesAtDepth.length-1; i++ ) {
+                if (nodesAtDepth[i] == getCurrentNode()) {
+                  onSelect( nodesAtDepth[i+1] );
+                  break;
+                }
+              }
+
+              return 8;
+
 		case 8:
 			console.log("The 'delete' key is pressed.");
-			return 4;
+			return 9;
     		default:
     			console.log("Pressed an unrecognized key!");
     			return -1;
     }
 }
 
+function getClickedNode(clicked) {
+
+  var temp = d3.select(clicked).attr("id");
+  var temp = temp.substr(1);
+  var selected = node_map["" + temp];
+  console.log(selected);
+  return selected
+
+}
+
+
 
 //Constructor for Nodes
 function Node(x, y, data){
+
     this.x = x;
     this.y = y;
 
@@ -72,10 +160,12 @@ function Node(x, y, data){
 
     this.depth = null;
     this.parent = null;
+    this.id = null;
 
     this.children = [];
 
     this.toggle = 0;
+
 }
 
 
@@ -172,7 +262,7 @@ function remove(node){
 
 
 id = 0;
-var arr_map = new Array();
+
 function drawNode(node){
 
 	  if (node.children) {
@@ -194,9 +284,10 @@ function drawNode(node){
                              .attr("fill", "white")
                              .attr("stroke", "black")
                              .attr("stroke-width", 1)
-                             .attr("id", id);
+                             .attr("id", "a" + id);
 
-    arr_map["" + id] = node;
+    node_map["" + id] = node;
+    node.id = id;
 
 
     var text = svgContainer.append("text")
@@ -235,10 +326,6 @@ function toggleSubtree(node){
   }
 }
 
-//from Queue.js by Stephen Morley
-function Queue(){var a=[],b=0;this.getLength=function(){return a.length-b};this.isEmpty=function(){return 0==a.length};this.enqueue=function(b){a.push(b)};this.dequeue=function(){if(0!=a.length){var c=a[b];2*++b>=a.length&&(a=a.slice(b),b=0);return c}};this.peek=function(){return 0<a.length?a[b]:void 0}};
-
-
 function __calculateSubtreeWidths(node, nodeWidthFunctor){
       var sum = 0;
       if (node.children){
@@ -249,7 +336,6 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor){
           sum += Math.max(node.children[i].width, node.children[i].subtreeWidth);
         }
       }
-
       node.subtreeWidth = sum;
       node.width = nodeWidthFunctor(node);
       node.subtreeWidth = Math.max(node.subtreeWidth, node.width);
@@ -312,7 +398,8 @@ function balance(root){
 
 
 function update(root){
-  arr_map = new Array();	// clear arr
+  node_map = new Array();	// clear node_map
+
   id = 0; //clear id
   svgContainer.selectAll("*").remove();
 
@@ -332,30 +419,25 @@ function update(root){
   		d3.select(this).attr('fill', '#302E1C');
   	})
   	.on("mouseout", function() {
-  		if (currentNode != this) {
+  		if (getCurrentNode() != getClickedNode( this )) {
   			d3.select(this).attr('fill', 'white');
   		}
   	})
    	 .on("click", function() {
-  		if (currentNode != this) {
-  			// clear last node
-  			d3.select(currentNode).attr('fill', 'white');
-  		}
-  		currentNode = this;
-  		d3.select(this).attr('fill', '#302E1C');
+
+       var node = getClickedNode( this );
+       onSelect( node );
+       setCurrentNode( node )
+
   	})
   	.on("dblclick", function() {
-  		if (currentNode != this) {
-  			// clear last node
-  			d3.select(currentNode).attr('fill', 'white');
-  		}
-  		currentNode = this;
-  		d3.select(this).attr('fill', '#302E1C');
 
-      temp = d3.select(this).attr("id");
+      node = getClickedNode( this );
+      onSelect( node );
+      setCurrentNode( node );
 
-      console.log(arr_map["" + temp]);
-  		toggleSubtree(arr_map["" + temp]);
+      console.log( getCurrentNode() );
+  		toggleSubtree( getCurrentNode() );
 
       update(root);
 
@@ -363,11 +445,41 @@ function update(root){
 
 }
 
+function getCurrentNode() {
+
+  return currentNode;
+
+}
+
+function setCurrentNode(n) {
+
+  currentNode = n;
+
+}
+
+function getNodeById( id ) {
+
+  return node_map[ id ];
+
+}
+
+function onSelect( node ) {
+
+  if (currentNode != node) {
+    // clear last node
+    d3.select("#a" + getCurrentNode().id).attr('fill', 'white');
+  }
+  currentNode = node;
+  d3.select("#a" + getCurrentNode().id).attr('fill', '#302E1C');
+
+}
+
 //set up tree with empty root node
 var root = new Node($(document).width() / 2, 50, "I am Root.");
 
-var currentNode; //Yay globals!
+var currentNode = root; //Yay globals!
 root.depth = 0;
+
 
 //calculateSubtreeWidths(root, nodeWidthFunctor);
 
@@ -403,6 +515,7 @@ add(root.children[1].children[1], new Node(root.x, 475, "I'm the map."));
 add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
 
 update(root);
+onSelect(root);
 
 </script>
 
