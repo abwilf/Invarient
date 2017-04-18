@@ -266,7 +266,7 @@ function postTraverseAndDo(node, d){
 
 //Given a node pointer, attach a node to it
 function add(parent, child){
-    if (node.toggle == 0) {
+    if (parent.toggle == 0) {
       child.parent = parent;
       parent.children.push(child);
       child.depth = parent.depth + 1;
