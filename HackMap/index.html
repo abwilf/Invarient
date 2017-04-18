@@ -174,7 +174,7 @@ function getClickedNode(clicked) {
 
 
 //Constructor for Nodes
-function Node(x, y, data){
+function Node(x, y, data) {
 
     this.x = x;
     this.y = y;
@@ -196,6 +196,7 @@ function saveToJSON(node_in) {
 	var obj = JSONHelper(root, "");
 	console.log(obj);
 	// write to JSON
+
 }
 // call with root
 function JSONHelper(node_in, string) {
@@ -224,33 +225,35 @@ function JSONHelper(node_in, string) {
 	}
 
 	return string;
+
 }
 
 //Helper function, iterates through tree and calls d on each node
-function traverseAndDo(node, d){
+function traverseAndDo(node, d) {
 
     temp = traverseAndDo;
 
     d(node);
-    traverseAndDo = function(node){
+    traverseAndDo = function(node) {
       d(node);
-      if (node.children){
+      if (node.children) {
         node.children.forEach(traverseAndDo);
       }
     }
-    if (node.children){
+    if (node.children) {
       node.children.forEach(traverseAndDo);
     }
 
     traverseAndDo = temp;
+
 }
 
 //Helper function, iterates through tree and calls d on each node AFTER children
-function postTraverseAndDo(node, d){
+function postTraverseAndDo(node, d) {
 
   temp = postTraverseAndDo;
 
-  postTraverseAndDo = function(node){
+  postTraverseAndDo = function(node) {
     if (node.children) {
       node.children.forEach(postTraverseAndDo);
     }
@@ -262,10 +265,12 @@ function postTraverseAndDo(node, d){
   d(node);
 
   postTraverseAndDo = temp;
+
 }
 
 //Given a node pointer, attach a node to it
-function add(parent, child){
+function add(parent, child) {
+
     if (parent.toggle == 0) {
       child.parent = parent;
       parent.children.push(child);
@@ -276,10 +281,11 @@ function add(parent, child){
       parent._children.push(child);
       child.depth = parent.depth + 1;
     }
+
 }
 
 
-function remove(node){
+function remove(node) {
 
       for (var i = 0; i < node.parent.children.length; i++) {
           if (node.parent.children[i] === node) {
@@ -288,12 +294,13 @@ function remove(node){
               return;
           }
       }
+
 }
 
 
 id = 0;
 
-function drawNode(node){
+function drawNode(node) {
 
 	  if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
@@ -311,7 +318,9 @@ function drawNode(node){
                              .attr("cx", node.x - 10)
                              .attr("cy", node.y - 5)
                              .attr("r", 5)
-                             .attr("fill", "white")
+                             .attr("fill", function (d) {
+                               return getColor( node );
+                             })
                              .attr("stroke", "black")
                              .attr("stroke-width", 1)
                              .attr("id", "a" + id);
@@ -327,40 +336,34 @@ function drawNode(node){
                            .attr("font-size", "15px")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
-/*
-     var lbl = svgContainer.append("text")
-                            .attr("x", node.x)
-                            .attr("y", node.y + 20)
-                            .attr("font-family", "sans-serif")
-                            .attr("font-size", "15px")
-                            .attr("id", "b" + id)
-                            .text( function(d) { return node.x + ", " + node.y });
 
-*/
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
     id++;
 
 }
 
 //Hide/Show the subtree of the selected node
-function toggleSubtree(node){
-  if (node.toggle == 0){
+function toggleSubtree(node) {
+
+  if (node.toggle == 0) {
     node._children = node.children;
     node.children = [];
     node.toggle = 1;
   }
-  else{
+  else {
     node.children = node._children;
     node._children = [];
     node.toggle = 0;
   }
+
 }
 
-function __calculateSubtreeWidths(node, nodeWidthFunctor){
+function __calculateSubtreeWidths(node, nodeWidthFunctor) {
+
       var sum = 0;
-      if (node.children){
+      if (node.children) {
         //console.log("Has children: " + node.children.length);
-        for (var i = 0; i < node.children.length; i++){
+        for (var i = 0; i < node.children.length; i++) {
           //console.log("child " + i + ": has width: " + node.children[i].width);
           //console.log("child " + i + ": has subtreeWidth" + node.children[i].subtreeWidth);
           sum += Math.max(node.children[i].width, node.children[i].subtreeWidth);
@@ -369,13 +372,15 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor){
       node.subtreeWidth = sum;
       node.width = nodeWidthFunctor(node);
       node.subtreeWidth = Math.max(node.subtreeWidth, node.width);
+
 }
 
 function nodeWidthFunctor(node) {
-    if (node.textsize){
 
+    if (node.textsize) {
       return node.textsize + 20;
     }
+
 }
 
 function calculateSubtreeWidths(node){
@@ -389,7 +394,8 @@ function balance(root){
   //toggling the root or its subtrees can move it around the page
   //instead we'll find the difference in position and then shift the whole
   //tree back in the end
-  anchor = root.x
+  anchorx = root.x
+  anchory = root.y
 
   function __balance__(node, start){
     _start = start
@@ -400,18 +406,17 @@ function balance(root){
       start += node.children[i].subtreeWidth;
     }
 
-
     if (node.children.length > 1){ //balance the node between its children
       node.x = (node.children[0].x + node.children[node.children.length-1].x) /2;
-      node.y = (node.depth+1) * 50;
+      node.y = (node.depth+1) * 100;
     }
     else if (node.children.length == 1){ //place node directly above its child
       node.x = node.children[0].x
-      node.y = (node.depth+1) * 50;
+      node.y = (node.depth+1) * 100;
     }
     else{ //leaf, just place the node
       node.x = _start;
-      node.y = (node.depth+1) * 50;
+      node.y = (node.depth+1) * 100;
     }
 
   }
@@ -419,13 +424,15 @@ function balance(root){
   __balance__(root, root.x - root.subtreeWidth/2);
 
   //Now we shift the tree so that the root remains at the same location
-  diff = anchor - root.x
+  var diffx = anchorx - root.x;
+  var diffy = anchory - root.y;
+
   traverseAndDo(root, function(node) {
-    node.x = node.x + diff
+    node.x = node.x + diffx;
+    node.y = node.y + diffy;
   })
 
 }
-
 
 function update(root){
   node_map = new Array();	// clear node_map
@@ -450,7 +457,9 @@ function update(root){
   	})
   	.on("mouseout", function() {
   		if (getCurrentNode() != getClickedNode( this )) {
-  			d3.select(this).attr('fill', 'white');
+  			d3.select(this).attr('fill', function (d) {
+          return getColor(getClickedNode( this ));
+        });
   		}
   	})
    	 .on("click", function() {
@@ -462,7 +471,7 @@ function update(root){
   	})
   	.on("dblclick", function() {
 
-      node = getClickedNode( this );
+      var node = getClickedNode( this );
       onSelect( node );
       setCurrentNode( node );
 
@@ -471,7 +480,23 @@ function update(root){
 
       update(root);
 
-  	  });
+      });
+}
+
+function getColor(node) {
+
+  if (node.toggle == 1) {
+    console.log("#ADD8E6");
+    return "#ADD8E6";
+  }
+  else if (node == getCurrentNode()) {
+    console.log("#302E1C");
+    return "#302E1C";
+  }
+  else {
+    console.log("white");
+    return "white";
+  }
 
 }
 
@@ -489,17 +514,21 @@ function setCurrentNode(n) {
 
 function getNodeById( id ) {
 
-  return node_map[ id ];
+  return node_map[ "" + id ];
 
 }
 
 function onSelect( node ) {
 
-  if (currentNode != node) {
-    // clear last node
-    d3.select("#a" + getCurrentNode().id).attr('fill', 'white');
-  }
+  var temp = currentNode;
   currentNode = node;
+  
+  if (temp != node) {
+    // clear last node
+    d3.select("#a" + temp.id).attr('fill', function (d) {
+      return getColor(temp);
+    });
+  }
   d3.select("#a" + getCurrentNode().id).attr('fill', '#302E1C');
 
 }
@@ -511,9 +540,6 @@ var currentNode = root; //Yay globals!
 root.depth = 0;
 var removedNodes = [];
 
-
-//calculateSubtreeWidths(root, nodeWidthFunctor);
-
 add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
 add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
@@ -521,13 +547,6 @@ add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 add(root.children[0], new Node(root.x, 150, "I'm a Grandson."));
 
 add(root.children[0], new Node(root.x, 200, "I'm a Granddaughter."))
-
-add(root.children[0].children[0], new Node(root.x, 225, "I'm the map."));
-
-add(root.children[0].children[0], new Node(root.x, 275, "I'm the map."))
-
-add(root.children[0].children[0], new Node(root.x, 295, "I'm the map."))
-
 
 add(root.children[0].children[1], new Node(root.x, 250, "I'm a Great-Grandson."));
 
@@ -540,10 +559,6 @@ add(root.children[1], new Node(root.x, 400, "I'm a nephew."))
 add(root.children[1].children[0], new Node(root.x, 450, "I'm a Great-niece."));
 
 add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
-
-add(root.children[1].children[1], new Node(root.x, 475, "I'm the map."));
-
-add(root.children[1].children[1], new Node(root.x, 525, "I'm the map"));
 
 update(root);
 onSelect(root);
