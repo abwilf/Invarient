@@ -5,14 +5,35 @@
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://d3js.org/d3-path.v1.min.js"></script>
 <script src="https://d3js.org/d3-selection.v1.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/d3-shape.v1.min.js"></script>
 </head>
-<body>
+
+<style>
+.overlay {
+
+  background-color: "light-blue";
+
+}
+</style>
+
+<body scroll="no", style="overflow: hidden">
+
+<div id="tree-container"> <div>
 <script>
 
-var svgContainer = d3.select("body").append("svg")
+function zoom() {
+    console.log("zoooom");
+    gGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+var svgContainer = d3.select("#tree-container").append("svg")
                                     .attr("width", $(document).width())
-                                    .attr("height", $(document).height());
+                                    .attr("height", $(document).height())
+                                    .attr("class", "overlay")
+                                    .call(d3.behavior.zoom().scaleExtent([.2, 5]).on("zoom", zoom)).on("dblclick.zoom", null)
+
+var gGroup = d3.select("svg").append("g");
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -32,7 +53,6 @@ function keyPressed(e) {
 		     add( curr, tmp );
 
          update(root);
-         setCurrentNode( tmp );
          onSelect( tmp );
 
 		     return 0;
@@ -304,7 +324,7 @@ function drawNode(node) {
 
 	  if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
-	    var line = svgContainer.append("line")
+	    var line = gGroup.append("line")
 	    					   .attr("x1", node.x-10)
 	    					   .attr("y1", node.y-5)
 	    					   .attr("x2", node.children[i].x-10)
@@ -314,7 +334,7 @@ function drawNode(node) {
 	  }
 	}
 
-    var circle = svgContainer.append("circle")
+    var circle = gGroup.append("circle")
                              .attr("cx", node.x - 10)
                              .attr("cy", node.y - 5)
                              .attr("r", 5)
@@ -329,7 +349,7 @@ function drawNode(node) {
     node.id = id;
 
 
-    var text = svgContainer.append("text")
+    var text = gGroup.append("text")
                            .attr("x", node.x)
                            .attr("y", node.y)
                            .attr("font-family", "sans-serif")
@@ -435,14 +455,17 @@ function balance(root){
 }
 
 function update(root){
+
+
   node_map = new Array();	// clear node_map
 
   id = 0; //clear id
-  svgContainer.selectAll("*").remove();
+  gGroup.selectAll("*").remove();
 
   traverseAndDo(root, drawNode);
 
-  svgContainer.selectAll("*").remove();
+  gGroup.selectAll("*").remove();
+
 
   postTraverseAndDo(root, calculateSubtreeWidths);
 
@@ -450,7 +473,7 @@ function update(root){
 
   traverseAndDo(root, drawNode);
 
-  svgContainer.selectAll("circle")
+  gGroup.selectAll("circle")
   	.on("mouseover", function() {
   		this.style.cursor = "pointer";
   		d3.select(this).attr('fill', '#302E1C');
@@ -522,7 +545,7 @@ function onSelect( node ) {
 
   var temp = currentNode;
   currentNode = node;
-  
+
   if (temp != node) {
     // clear last node
     d3.select("#a" + temp.id).attr('fill', function (d) {
