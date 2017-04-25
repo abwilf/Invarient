@@ -27,13 +27,16 @@ function zoom() {
     gGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
+zoomListener = d3.behavior.zoom(); //use a zoom listener to preserve the scale accross the program.
+
 var svgContainer = d3.select("#tree-container").append("svg")
                                     .attr("width", $(document).width())
                                     .attr("height", $(document).height())
                                     .attr("class", "overlay")
-                                    .call(d3.behavior.zoom().scaleExtent([.2, 5]).on("zoom", zoom)).on("dblclick.zoom", null)
+                                    .call(zoomListener.scaleExtent([.2, 5]).on("zoom", zoom)).on("dblclick.zoom", null)
 
 var gGroup = d3.select("svg").append("g");
+
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -198,7 +201,17 @@ function getMapById(id, callback) {
 }
 
 function hydrateData(data) {
-  // FIXME:
+
+  console.log("Hydrating node (stay thirsty):" , node_in);
+
+  traverseAndDo(data, function(d) {
+    if( typeof(d.children) !== 'undefined') {
+      d.children.forEach(function(child, elem){
+        child.parent = d;
+      })
+    });
+  }
+
 }
 
 $(function() {
@@ -496,7 +509,9 @@ function update(root){
 
        var node = getClickedNode( this );
        onSelect( node );
-       setCurrentNode( node )
+       setCurrentNode( node );
+
+       center( node );
 
   	})
   	.on("dblclick", function() {
@@ -505,10 +520,11 @@ function update(root){
       onSelect( node );
       setCurrentNode( node );
 
-      console.log( getCurrentNode() );
   		toggleSubtree( getCurrentNode() );
 
       update(root);
+
+      center( node );
 
       });
 }
@@ -546,6 +562,23 @@ function getNodeById( id ) {
 
   return node_map[ "" + id ];
 
+}
+
+function center( node ) {
+
+    var source = d3.select("#a" + node.id);
+    console.log(source)
+    scale = zoomListener.scale();
+    x = -source.property("cx").baseVal.value;
+    y = -source.property("cy").baseVal.value;
+    x = x * scale + $(document).width() / 2;
+    y = y * scale + $(document).height() / 8;
+    d3.select('g').transition()
+        .duration(250)
+        .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+    zoomListener.scale(scale);
+    zoomListener.translate([x, y]);
+    console.log( d3.select("#a" + root.id).property("cy").baseVal.value );
 }
 
 function onSelect( node ) {
@@ -592,7 +625,6 @@ add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
 
 update(root);
 onSelect(root);
-
 
 </script>
 
