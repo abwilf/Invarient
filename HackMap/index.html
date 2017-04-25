@@ -191,7 +191,23 @@ function getClickedNode(clicked) {
 
 }
 
+function getMapById(id, callback) {
+  $.getJSON('/data/' + id, function(data, status) {
+    callback(data);
+  });
+}
 
+function hydrateData(data) {
+  // FIXME:
+}
+
+$(function() {
+  var id = window.location.hash.substring(1);
+  getMapById(id, function(data) {
+    // hydrateData(data); // FIXME:
+    console.log(data);
+  })
+});
 
 //Constructor for Nodes
 function Node(x, y, data) {
@@ -208,44 +224,35 @@ function Node(x, y, data) {
     this.children = [];
 
     this.toggle = 0;
-
 }
 
 
 function saveToJSON(node_in) {
-	var obj = JSONHelper(root, "");
+	var obj = JSONHelper(root, []);
 	console.log(obj);
 	// write to JSON
-
+      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
+          console.log(data);
+          console.log(status);
+      })
 }
 // call with root
-function JSONHelper(node_in, string) {
-	// loop through root and children, call this on each
+function JSONHelper(node_in, nodes) {
+    newNodes = dehydrateNode(node_in);
+    nodes.push(newNodes);
+    return nodes;
+}
 
-  temp = node_in.parent;
-  node_in.parent = null;
-  temparr = node_in.children;
-  node_in.children = null;
-
-	// write string to JSON
-  string += JSON.stringify(node_in);
-
-  node_in.parent = temp;
-  node_in.children = temparr;
-
-  if (!(typeof node_in.children != "undefined" && node_in.children != null && node_in.children.length > 0)) {
-		return string;
-	}
-
-	for (i = 0; i < node_in.children.length; ++i) {
-    //console.log(i);
-    //console.log(node_in.children[i]);
-    //console.log(JSONHelper(node_in.children[i], ""));
-		string += JSONHelper(node_in.children[i], "");	// recursive call
-	}
-
-	return string;
-
+function dehydrateNode(node_in) {
+    console.log("Dehydrating node:" , node_in);
+    node_in.parent = null;
+    if (typeof(node_in.children) !== 'undefined')  {
+      node_in.children.forEach(function(child, elem) {
+        child.parent = null;
+        dehydrateNode(child);
+      });
+    }
+    return node_in;
 }
 
 //Helper function, iterates through tree and calls d on each node
