@@ -209,15 +209,14 @@ function hydrateData(data) {
       d.children.forEach(function(child, elem){
         child.parent = d;
       })
-    });
-  }
-
+    }
+  })
 }
 
 $(function() {
   var id = window.location.hash.substring(1);
   getMapById(id, function(data) {
-    // hydrateData(data); // FIXME:
+    hydrateData(data); // FIXME:
     console.log(data);
   })
 });
