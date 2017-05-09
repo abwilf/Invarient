@@ -1,27 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="https://d3js.org/d3-path.v1.min.js"></script>
-<script src="https://d3js.org/d3-selection.v1.min.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://d3js.org/d3-shape.v1.min.js"></script>
-</head>
-
-<style>
-.overlay {
-
-  background-color: "light-blue";
-
-}
-</style>
-
-<body scroll="no", style="overflow: hidden">
-
-<div id="tree-container"> <div>
-<script>
-
 function zoom() {
     console.log("zoooom");
     gGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -40,13 +16,26 @@ var gGroup = d3.select("svg").append("g");
 
 window.addEventListener("keydown", keyPressed, false);
 
- // returns 0 if n (comes from) is pressed, 1 if 'e' is pressed, 2 if r, 3 if d, 4 if delete, -1 else
+
+function save(root) {
+	// FIXME: to implement!
+}
+
 function keyPressed(e) {
 	console.log(e.keyCode);
     switch (e.keyCode) {
     		case 78:
     			// 0
 		     console.log("The 'n' key is pressed.");
+		case 83:
+			console.log("The 's' key is pressed.");
+			if (typeof(root) == 'undefined') {
+				console.log('Cannot save with null root');
+			}
+			else {
+				save(root);
+			}
+			break;
 
          //Fetch the current active node.
          curr = getCurrentNode();
@@ -194,15 +183,14 @@ function getClickedNode(clicked) {
 
 }
 
-function getMapById(id, callback) {
-  $.getJSON('/data/' + id, function(data, status) {
-    callback(data);
-  });
-}
+// function getMapById(id, callback) {
+//   $.getJSON('/data/' + id, function(data, status) {
+//     callback(data);
+//   });
+// }
 
 function hydrateData(data) {
-
-  console.log("Hydrating node (stay thirsty):" , node_in);
+  console.log("Hydrating node (stay thirsty):" , data);
 
   traverseAndDo(data, function(d) {
     if( typeof(d.children) !== 'undefined') {
@@ -213,17 +201,33 @@ function hydrateData(data) {
   })
 }
 
+//////////////////////////////////// BEGIN HERE /////////////////////////////////////////////
+var root;
+var currentNode;
 $(function() {
-  var id = window.location.hash.substring(1);
-  getMapById(id, function(data) {
-    hydrateData(data); // FIXME:
-    console.log(data);
-  })
+	if (App.RESULT != -1) {
+		root = App.RESULT;
+		root = JSON.parse(root.data);
+		root = root[0];
+	}
+	else {
+		root = new Node($(document).width() / 2, 50, "Enter your text here.");
+	}
+
+	console.log(root);
+	hydrateData(root);
+	root.depth = 0;
+	currentNode = root;
+
+	update(root);
+	console.log("Done");
+	onSelect(root);
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Constructor for Nodes
 function Node(x, y, data) {
-
     this.x = x;
     this.y = y;
 
@@ -596,36 +600,28 @@ function onSelect( node ) {
 }
 
 //set up tree with empty root node
-var root = new Node($(document).width() / 2, 50, "I am Root.");
+// var root = new Node($(document).width() / 2, 50, "I am Root.");
 
-var currentNode = root; //Yay globals!
-root.depth = 0;
+
 var removedNodes = [];
 
-add(root, new Node(root.x - 50, 100, "I'm a kid."));
+// add(root, new Node(root.x - 50, 100, "I'm a kid."));
 
-add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
+// add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
 
-add(root.children[0], new Node(root.x, 150, "I'm a Grandson."));
+// add(root.children[0], new Node(root.x, 150, "I'm a Grandson."));
 
-add(root.children[0], new Node(root.x, 200, "I'm a Granddaughter."))
+// add(root.children[0], new Node(root.x, 200, "I'm a Granddaughter."))
 
-add(root.children[0].children[1], new Node(root.x, 250, "I'm a Great-Grandson."));
+// add(root.children[0].children[1], new Node(root.x, 250, "I'm a Great-Grandson."));
 
-add(root.children[0].children[1], new Node(root.x, 300, "I'm a Great-Granddaughter."))
+// add(root.children[0].children[1], new Node(root.x, 300, "I'm a Great-Granddaughter."))
 
-add(root.children[1], new Node(root.x, 350, "I'm a niece."));
+// add(root.children[1], new Node(root.x, 350, "I'm a niece."));
 
-add(root.children[1], new Node(root.x, 400, "I'm a nephew."))
+// add(root.children[1], new Node(root.x, 400, "I'm a nephew."))
 
-add(root.children[1].children[0], new Node(root.x, 450, "I'm a Great-niece."));
+// add(root.children[1].children[0], new Node(root.x, 450, "I'm a Great-niece."));
 
-add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
+// add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
 
-update(root);
-onSelect(root);
-
-</script>
-
-</body>
-</html>

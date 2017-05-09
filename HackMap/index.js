@@ -1,14 +1,29 @@
-////////////////////////// Server Essentials ////////////////////////// 
-var mongo = require('mongodb');
-var MongoClient = mongo.MongoClient
 var express = require('express');
-var app = express();
 var bodyParser = require('body-parser');
+var logger = require('morgan');
+var exphbs = require('express-handlebars');
+var expstate = require('express-state');
+var app = express();
+var PORT = 3000;
+
+var mongo = require('mongodb');
+var MongoClient = mongo.MongoClient;
+
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.listen(80, function() {
-    console.log('Example app listening on port 80!!');
-})
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
+app.use('/public', express.static('public'));
+expstate.extend(app);
+
+app.set("state namespace", 'App');
+// var API_KEYS = {
+// 	"GOOGLE_API_KEY": "102938120938123", 
+// 	"FACEBOOK_API_KEY": "12039812093",
+// }
+// app.expose(API_KEYS, "API_KEYS");
+
 
 var db1;
 MongoClient.connect('mongodb://abwilf:blah123@ds159050.mlab.com:59050/hackmap', function(err, db) {
@@ -17,41 +32,25 @@ MongoClient.connect('mongodb://abwilf:blah123@ds159050.mlab.com:59050/hackmap', 
   db1 = db;
 });
 
-app.get('/', function(req, res) {
-	res.sendFile('./index.html', {root: __dirname});
-	console.log("money");
-})
-
-app.post('/data', function(req, res) {
-	console.log(Object.keys(req.body));
-	var collection = db1.collection('maps');	// name of collection
-	collection.insert(req.body, function(err, result) {
-		console.log(err, result);
-	});
-	res.send(req.body);
-})
+var RESULT;
 
 app.get('/data/:id', function(req, res) {
 	var collection = db1.collection('maps');	// name of collection
 	if (req.params.id) {
 		collection.findOne({_id: new mongo.ObjectID(req.params.id)}, function(err, result) {
-			res.send(result);
-		});
-	} else {
-		collection.findOne({}, function(err, result) {
-			res.send(result);
+			RESULT = result;
+			app.expose(RESULT, "RESULT");
+			res.render("home");
 		});
 	}
 })
-//////////////////////////////////////////////////////////////////////// 
 
+app.get("/", function(req, res) {
+	RESULT = -1;
+	app.expose(RESULT, "RESULT");
+	res.render("home");
+});
 
-// Done so far:
-// 	set up mongodb database
-// 	communicate with it via express
-// 	use their unique identifier to grab maps
-// 	dehydrate nodes to deal with storage
-
-// Need to do:
-// 	rehydrate nodes and re-render root object from them
-// 	push all this shit onto a server (heroku)
+app.listen(PORT, function() {
+    console.log('Server listening on port:', PORT);
+});
