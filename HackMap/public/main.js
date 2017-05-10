@@ -27,16 +27,6 @@ function keyPressed(e) {
     		case 78:
     			// 0
 		     console.log("The 'n' key is pressed.");
-		case 83:
-			console.log("The 's' key is pressed.");
-			if (typeof(root) == 'undefined') {
-				console.log('Cannot save with null root');
-			}
-			else {
-				save(root);
-			}
-			break;
-
          //Fetch the current active node.
          curr = getCurrentNode();
          var txt = prompt("Enter new node text.", "Lorem Ipsum");
@@ -48,6 +38,16 @@ function keyPressed(e) {
          onSelect( tmp );
 
 		     return 0;
+
+case 83:
+      console.log("The 's' key is pressed.");
+      if (typeof(root) == 'undefined') {
+        console.log('Cannot save with null root');
+      }
+      else {
+        save(root);
+      }
+      return 100;
 
     		case 69:
     			// 1
