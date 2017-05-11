@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var dotenv = require('dotenv');
-var map = require('./models/map');
+var Map = require('./models/Map');
 var logger = require('morgan');
 var exphbs = require('express-handlebars');
 var expstate = require('express-state');
@@ -34,20 +34,28 @@ app.set("state namespace", 'App');
 var RESULT;
 
 app.get('/:id', function(req, res) {
-    map.findOne({ _id: req.params.id }, function(err, map) {
+    Map.findOne({ _id: req.params.id }, function(err, m) {
         if (err) throw err;
-        if (!map) return res.send('No map found with that ID.');
-        RESULT = map;
+        if (!m) return res.send('No map found with that ID.');
+        RESULT = m;
 	  app.expose(RESULT, "RESULT");
 	  res.render("home");
     })
 })
 
 app.get("/", function(req, res) {
-	RESULT = -1;
-	app.expose(RESULT, "RESULT");
-	res.render("home");
+    RESULT = -1;
+    app.expose(RESULT, "RESULT");
+    res.render("home");
 });
+
+app.post("/", function(req, res) {
+    var map = new Map({data: "holla!"});
+    map.save(function(err) {
+        if (err) throw err;
+        return res.send("Success!");
+    });
+})
 
 app.listen(PORT, function() {
     console.log('App listening on port:', PORT);

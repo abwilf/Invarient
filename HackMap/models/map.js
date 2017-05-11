@@ -1,21 +1,5 @@
 var mongoose = require('mongoose');
 
-// var reviewSchema = new mongoose.Schema({
-//     rating: {
-//         type: Number,
-//         min: 0.0,
-//         max: 5.0,
-//         required: true
-//     },
-//     comment: {
-//         type: String
-//     },
-//     author: {
-//         type: String,
-//         required: true
-//     }
-// });
-
 var mapSchema = new mongoose.Schema({
     // title: {
     //     type: String,
@@ -38,6 +22,6 @@ var mapSchema = new mongoose.Schema({
     }
 });
 
-var map = mongoose.model('map', mapSchema);
+var Map = mongoose.model('map', mapSchema);
 
-module.exports = map;
+module.exports = Map;
