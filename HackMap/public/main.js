@@ -1,3 +1,6 @@
+// for web socket
+var socket = io();
+
 function zoom() {
     console.log("zoooom");
     gGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -16,10 +19,6 @@ var gGroup = d3.select("svg").append("g");
 
 window.addEventListener("keydown", keyPressed, false);
 
-
-function save(root) {
-	// FIXME: to implement!
-}
 
 function keyPressed(e) {
 	console.log(e.keyCode);
@@ -45,7 +44,7 @@ case 83:
         console.log('Cannot save with null root');
       }
       else {
-        save(root);
+        saveToJSON(root);
       }
       return 100;
 
@@ -78,7 +77,7 @@ case 83:
 
         case 38:
               console.log("The 'up arrow' key is pressed.");
-
+              console.log(root);  // FIXME: DELETE!
               if (getCurrentNode().parent != null) {
 
                 onSelect( getCurrentNode().parent );
@@ -243,14 +242,18 @@ function Node(x, y, data) {
 }
 
 
+// remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
 function saveToJSON(node_in) {
 	var obj = JSONHelper(root, []);
-	console.log(obj);
-	// write to JSON
-      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
-          console.log(data);
-          console.log(status);
-      })
+      obj = JSON.stringify(obj);
+      console.log(obj);
+      socket.emit('save', obj);
+
+	// // write to JSON
+ //      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
+ //          console.log(data);
+ //          console.log(status);
+ //      })
 }
 // call with root
 function JSONHelper(node_in, nodes) {
