@@ -56,10 +56,14 @@ io.on('connection', function(socket) {
 var RESULT;
 
 app.get('/:id', function(req, res) {
-    Map.findOne({ _id: req.params.id }, function(err, m) {
+    console.log("id is: " + req.params.id);
+    Map.findOne({ _id: req.params.id}, function(err, m) {
         if (err) throw err;
-        if (!m) return res.send('No map found with that ID.');
-        
+        if (!m) {
+            console.log('No map found with that ID.');
+            res.send("");
+            return;
+        }
         id = req.params.id; // set id for later saving and such
         RESULT = m;
         app.expose(RESULT, "RESULT");
