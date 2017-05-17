@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HackMap</title>
+	<link href='/public/index_style.css' type='text/css' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<script>
+		var socket = io();
+
+		// catches from server side to redirect 
+		socket.on('created', function(id) {
+		  window.location.href = id;
+		});
+
+		function try_it() {
+              socket.emit('create new map', 'blank');
+		}
+	</script>
+	<div id="first_wrapper">
+		<div class="nav_bar">
+			<a class="name" href="index.html">HackMap</a>
+			<div class="right">
+				<a class="nav_elt" href="projects.html">Features</a>
+				<a class="nav_elt" onclick="try_it()">Try It</a>
+			</div>
+		</div>
+		<div id = "banner">
+			<h2>What will you build?</h2>
+			<a class= "learn" href='#'>learn more</a>
+		</div>
+	</div>
+
+</body>
+</html>

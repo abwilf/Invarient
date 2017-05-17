@@ -22,6 +22,6 @@ var mapSchema = new mongoose.Schema({
     }
 });
 
-var Map = mongoose.model('map', mapSchema);
+var Map = mongoose.model('Map', mapSchema);
 
 module.exports = Map;

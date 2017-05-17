@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var dotenv = require('dotenv');
 var Map = require('./models/Map');
-var logger = require('morgan');
+// var logger = require('morgan');
 var exphbs = require('express-handlebars');
 var expstate = require('express-state');
 var app = express();
@@ -21,7 +21,7 @@ mongoose.connection.on('error', function() {
 });
 
 // set up express app
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -51,6 +51,18 @@ io.on('connection', function(socket) {
           });
         });
     });
+
+    socket.on('create new map', function(obj) {
+        var newMap = new Map ({
+            data: "[{\"x\":462,\"y\":50,\"data\":\"Enter your text here\",\"depth\":0,\"parent\":null,\"id\":1,\"children\":[],\"toggle\":0,\"textsize\":131.68972778320312,\"subtreeWidth\":151.68972778320312,\"width\":151.68972778320312}]"
+         });
+        newMap.save(function(err) {
+            if (err) throw err;
+            // send to client for redirect
+            socket.emit('created', newMap._id);
+            console.log('new id is: '+ newMap._id);
+        })
+     })
 });
 
 var RESULT;
@@ -71,6 +83,10 @@ app.get('/:id', function(req, res) {
     })
 })
 
+app.post('/:id', function(req, res) {
+
+});
+
    // for altering map manually when dealing with saving
         // m.data = "[{\"x\":462,\"y\":50,\"data\":\"I am Root.\",\"depth\":0,\"parent\":null,\"id\":6,\"children\":[{\"x\":462,\"y\":150,\"data\":\"I'm a kid 2.\",\"depth\":1,\"parent\":null,\"id\":7,\"children\":[{\"x\":350.0126953125,\"y\":250,\"data\":\"I'm a niece.\",\"depth\":2,\"parent\":null,\"id\":8,\"children\":[{\"x\":280.642578125,\"y\":350,\"data\":\"I'm a Great-niece.\",\"depth\":3,\"parent\":null,\"id\":9,\"children\":[],\"toggle\":0,\"textsize\":118.740234375,\"subtreeWidth\":138.740234375,\"width\":138.740234375},{\"x\":419.3828125,\"y\":350,\"data\":\"I'm a Great-nephew.\",\"depth\":3,\"parent\":null,\"id\":10,\"children\":[],\"toggle\":0,\"textsize\":134.6044921875,\"subtreeWidth\":154.6044921875,\"width\":154.6044921875}],\"toggle\":0,\"textsize\":76.23046875,\"subtreeWidth\":293.3447265625,\"width\":96.23046875},{\"x\":573.9873046875,\"y\":250,\"data\":\"I'm a nephew.\",\"depth\":2,\"parent\":null,\"id\":11,\"children\":[],\"toggle\":0,\"textsize\":92.0947265625,\"subtreeWidth\":112.0947265625,\"width\":112.0947265625}],\"toggle\":0,\"textsize\":72.0556640625,\"subtreeWidth\":405.439453125,\"width\":92.0556640625}],\"toggle\":0,\"textsize\":69.19189453125,\"subtreeWidth\":405.439453125,\"width\":89.19189453125}]";
         // m.save(function(err) {
@@ -81,9 +97,10 @@ app.get('/:id', function(req, res) {
 
 
 app.get("/", function(req, res) {
-    RESULT = -1;
-    app.expose(RESULT, "RESULT");
-    res.render("home");
+    // RESULT = -1;
+    // app.expose(RESULT, "RESULT");
+    // res.render("home");
+    res.sendFile("/index.html", { root: __dirname + '/site'});
 });
 
 app.post("/", function(req, res) {

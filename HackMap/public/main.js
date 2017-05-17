@@ -166,11 +166,22 @@ case 83:
       onSelect( getCurrentNode().parent );
 
 			return 10;
+
+            // create new map (c), redirect url - TEMPORARY
+            case 67:
+              // sends to server side to create map
+              socket.emit('create new map', 'blank');
+              return 100;
     		default:
     			console.log("Pressed an unrecognized key!");
     			return -1;
     }
 }
+
+// catches from server side to redirect 
+socket.on('created', function(id) {
+  window.location.href = id;
+});
 
 function getClickedNode(clicked) {
 
@@ -224,6 +235,8 @@ $(function() {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 //Constructor for Nodes
 function Node(x, y, data) {
