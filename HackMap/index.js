@@ -86,8 +86,8 @@ app.get('/:id', function(req, res) {
         
 
         // ----------------------------------  DEAR MATT: YOUR QUOTE HERE------------------------------
-        data: "[{\"x\":462,\"y\":50,\"data\":\"\",  \”connection\”:null,\"depth\":0,\"parent\":null,\"id\”:0,\”children\”[{\"x\":462,\”y\”:100,\"data\”:\”\”,\”connection\”:\”neoroot\”,\”depth\":0,\"parent\":null,\"id\”:0,\”children\”[]}] ]”
-        // ----------------------------------------------------------------------------------------------------------------------------------------
+        data: "[{\"x\":462,\"y\":50,\"data\":\"Enter your text here\",\"depth\":0,\"parent\":null,\"id\":1,\"children\":[],\"toggle\":0,\"textsize\":131.68972778320312,\"subtreeWidth\":151.68972778320312,\"width\":151.68972778320312}]"
+        // 
     });
     RESULT = newMap;
     app.expose(RESULT, "RESULT");
