@@ -76,10 +76,27 @@ dragListener = d3.behavior.drag()
           }
       }
       node.parent = null;
+      node.connection = "line";
 
       add(dragTarget, node);
 
       dragTarget = null;
+    }
+
+    else if (!dragTarget){
+      for (var i = 0; i < node.parent.children.length; i++) {
+          if (node.parent.children[i] === node) {
+              node.parent.children.splice(i, 1);
+          }
+      }
+      node.parent = null;
+
+      node.connection = "neoroot";
+
+      add(root, node);
+
+      dragTarget = null;
+
     }
 
     if (nodeInitialState == 0) {
@@ -316,9 +333,35 @@ case 83:
 
 
 
-            return 12;
+            return 13;
 
+    case 89:
+            console.log("The 'y' key is pressed.");
+            curr = getCurrentNode();
 
+            var lbl = prompt("Enter label connection type. [arrow], [line], [custom]", "line");
+            if (!lbl){
+                lbl = curr.connection;
+            }
+            else if (lbl == "arrow" || lbl == "line"){
+
+            }
+
+            else if (lbl == "custom") {
+              var lbl = prompt("Enter custom connection type.", "Lorem Ipsum");
+
+              if (!lbl){
+                lbl = curr.connection
+              }
+            }
+
+            curr.connection = lbl;
+
+            update(root);
+
+            onSelect( curr );
+
+            return 14;
 
             // create new map (c), redirect url - TEMPORARY
             case 67:
