@@ -68,19 +68,30 @@ io.on('connection', function(socket) {
 var RESULT;
 
 app.get('/:id', function(req, res) {
-    console.log("id is: " + req.params.id);
-    Map.findOne({ _id: req.params.id}, function(err, m) {
-        if (err) throw err;
-        if (!m) {
-            console.log('No map found with that ID.');
-            res.send("");
-            return;
-        }
-        id = req.params.id; // set id for later saving and such
-        RESULT = m;
-        app.expose(RESULT, "RESULT");
-        res.render("home");
-    })
+    // console.log("id is: " + req.params.id);
+    // Map.findOne({ _id: req.params.id}, function(err, m) {
+    //     if (err) throw err;
+    //     if (!m) {
+    //         console.log('No map found with that ID.');
+    //         res.send("");
+    //         return;
+    //     }
+    //     id = req.params.id; // set id for later saving and such
+    //     RESULT = m;
+    //     app.expose(RESULT, "RESULT");
+    //     res.render("home");
+    // })
+    console.log("holla!");
+     var newMap = new Map ({
+        
+
+        // ----------------------------------  DEAR MATT: YOUR QUOTE HERE------------------------------
+        data: "[{\"x\":462,\"y\":50,\"data\":\"\",  \”connection\”:null,\"depth\":0,\"parent\":null,\"id\”:0,\”children\”[{\"x\":462,\”y\”:100,\"data\”:\”\”,\”connection\”:\”neoroot\”,\”depth\":0,\"parent\":null,\"id\”:0,\”children\”[]}] ]”
+        // ----------------------------------------------------------------------------------------------------------------------------------------
+    });
+    RESULT = newMap;
+    app.expose(RESULT, "RESULT");
+    res.render("home");
 })
 
 app.post('/:id', function(req, res) {
