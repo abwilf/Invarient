@@ -105,12 +105,16 @@ function keyPressed(e) {
          //Fetch the current active node.
          curr = getCurrentNode();
          var txt = prompt("Enter new node text.", "Lorem Ipsum");
-         var tmp = new Node(root.x, 0, txt);
+         if (txt) {
+           var tmp = new Node(root.x, 0, txt);
 
-		     add( curr, tmp );
+           add( curr, tmp );
 
-         update(root);
-         onSelect( tmp );
+           update(root);
+           onSelect( tmp );
+         }
+
+
 
 		     return 0;
 
@@ -257,13 +261,17 @@ case 83:
       //Fetch the current active node.
       curr = getCurrentNode();
       var txt = prompt("Enter new node text.", "Lorem Ipsum");
-      var tmp = new Node(root.x, 0, txt);
-      tmp.connection = "arrow";
 
-      add( curr, tmp );
+      if (txt) {
+        var tmp = new Node(root.x, 0, txt);
 
-      update(root);
-      onSelect( tmp );
+        tmp.connection = "arrow";
+
+        add( curr, tmp );
+
+        update(root);
+        onSelect( tmp );
+      }
 
       return 11;
 
@@ -271,13 +279,17 @@ case 83:
         console.log("The 'f' key is pressed.");
 
         var txt = prompt("Enter new node text.", "Lorem Ipsum");
-        var tmp = new Node(root.x, 0, txt);
-        tmp.connection = "neoroot";
 
-        add( root, tmp );
+        if (txt) {
+          var tmp = new Node(root.x, 0, txt);
 
-        update(root);
-        onSelect( tmp );
+          tmp.connection = "neoroot";
+
+          add( root, tmp );
+
+          update(root);
+          onSelect( tmp );
+        }
 
         return 12;
 
@@ -285,15 +297,24 @@ case 83:
             console.log("The 'm' key is pressed.");
             curr = getCurrentNode();
 
-            var lbl = prompt("Enter custom connection label.", "Lorem");
+            var lbl = prompt("Enter custom connection label.", "Lorem Ipsum");
+            if (!lbl){
+              lbl = "line";
+            }
             var txt = prompt("Enter new node text.", "Lorem Ipsum");
-            var tmp = new Node(root.x, 0, txt);
-            tmp.connection = lbl;
 
-            add( curr, tmp );
+            if (txt) {
+              var tmp = new Node(root.x, 0, txt);
 
-            update(root);
-            onSelect( tmp );
+              tmp.connection = lbl;
+
+              add( curr, tmp );
+
+              update(root);
+              onSelect( tmp );
+            }
+
+
 
             return 12;
 
@@ -548,7 +569,7 @@ function drawNode(node) {
             else if (node.children[i].connection != "line"){
 
                 var lbl = gGroup.append("text")
-                                     .attr("x", (node.x + node.children[i].x)/2 )
+                                     .attr("x", (node.x + node.children[i].x)/2 + 5)
                                      .attr("y", (node.y + node.children[i].y)/2)
                                      .attr("font-family", "sans-serif")
                                      .attr("font-size", "15px")
