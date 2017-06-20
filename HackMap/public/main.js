@@ -2,7 +2,7 @@
 var socket = io();
 
 function zoom() {
-    console.log("zoooom");
+    //console.log("zoooom");
     gGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
@@ -16,6 +16,82 @@ var svgContainer = d3.select("#tree-container").append("svg")
 
 var gGroup = d3.select("svg").append("g");
 
+dragListener = d3.behavior.drag()
+  .on("dragstart", function(){
+    console.log("Drag starting.");
+    var node = getClickedNode( this );
+
+    if (node == root) {
+        return;
+    }
+
+    console.log(d3.select(this).attr("cx"));
+    console.log(d3.select(this).attr("cy"));
+    node.x = Number(d3.select(this).attr("cx"));
+    node.y = Number(d3.select(this).attr("cy"));
+
+    d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
+
+    dragStarted = true;
+
+    d3.event.sourceEvent.stopPropagation();
+  })
+  .on("drag", function(){
+    console.log("Dragging.");
+    var node = getClickedNode( this );
+
+    if (node == root) {
+        return;
+    }
+
+    if (dragStarted == true) {
+      dragOn( node );
+    }
+
+    var svgnode = d3.select(this);
+
+    scale = zoomListener.scale();
+
+
+    node.x += d3.event.dx;
+    node.y += d3.event.dy;
+
+    svgnode.attr("transform", "translate(" + node.x + "," + node.y +")");
+
+  })
+  .on("dragend", function() {
+
+    var node = getClickedNode( this );
+
+    if (node == root) {
+        return;
+    }
+
+    if (dragTarget && dragTarget != node){
+      console.log("Drag target present!")
+      //Remove node from previous parent
+      for (var i = 0; i < node.parent.children.length; i++) {
+          if (node.parent.children[i] === node) {
+              node.parent.children.splice(i, 1);
+          }
+      }
+      node.parent = null;
+
+      add(dragTarget, node);
+
+      dragTarget = null;
+    }
+
+    if (nodeInitialState == 0) {
+      toggleSubtree( node );
+      nodeInitialState = -1;
+    }
+
+    d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
+
+    update( root );
+    onSelect( node );
+});
 
 window.addEventListener("keydown", keyPressed, false);
 
@@ -54,8 +130,16 @@ case 83:
 
          //Fetch the node corresponding to the currently selected svg element
          curr = getCurrentNode()
+         var oldTxt = curr.data;
          var txt = prompt("Enter new node text.", curr.data);
-         curr.data = txt;
+
+         if ( txt ){
+           //console.log("Wasn't null.");
+           curr.data = txt;
+         }
+         else {
+           curr.data = oldTxt;
+         }
 
          update(root);
          onSelect( curr );
@@ -77,8 +161,8 @@ case 83:
 
         case 38:
               console.log("The 'up arrow' key is pressed.");
-              console.log(root);  // FIXME: DELETE!
-              if (getCurrentNode().parent != null) {
+              //console.log(root);  // FIXME: DELETE!
+              if (getCurrentNode().parent != root) {
 
                 onSelect( getCurrentNode().parent );
 
@@ -167,6 +251,54 @@ case 83:
 
 			return 10;
 
+    case 65:
+      console.log("The 'a' key is pressed.");
+
+      //Fetch the current active node.
+      curr = getCurrentNode();
+      var txt = prompt("Enter new node text.", "Lorem Ipsum");
+      var tmp = new Node(root.x, 0, txt);
+      tmp.connection = "arrow";
+
+      add( curr, tmp );
+
+      update(root);
+      onSelect( tmp );
+
+      return 11;
+
+    case 70:
+        console.log("The 'f' key is pressed.");
+
+        var txt = prompt("Enter new node text.", "Lorem Ipsum");
+        var tmp = new Node(root.x, 0, txt);
+        tmp.connection = "neoroot";
+
+        add( root, tmp );
+
+        update(root);
+        onSelect( tmp );
+
+        return 12;
+
+    case 77:
+            console.log("The 'm' key is pressed.");
+            curr = getCurrentNode();
+
+            var lbl = prompt("Enter custom connection label.", "Lorem");
+            var txt = prompt("Enter new node text.", "Lorem Ipsum");
+            var tmp = new Node(root.x, 0, txt);
+            tmp.connection = lbl;
+
+            add( curr, tmp );
+
+            update(root);
+            onSelect( tmp );
+
+            return 12;
+
+
+
             // create new map (c), redirect url - TEMPORARY
             case 67:
               // sends to server side to create map
@@ -178,7 +310,7 @@ case 83:
     }
 }
 
-// catches from server side to redirect 
+// catches from server side to redirect
 socket.on('created', function(id) {
   window.location.href = id;
 });
@@ -188,7 +320,6 @@ function getClickedNode(clicked) {
   var temp = d3.select(clicked).attr("id");
   var temp = temp.substr(1);
   var selected = node_map["" + temp];
-  console.log(selected);
   return selected
 
 }
@@ -214,6 +345,10 @@ function hydrateData(data) {
 //////////////////////////////////// BEGIN HERE /////////////////////////////////////////////
 var root;
 var currentNode;
+var dragStarted;
+var dragTarget;
+var nodeOriginalState;
+
 $(function() {
 	if (App.RESULT != -1) {
 		root = App.RESULT;
@@ -224,14 +359,14 @@ $(function() {
 		root = new Node($(document).width() / 2, 50, "Enter your text here.");
 	}
 
-	console.log(root);
+	//console.log(root);
 	hydrateData(root);
 	root.depth = 0;
 	currentNode = root;
 
 	update(root);
 	console.log("Done");
-	onSelect(root);
+	onSelect(root.children[0]);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -243,6 +378,8 @@ function Node(x, y, data) {
     this.x = x;
     this.y = y;
 
+    this.connection = "line"; //types: line, arrow, custom
+
     this.data = data;
 
     this.depth = null;
@@ -253,6 +390,8 @@ function Node(x, y, data) {
 
     this.toggle = 0;
 }
+
+
 
 
 // remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
@@ -358,18 +497,66 @@ function remove(node) {
 
 
 id = 0;
+var nodeInitialState;
+
+function dragOn(node) {
+
+  //If children are visible hide them.
+  if (node.toggle == 0) {
+    toggleSubtree( node );
+    nodeInitialState = 0;
+  }
+
+  dragStarted = false;
+
+  var source = d3.select("#a" + node.id);
+
+}
+
+// define marker
+d3.select("svg").append("svg:defs").selectAll("marker")
+    .data(["end"])      // Different link/path types can be defined here
+  .enter().append("svg:marker")    // This section adds in the arrows
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5");
 
 function drawNode(node) {
 
 	  if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
-	    var line = gGroup.append("line")
+        if (node.children[i].connection != "neoroot") {
+
+	         var line = gGroup.append("line")
 	    					   .attr("x1", node.x-10)
 	    					   .attr("y1", node.y-5)
 	    					   .attr("x2", node.children[i].x-10)
 	    					   .attr("y2", node.children[i].y-5)
 	    					   .attr("stroke-width", 2)
 	    					   .attr("stroke", "black");
+
+            if (node.children[i].connection == "arrow") {
+              line.attr("marker-end", "url(#end)")
+            }
+
+            else if (node.children[i].connection != "line"){
+
+                var lbl = gGroup.append("text")
+                                     .attr("x", (node.x + node.children[i].x)/2 )
+                                     .attr("y", (node.y + node.children[i].y)/2)
+                                     .attr("font-family", "sans-serif")
+                                     .attr("font-size", "15px")
+                                     .attr("font-style", "italic")
+                                     .text( function(d) { return node.children[i].connection });
+
+            }
+      }
 	  }
 	}
 
@@ -395,6 +582,18 @@ function drawNode(node) {
                            .attr("font-size", "15px")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
+
+    var ghost = gGroup.append("circle")
+        .attr("cx", node.x - 10)
+        .attr("cy", node.y - 5)
+        .attr('class', 'ghostCircle')
+        .attr("r", 30)
+        .attr("opacity", 0.2) // change this to zero to hide the target area
+        .attr("id", "a" + id)
+        .style("fill", "red")
+        //.attr("pointer-events", "none");
+
+
 
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
     id++;
@@ -516,9 +715,11 @@ function update(root){
   	.on("mouseover", function() {
   		this.style.cursor = "pointer";
   		d3.select(this).attr('fill', '#302E1C');
+      dragTarget = getClickedNode( this );
   	})
   	.on("mouseout", function() {
   		if (getCurrentNode() != getClickedNode( this )) {
+        dragTarget = null;
   			d3.select(this).attr('fill', function (d) {
           return getColor(getClickedNode( this ));
         });
@@ -545,7 +746,20 @@ function update(root){
 
       center( node );
 
-      });
+      })
+    .call(dragListener);
+
+    gGroup.selectAll(".ghostcircle")
+    	.on("mouseover", function() {
+    		this.style.cursor = "pointer";
+
+        dragTarget = getClickedNode( this );
+
+    	})
+    	.on("mouseout", function() {
+    		dragTarget = null;
+    	})
+
 }
 
 function getColor(node) {
@@ -586,12 +800,12 @@ function getNodeById( id ) {
 function center( node ) {
 
     var source = d3.select("#a" + node.id);
-    console.log(source)
+    //console.log(source)
     scale = zoomListener.scale();
     x = -source.property("cx").baseVal.value;
     y = -source.property("cy").baseVal.value;
     x = x * scale + $(document).width() / 2;
-    y = y * scale + $(document).height() / 8;
+    y = y * scale + $(document).height() / 4;
     d3.select('g').transition()
         .duration(250)
         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
@@ -613,6 +827,8 @@ function onSelect( node ) {
   }
   d3.select("#a" + getCurrentNode().id).attr('fill', '#302E1C');
 
+  center( node );
+
 }
 
 //set up tree with empty root node
@@ -620,24 +836,3 @@ function onSelect( node ) {
 
 
 var removedNodes = [];
-
-// add(root, new Node(root.x - 50, 100, "I'm a kid."));
-
-// add(root, new Node(root.x + 50, 100, "I'm a kid 2."));
-
-// add(root.children[0], new Node(root.x, 150, "I'm a Grandson."));
-
-// add(root.children[0], new Node(root.x, 200, "I'm a Granddaughter."))
-
-// add(root.children[0].children[1], new Node(root.x, 250, "I'm a Great-Grandson."));
-
-// add(root.children[0].children[1], new Node(root.x, 300, "I'm a Great-Granddaughter."))
-
-// add(root.children[1], new Node(root.x, 350, "I'm a niece."));
-
-// add(root.children[1], new Node(root.x, 400, "I'm a nephew."))
-
-// add(root.children[1].children[0], new Node(root.x, 450, "I'm a Great-niece."));
-
-// add(root.children[1].children[0], new Node(root.x, 500, "I'm a Great-nephew."));
-
