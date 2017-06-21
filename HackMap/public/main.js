@@ -25,8 +25,8 @@ dragListener = d3.behavior.drag()
         return;
     }
 
-    console.log(d3.select(this).attr("cx"));
-    console.log(d3.select(this).attr("cy"));
+    //console.log(d3.select(this).attr("cx"));
+    //console.log(d3.select(this).attr("cy"));
     node.x = Number(d3.select(this).attr("cx"));
     node.y = Number(d3.select(this).attr("cy"));
 
@@ -45,7 +45,8 @@ dragListener = d3.behavior.drag()
     }
 
     if (dragStarted == true) {
-      dragOn( node );
+
+      ( node );
     }
 
     var svgnode = d3.select(this);
@@ -56,7 +57,7 @@ dragListener = d3.behavior.drag()
     node.x += d3.event.dx;
     node.y += d3.event.dy;
 
-    svgnode.attr("transform", "translate(" + node.x + "," + node.y +")");
+    //svgnode.attr("transform", "translate(" + node.x + "," + node.y +")");
 
   })
   .on("dragend", function() {
@@ -96,6 +97,11 @@ dragListener = d3.behavior.drag()
       add(root, node);
 
       dragTarget = null;
+
+    }
+    else{
+      console.log("Weird!");
+      console.log(dragTarget);
 
     }
 
@@ -420,19 +426,12 @@ $(function() {
 		root = root[0];
 	}
 	else {
+    ///////////////////////////// TODO: REMOVE THIS //////////////////////////////////////
 		root = new Node($(document).width() / 2, 50, "Enter your text here.");
 	}
 
 	//console.log(root);
 	hydrateData(root);
-  /*
-  root = null;
-  root = new Node($(document).width() / 2, 50, "");
-  var tmp = new Node(0,0, "Enter your text here.");
-  tmp.connection = "neoroot";
-
-  add(root, tmp);
-  */
 
 	root.depth = 0;
 	currentNode = root;
@@ -601,8 +600,6 @@ d3.select("svg").append("svg:defs").selectAll("marker")
     .attr("d", "M0,-5L10,0L0,5");
 
 function drawNode(node) {
-
-    console.log(node.x);
 
 	  if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
@@ -801,8 +798,8 @@ function update(root){
       dragTarget = getClickedNode( this );
   	})
   	.on("mouseout", function() {
+      dragTarget = null;
   		if (getCurrentNode() != getClickedNode( this )) {
-        dragTarget = null;
   			d3.select(this).attr('fill', function (d) {
           return getColor(getClickedNode( this ));
         });
@@ -836,10 +833,12 @@ function update(root){
     	.on("mouseover", function() {
     		this.style.cursor = "pointer";
 
+        console.log("MOUSED OVER GHOST CIRCLE.");
         dragTarget = getClickedNode( this );
 
     	})
     	.on("mouseout", function() {
+        console.log("MOUSEOUT GHOST CIRCLE.");
     		dragTarget = null;
     	})
 
@@ -848,15 +847,15 @@ function update(root){
 function getColor(node) {
 
   if (node.toggle == 1) {
-    console.log("#ADD8E6");
+    //console.log("#ADD8E6");
     return "#ADD8E6";
   }
   else if (node == getCurrentNode()) {
-    console.log("#302E1C");
+    //console.log("#302E1C");
     return "#302E1C";
   }
   else {
-    console.log("white");
+    //console.log("white");
     return "white";
   }
 
@@ -894,7 +893,7 @@ function center( node ) {
         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
     zoomListener.scale(scale);
     zoomListener.translate([x, y]);
-    console.log( d3.select("#a" + root.id).property("cy").baseVal.value );
+    //console.log( d3.select("#a" + root.id).property("cy").baseVal.value );
 }
 
 function onSelect( node ) {
