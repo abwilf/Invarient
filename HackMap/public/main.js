@@ -120,26 +120,28 @@ window.addEventListener("keydown", keyPressed, false);
 
 
 function keyPressed(e) {
-	console.log(e.keyCode);
+  console.log(e.keyCode);
     switch (e.keyCode) {
-    		case 78:
-    			// 0
-		     console.log("The 'n' key is pressed.");
-         //Fetch the current active node.
-         curr = getCurrentNode();
-         var txt = prompt("Enter new node text.", "Lorem Ipsum");
-         if (txt) {
-           var tmp = new Node(root.x, 0, txt);
+        case 78:
+          // 0
+         console.log("The 'n' key is pressed.");
+                  
+      //Fetch the current active node.
+      curr = getCurrentNode();
+      var txt = prompt("Enter new node text.", "Lorem Ipsum");
 
-           add( curr, tmp );
+      if (txt) {
+        var tmp = new Node(root.x, 0, txt);
 
-           update(root);
-           onSelect( tmp );
-         }
+        tmp.connection = "arrow";
 
+        add( curr, tmp );
 
+        update(root);
+        onSelect( tmp );
+      }
 
-		     return 0;
+         return 0;
 
 case 83:
       console.log("The 's' key is pressed.");
@@ -151,9 +153,9 @@ case 83:
       }
       return 100;
 
-    		case 69:
-    			// 1
-		     console.log("The 'e' key is pressed.");
+        case 69:
+          // 1
+         console.log("The 'e' key is pressed.");
 
          //Fetch the node corresponding to the currently selected svg element
          curr = getCurrentNode()
@@ -171,13 +173,27 @@ case 83:
          update(root);
          onSelect( curr );
 
-		     return 1;
-    		case 82:
-	           console.log("The 'r' key is pressed.");
-	           return 2;
-    		case 68:
-			console.log("The 'd' key is pressed.");
-			return 3;
+         return 1;
+        case 82:
+             console.log("The 'r' key is pressed.");
+             return 2;
+        case 68:
+      console.log("The 'd' key is pressed.");
+
+                    //Fetch the current active node.
+                         curr = getCurrentNode();
+                         var txt = prompt("Enter new node text.", "Lorem Ipsum");
+                         if (txt) {
+                           var tmp = new Node(root.x, 0, txt);
+
+                           add( curr, tmp );
+
+                           update(root);
+                           onSelect( tmp );
+                         }
+
+
+      return 3;
         case 32:
               console.log("The '(space)' key is pressed.");
               toggleSubtree( getCurrentNode() );
@@ -269,32 +285,17 @@ case 83:
 
               return 9;
 
-		case 8:
-			console.log("The 'delete' key is pressed.");
+    case 8:
+      console.log("The 'delete' key is pressed.");
 
       remove( getCurrentNode() );
       update( root );
       onSelect( getCurrentNode().parent );
 
-			return 10;
+      return 10;
 
     case 65:
       console.log("The 'a' key is pressed.");
-
-      //Fetch the current active node.
-      curr = getCurrentNode();
-      var txt = prompt("Enter new node text.", "Lorem Ipsum");
-
-      if (txt) {
-        var tmp = new Node(root.x, 0, txt);
-
-        tmp.connection = "arrow";
-
-        add( curr, tmp );
-
-        update(root);
-        onSelect( tmp );
-      }
 
       return 11;
 
@@ -318,26 +319,7 @@ case 83:
 
     case 77:
             console.log("The 'm' key is pressed.");
-            curr = getCurrentNode();
-
-            var lbl = prompt("Enter custom connection label.", "Lorem Ipsum");
-            if (!lbl){
-              lbl = "line";
-            }
-            var txt = prompt("Enter new node text.", "Lorem Ipsum");
-
-            if (txt) {
-              var tmp = new Node(root.x, 0, txt);
-
-              tmp.connection = lbl;
-
-              add( curr, tmp );
-
-              update(root);
-              onSelect( tmp );
-            }
-
-
+            
 
             return 13;
 
@@ -372,11 +354,31 @@ case 83:
             // create new map (c), redirect url - TEMPORARY
             case 67:
               // sends to server side to create map
-              socket.emit('create new map', 'blank');
+              console.log("The 'c' key is pressed.");
+              // socket.emit('create new map', 'blank');
+                      curr = getCurrentNode();
+
+                    var lbl = prompt("Enter custom connection label.", "Lorem Ipsum");
+                    if (!lbl){
+                      lbl = "line";
+                    }
+                    var txt = prompt("Enter new node text.", "Lorem Ipsum");
+
+                    if (txt) {
+                      var tmp = new Node(root.x, 0, txt);
+
+                      tmp.connection = lbl;
+
+                      add( curr, tmp );
+
+                      update(root);
+                      onSelect( tmp );
+                    }
+
               return 100;
-    		default:
-    			console.log("Pressed an unrecognized key!");
-    			return -1;
+        default:
+          console.log("Pressed an unrecognized key!");
+          return -1;
     }
 }
 
@@ -420,25 +422,25 @@ var dragTarget;
 var nodeOriginalState;
 
 $(function() {
-	if (App.RESULT != -1) {
-		root = App.RESULT;
-		root = JSON.parse(root.data);
-		root = root[0];
-	}
-	else {
+  if (App.RESULT != -1) {
+    root = App.RESULT;
+    root = JSON.parse(root.data);
+    root = root[0];
+  }
+  else {
     ///////////////////////////// TODO: REMOVE THIS //////////////////////////////////////
-		root = new Node($(document).width() / 2, 50, "Enter your text here.");
-	}
+    root = new Node($(document).width() / 2, 50, "Enter your text here.");
+  }
 
-	//console.log(root);
-	hydrateData(root);
+  //console.log(root);
+  hydrateData(root);
 
-	root.depth = 0;
-	currentNode = root;
+  root.depth = 0;
+  currentNode = root;
 
-	update(root);
-	console.log("Done");
-	onSelect(root.children[0]);
+  update(root);
+  console.log("Done");
+  onSelect(root.children[0]);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -468,12 +470,12 @@ function Node(x, y, data) {
 
 // remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
 function saveToJSON(node_in) {
-	var obj = JSONHelper(root, []);
+  var obj = JSONHelper(root, []);
       obj = JSON.stringify(obj);
       console.log(obj);
       socket.emit('save', obj);
 
-	// // write to JSON
+  // // write to JSON
  //      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
  //          console.log(data);
  //          console.log(status);
@@ -601,17 +603,17 @@ d3.select("svg").append("svg:defs").selectAll("marker")
 
 function drawNode(node) {
 
-	  if (node.children) {
+    if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
         if (node.children[i].connection != "neoroot") {
 
-	         var line = gGroup.append("line")
-	    					   .attr("x1", node.x-10)
-	    					   .attr("y1", node.y-5)
-	    					   .attr("x2", node.children[i].x-10)
-	    					   .attr("y2", node.children[i].y-5)
-	    					   .attr("stroke-width", 2)
-	    					   .attr("stroke", "black");
+           var line = gGroup.append("line")
+                   .attr("x1", node.x-10)
+                   .attr("y1", node.y-5)
+                   .attr("x2", node.children[i].x-10)
+                   .attr("y2", node.children[i].y-5)
+                   .attr("stroke-width", 2)
+                   .attr("stroke", "black");
 
             if (node.children[i].connection == "arrow") {
               line.attr("marker-end", "url(#end)")
@@ -629,8 +631,8 @@ function drawNode(node) {
 
             }
       }
-	  }
-	}
+    }
+  }
 
     var circle = gGroup.append("circle")
                              .attr("cx", node.x - 10)
@@ -775,7 +777,7 @@ function balance(root){
 function update(root){
 
 
-  node_map = new Array();	// clear node_map
+  node_map = new Array(); // clear node_map
 
   id = 0; //clear id
   gGroup.selectAll("*").remove();
@@ -792,20 +794,20 @@ function update(root){
   traverseAndDo(root, drawNode);
 
   gGroup.selectAll("circle")
-  	.on("mouseover", function() {
-  		this.style.cursor = "pointer";
-  		d3.select(this).attr('fill', '#302E1C');
+    .on("mouseover", function() {
+      this.style.cursor = "pointer";
+      d3.select(this).attr('fill', '#302E1C');
       dragTarget = getClickedNode( this );
-  	})
-  	.on("mouseout", function() {
+    })
+    .on("mouseout", function() {
       dragTarget = null;
-  		if (getCurrentNode() != getClickedNode( this )) {
-  			d3.select(this).attr('fill', function (d) {
+      if (getCurrentNode() != getClickedNode( this )) {
+        d3.select(this).attr('fill', function (d) {
           return getColor(getClickedNode( this ));
         });
-  		}
-  	})
-   	 .on("click", function() {
+      }
+    })
+     .on("click", function() {
 
        var node = getClickedNode( this );
        onSelect( node );
@@ -813,14 +815,14 @@ function update(root){
 
        center( node );
 
-  	})
-  	.on("dblclick", function() {
+    })
+    .on("dblclick", function() {
 
       var node = getClickedNode( this );
       onSelect( node );
       setCurrentNode( node );
 
-  		toggleSubtree( getCurrentNode() );
+      toggleSubtree( getCurrentNode() );
 
       update(root);
 
@@ -830,17 +832,17 @@ function update(root){
     .call(dragListener);
 
     gGroup.selectAll(".ghostcircle")
-    	.on("mouseover", function() {
-    		this.style.cursor = "pointer";
+      .on("mouseover", function() {
+        this.style.cursor = "pointer";
 
         console.log("MOUSED OVER GHOST CIRCLE.");
         dragTarget = getClickedNode( this );
 
-    	})
-    	.on("mouseout", function() {
+      })
+      .on("mouseout", function() {
         console.log("MOUSEOUT GHOST CIRCLE.");
-    		dragTarget = null;
-    	})
+        dragTarget = null;
+      })
 
 }
 
