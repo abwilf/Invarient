@@ -715,7 +715,7 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
 function nodeWidthFunctor(node) {
 
     if (node.textsize) {
-      return node.textsize + 20;
+      return node.textsize + 55;
     }
     else{
       return 20;
