@@ -38,7 +38,7 @@ var id; // will come from app.get /:id
 
 io.on('connection', function(socket) {
     // catches emission from client side
-    socket.on('save', function(obj) { 
+    socket.on('save', function(obj) {
         // finds map, alters data, saves
         Map.findOne({ _id: id}, function(err, m) {
           if (err) throw err;
@@ -83,11 +83,11 @@ app.get('/:id', function(req, res) {
     // })
     console.log("holla!");
      var newMap = new Map ({
-        
+
 
         // ----------------------------------  DEAR MATT: YOUR QUOTE HERE------------------------------
-        data: "[{\"x\":462,\"y\":50,\"data\":\"Enter your text here\",\"depth\":0,\"parent\":null,\"id\":1,\"children\":[],\"toggle\":0,\"textsize\":131.68972778320312,\"subtreeWidth\":151.68972778320312,\"width\":151.68972778320312}]"
-        // 
+        data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":2,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":3,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
+        //
     });
     RESULT = newMap;
     app.expose(RESULT, "RESULT");

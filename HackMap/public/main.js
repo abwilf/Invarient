@@ -425,6 +425,15 @@ $(function() {
 
 	//console.log(root);
 	hydrateData(root);
+  /*
+  root = null;
+  root = new Node($(document).width() / 2, 50, "");
+  var tmp = new Node(0,0, "Enter your text here.");
+  tmp.connection = "neoroot";
+
+  add(root, tmp);
+  */
+
 	root.depth = 0;
 	currentNode = root;
 
@@ -593,6 +602,8 @@ d3.select("svg").append("svg:defs").selectAll("marker")
 
 function drawNode(node) {
 
+    console.log(node.x);
+
 	  if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
         if (node.children[i].connection != "neoroot") {
@@ -635,6 +646,10 @@ function drawNode(node) {
                              .attr("stroke-width", 1)
                              .attr("id", "a" + id);
 
+    if (node == root){
+        circle.attr("display", "none");
+    }
+
     node_map["" + id] = node;
     node.id = id;
 
@@ -647,16 +662,17 @@ function drawNode(node) {
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
 
-    var ghost = gGroup.append("circle")
-        .attr("cx", node.x - 10)
-        .attr("cy", node.y - 5)
-        .attr('class', 'ghostCircle')
-        .attr("r", 30)
-        .attr("opacity", 0.2) // change this to zero to hide the target area
-        .attr("id", "a" + id)
-        .style("fill", "red")
-        //.attr("pointer-events", "none");
-
+    if (node != root) {
+      var ghost = gGroup.append("circle")
+          .attr("cx", node.x - 10)
+          .attr("cy", node.y - 5)
+          .attr('class', 'ghostCircle')
+          .attr("r", 30)
+          .attr("opacity", 0.2) // change this to zero to hide the target area
+          .attr("id", "a" + id)
+          .style("fill", "red")
+          //.attr("pointer-events", "none");
+    }
 
 
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
@@ -701,6 +717,9 @@ function nodeWidthFunctor(node) {
 
     if (node.textsize) {
       return node.textsize + 20;
+    }
+    else{
+      return 20;
     }
 
 }
@@ -869,7 +888,7 @@ function center( node ) {
     x = -source.property("cx").baseVal.value;
     y = -source.property("cy").baseVal.value;
     x = x * scale + $(document).width() / 2;
-    y = y * scale + $(document).height() / 4;
+    y = y * scale + $(document).height() / 2;
     d3.select('g').transition()
         .duration(250)
         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
