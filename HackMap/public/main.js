@@ -551,6 +551,10 @@ function postTraverseAndDo(node, d) {
 //Given a node pointer, attach a node to it
 function add(parent, child) {
 
+    if (parent == root){
+      child.connection = "neoroot";
+    }
+
     if (parent.toggle == 0) {
       child.parent = parent;
       parent.children.push(child);
@@ -624,11 +628,11 @@ function drawNode(node) {
                    .attr("stroke", "black");
 
             if (node.children[i].connection == "arrow") {
-              line.attr("marker-end", "url(#end)")
+              line.attr("marker-end", "url(#end)");
             }
 
             else if (node.children[i].connection != "line"){
-
+                line.attr("marker-end", "url(#end)");
                 var lbl = gGroup.append("text")
                                      .attr("x", (node.x + node.children[i].x)/2 + 5)
                                      .attr("y", (node.y + node.children[i].y)/2)
@@ -796,6 +800,39 @@ function updateDepths(root) {
 
 }
 
+function sortByConnection(root) {
+
+  traverseAndDo(root, function(node){
+
+    node.children.sort(function(a,b){
+
+        if (a.connection == "arrow" && b.connection == "line"){
+          return 1;
+        }
+        else if(a.connection == "line" && b.connection == "arrow"){
+          return -1;
+        }
+        else if(a.connection == "arrow"){
+          return -1;
+        }
+        else if(a.connection == "line"){
+          return -1;
+        }
+        else if(b.connection == "arrow"){
+          return 1;
+        }
+        else if(b.connection == "line"){
+          return 1;
+        }
+
+        return a.connection.localeCompare(b.connection);
+
+    })
+
+  })
+
+}
+
 function update(root){
 
 
@@ -809,6 +846,8 @@ function update(root){
   gGroup.selectAll("*").remove();
 
   updateDepths(root);
+
+  sortByConnection(root);
 
   postTraverseAndDo(root, calculateSubtreeWidths);
 
@@ -912,7 +951,7 @@ function center( node ) {
     x = -source.property("cx").baseVal.value;
     y = -source.property("cy").baseVal.value;
     x = x * scale + $(document).width() / 2;
-    y = y * scale + $(document).height() / 2;
+    y = y * scale + $(document).height() / 3;
     d3.select('g').transition()
         .duration(250)
         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
