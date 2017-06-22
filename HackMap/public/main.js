@@ -77,7 +77,10 @@ dragListener = d3.behavior.drag()
           }
       }
       node.parent = null;
-      node.connection = "line";
+
+      if (node.connection == "neoroot"){
+        node.connection = "arrow";
+      }
 
       add(dragTarget, node);
 
@@ -125,7 +128,7 @@ function keyPressed(e) {
         case 78:
           // 0
          console.log("The 'n' key is pressed.");
-                  
+
       //Fetch the current active node.
       curr = getCurrentNode();
       var txt = prompt("Enter new node text.", "Lorem Ipsum");
@@ -319,7 +322,7 @@ case 83:
 
     case 77:
             console.log("The 'm' key is pressed.");
-            
+
 
             return 13;
 
@@ -335,12 +338,17 @@ case 83:
 
             }
 
-            else if (lbl == "custom") {
+            else if (lbl == "n"){
+              lbl = "arrow";
+            }
+
+            else if (lbl == "d") {
+              lbl == "line"
+            }
+
+            else if (lbl == "custom" || lbl == "c") {
               var lbl = prompt("Enter custom connection type.", "Lorem Ipsum");
 
-              if (!lbl){
-                lbl = curr.connection
-              }
             }
 
             curr.connection = lbl;
@@ -774,6 +782,20 @@ function balance(root){
 
 }
 
+function updateDepths(root) {
+
+  root.depth = 0;
+
+  traverseAndDo(root, function(node) {
+
+    if (node.parent) {
+      node.depth = node.parent.depth + 1;
+    }
+
+  });
+
+}
+
 function update(root){
 
 
@@ -786,6 +808,7 @@ function update(root){
 
   gGroup.selectAll("*").remove();
 
+  updateDepths(root);
 
   postTraverseAndDo(root, calculateSubtreeWidths);
 
