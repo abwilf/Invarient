@@ -673,6 +673,8 @@ function drawNode(node) {
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
 
+    text = wrap(text, 300);
+
     if (node != root) {
       var ghost = gGroup.append("circle")
           .attr("cx", node.x - 10)
@@ -935,6 +937,36 @@ function setCurrentNode(n) {
 
   currentNode = n;
 
+}
+
+function wrap(text, width) {
+
+  text.attr("dy",0);
+  var x = text.attr("x");
+  console.log(x);
+
+  text.each(function() {
+    var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+        console.log(dy);
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+      }
+    }
+  });
 }
 
 function getNodeById( id ) {
