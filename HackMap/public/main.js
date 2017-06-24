@@ -673,6 +673,7 @@ function drawNode(node) {
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
 
+    node.textsize = document.getElementById("b" + id).getComputedTextLength();
     text = wrap(text, 300);
 
     if (node != root) {
@@ -687,8 +688,6 @@ function drawNode(node) {
           //.attr("pointer-events", "none");
     }
 
-
-    node.textsize = document.getElementById("b" + id).getComputedTextLength();
     id++;
 
 }
@@ -728,10 +727,19 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
 
 function nodeWidthFunctor(node) {
 
+    console.log(node.textsize);
     if (node.textsize) {
-      return node.textsize + 55;
+      if (node.textsize>300){
+        console.log("Case A");
+        return 355;
+      }
+      else{
+        console.log("Case B");
+        return node.textsize + 55;
+      }
     }
     else{
+      console.log("Case C");
       return 20;
     }
 
@@ -943,7 +951,7 @@ function wrap(text, width) {
 
   text.attr("dy",0);
   var x = text.attr("x");
-  console.log(x);
+  //console.log(x);
 
   text.each(function() {
     var text = d3.select(this),
@@ -955,7 +963,7 @@ function wrap(text, width) {
         y = text.attr("y"),
         dy = parseFloat(text.attr("dy")),
         tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-        console.log(dy);
+        //console.log(dy);
     while (word = words.pop()) {
       line.push(word);
       tspan.text(line.join(" "));
