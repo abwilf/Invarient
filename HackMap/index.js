@@ -2,7 +2,31 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var dotenv = require('dotenv');
-var Map = require('./models/Map');
+// var Map = require('./models/Map');
+var mapSchema = new mongoose.Schema({
+    // title: {
+    //     type: String,
+    //     required: true
+    // },
+    // year: {
+    //     type: Number,
+    //     min: 0,
+    //     max: 2017,
+    //     required: true
+    // },
+    // genre: {
+    //     type: String,
+    //     required: true
+    // },
+    // reviews: [reviewSchema]
+    data: {
+        type: String,
+        required: true
+    }
+});
+
+var Map = mongoose.model('Map', mapSchema);
+
 // var logger = require('morgan');
 var exphbs = require('express-handlebars');
 var expstate = require('express-state');

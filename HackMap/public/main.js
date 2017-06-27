@@ -674,7 +674,7 @@ function drawNode(node) {
                            .text( function(d) { return node.data });
 
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    text = wrap(text, 300);
+    text = wrap(text, 200);
 
     if (node != root) {
       var ghost = gGroup.append("circle")
