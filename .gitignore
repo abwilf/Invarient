@@ -1,0 +1,14 @@
+#OS X
+.DS_Store*
+Icon?
+._*
+
+# Linux
+.directory
+*~
+
+
+# npm
+node_modules
+*.log
+*.gz
