@@ -1,3 +1,4 @@
+/*.env
 #OS X
 .DS_Store*
 Icon?
@@ -9,6 +10,6 @@ Icon?
 
 
 # npm
-node_modules
+/node_modules
 *.log
 *.gz
