@@ -1,3 +1,22 @@
+#shortcuts_wrapper {
+/*    border: 1px solid black;*/
+    padding: 2%;
+    text-align: center;
+}
+button {
+    margin: 5px;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
 .container {
 	width: 70%;
 	margin: 0 auto;
@@ -8,4 +27,12 @@
 
 .ghostCircle, .activeDrag .ghostCircle{
   display: none;
+}
+
+
+/* mouse over button */
+
+button:hover {
+	transition: background-color 0.2s ease;
+	background-color: #008CBA;
 }

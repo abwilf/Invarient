@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Blah</title>
+    <title>Invarient</title>
     <link rel="stylesheet" type="text/css" href="/public/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -17,6 +17,22 @@
 </head>
 
 <body>
+<div id = "shortcuts_wrapper">
+    <div id = "shortcuts">
+        <button id = "N" onclick="n_key()"> New Comes From Node (N) </button>
+        <button id = "D" onclick="d_key()"> New Definition Node (D) </button>
+        <button id = "C" onclick="c_key()"> Custom (C) </button>
+        <button id = "Y" onclick="y_key()"> Change Connection Type (Y) </button>
+        <button id = "F" onclick="f_key()"> New Forested Node (F) </button>
+        <button id = "E" onclick="e_key()"> Edit Node (E) </button>
+        <button id = "Sp" onclick="space_key()"> Toggle Subtree (Space) </button>
+        <button id = "Del" onclick="del_key()"> Delete Node (Del) </button>
+        <button id = "←" onclick="left_key()"> ← </button>
+        <button id = "→" onclick="right_key()"> → </button>
+        <button id = "↑" onclick="up_key()"> ↑ </button>
+        <button id = "↓" onclick="down_key()"> ↓ </button>
+    </div>    
+</div>
 <div id="tree-container"> <div>
     {{{body}}}
 
@@ -30,3 +46,4 @@
 <script src="/public/main.js"></script>
 
 </html>
+

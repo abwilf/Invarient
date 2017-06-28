@@ -121,45 +121,33 @@ dragListener = d3.behavior.drag()
 
 window.addEventListener("keydown", keyPressed, false);
 
+  function n_key() {
+           //Fetch the current active node.
+            curr = getCurrentNode();
+             var txt = prompt("Edit node text.", "Lorem Ipsum");
 
-function keyPressed(e) {
-  console.log(e.keyCode);
-    switch (e.keyCode) {
-        case 78:
-          // 0
-         console.log("The 'n' key is pressed.");
+              if (txt) {
+                var tmp = new Node(root.x, 0, txt);
 
-      //Fetch the current active node.
-      curr = getCurrentNode();
-      var txt = prompt("Enter new node text.", "Lorem Ipsum");
+                tmp.connection = "arrow";
 
-      if (txt) {
-        var tmp = new Node(root.x, 0, txt);
+                add( curr, tmp );
 
-        tmp.connection = "arrow";
+                update(root);
+                onSelect( tmp );
+            }
+  }
 
-        add( curr, tmp );
-
-        update(root);
-        onSelect( tmp );
-      }
-
-         return 0;
-
-case 83:
-      console.log("The 's' key is pressed.");
+function s_key() {
       if (typeof(root) == 'undefined') {
         console.log('Cannot save with null root');
       }
       else {
         saveToJSON(root);
       }
-      return 100;
+}
 
-        case 69:
-          // 1
-         console.log("The 'e' key is pressed.");
-
+function e_key() {
          //Fetch the node corresponding to the currently selected svg element
          curr = getCurrentNode()
          var oldTxt = curr.data;
@@ -175,14 +163,9 @@ case 83:
 
          update(root);
          onSelect( curr );
+}
 
-         return 1;
-        case 82:
-             console.log("The 'r' key is pressed.");
-             return 2;
-        case 68:
-      console.log("The 'd' key is pressed.");
-
+function d_key() {
                     //Fetch the current active node.
                          curr = getCurrentNode();
                          var txt = prompt("Enter new node text.", "Lorem Ipsum");
@@ -194,38 +177,31 @@ case 83:
                            update(root);
                            onSelect( tmp );
                          }
+}
 
-
-      return 3;
-        case 32:
-              console.log("The '(space)' key is pressed.");
+function space_key() {
               toggleSubtree( getCurrentNode() );
               update( root );
 
               onSelect( getCurrentNode() );
-              return 4;
+}
 
-        case 38:
-              console.log("The 'up arrow' key is pressed.");
-              //console.log(root);  // FIXME: DELETE!
+function up_key() {
               if (getCurrentNode().parent != root) {
 
                 onSelect( getCurrentNode().parent );
 
               }
-              return 5;
-        case 40:
-              console.log("The 'down arrow' key is pressed.");
+}
 
+function down_key() {
               if (getCurrentNode().children.length > 0) {
 
                 onSelect( getCurrentNode().children[0] );
 
               }
-              return 6;
-        case 37:
-              console.log("The 'left arrow' key is pressed.");
-
+}
+function left_key() {
               var depth = getCurrentNode().depth;
 
               var nodesAtDepth = [];
@@ -244,12 +220,9 @@ case 83:
                   break;
                 }
               }
+}
 
-              return 7;
-
-          case 39:
-              console.log("The 'right arrow' key is pressed.");
-
+function right_key() {
               var depth = getCurrentNode().depth;
 
               var nodesAtDepth = [];
@@ -267,13 +240,8 @@ case 83:
                   break;
                 }
               }
-
-              return 8;
-
-          case 90:
-
-              console.log("The 'z' key is pressed.");
-
+}
+function z_key() {
               var revived = null;
 
               if (removedNodes.length > 0) {
@@ -285,27 +253,16 @@ case 83:
                 removedNodes.pop();
 
               }
+}
 
-              return 9;
-
-    case 8:
-      console.log("The 'delete' key is pressed.");
-
+function del_key() {
       remove( getCurrentNode() );
       update( root );
       onSelect( getCurrentNode().parent );
+}
 
-      return 10;
-
-    case 65:
-      console.log("The 'a' key is pressed.");
-
-      return 11;
-
-    case 70:
-        console.log("The 'f' key is pressed.");
-
-        var txt = prompt("Enter new node text.", "Lorem Ipsum");
+function f_key() {
+        var txt = prompt("Enter forested node text.", "Lorem Ipsum");
 
         if (txt) {
           var tmp = new Node(root.x, 0, txt);
@@ -317,38 +274,25 @@ case 83:
           update(root);
           onSelect( tmp );
         }
+}
 
-        return 12;
-
-    case 77:
-            console.log("The 'm' key is pressed.");
-
-
-            return 13;
-
-    case 89:
-            console.log("The 'y' key is pressed.");
+function y_key() {
             curr = getCurrentNode();
 
-            var lbl = prompt("Enter label connection type. [arrow], [line], [custom]", "line");
+            var lbl = prompt("Enter label connection type. [comes from], [definition], [custom]", "custom");
             if (!lbl){
                 lbl = curr.connection;
             }
-            else if (lbl == "arrow" || lbl == "line"){
+            else if (lbl == "comes from" || lbl == "n") {
+                lbl = "arrow";
+            } 
 
-            }
-
-            else if (lbl == "n"){
-              lbl = "arrow";
-            }
-
-            else if (lbl == "d") {
-              lbl == "line"
+            else if (lbl == "d" || lbl == "definition") {
+              lbl = "line";
             }
 
             else if (lbl == "custom" || lbl == "c") {
               var lbl = prompt("Enter custom connection type.", "Lorem Ipsum");
-
             }
 
             curr.connection = lbl;
@@ -356,14 +300,8 @@ case 83:
             update(root);
 
             onSelect( curr );
-
-            return 14;
-
-            // create new map (c), redirect url - TEMPORARY
-            case 67:
-              // sends to server side to create map
-              console.log("The 'c' key is pressed.");
-              // socket.emit('create new map', 'blank');
+}
+function c_key() {
                       curr = getCurrentNode();
 
                     var lbl = prompt("Enter custom connection label.", "Lorem Ipsum");
@@ -382,7 +320,88 @@ case 83:
                       update(root);
                       onSelect( tmp );
                     }
+}
 
+function keyPressed(e) {
+  console.log(e.keyCode);
+    switch (e.keyCode) {
+        case 78:
+          // 0
+         console.log("The 'n' key is pressed.");
+              n_key();
+         return 0;
+
+case 83:
+      console.log("The 's' key is pressed.");
+      s_key();
+      return 100;
+
+        case 69:
+          // 1
+         console.log("The 'e' key is pressed.");
+         e_key();
+         return 1;
+        case 82:
+             console.log("The 'r' key is pressed.");
+             return 2;
+        case 68:
+      console.log("The 'd' key is pressed.");
+      d_key();
+      return 3;
+        case 32:
+              console.log("The '(space)' key is pressed.");
+              space_key();
+              return 4;
+
+        case 38:
+              console.log("The 'up arrow' key is pressed.");
+              up_key();
+              return 5;
+        case 40:
+              console.log("The 'down arrow' key is pressed.");
+              down_key();
+              return 6;
+        case 37:
+              console.log("The 'left arrow' key is pressed.");
+              left_key();
+              return 7;
+
+          case 39:
+              console.log("The 'right arrow' key is pressed.");
+              right_key();
+              return 8;
+
+          case 90:
+              console.log("The 'z' key is pressed.");
+              z_key();
+              return 9;
+
+    case 8:
+      console.log("The 'delete' key is pressed.");
+      del_key();
+      return 10;
+
+    case 65:
+      console.log("The 'a' key is pressed.");
+      return 11;
+
+    case 70:
+        console.log("The 'f' key is pressed.");
+        f_key();
+        return 12;
+
+    case 77:
+            console.log("The 'm' key is pressed.");
+            return 13;
+
+    case 89:
+            console.log("The 'y' key is pressed.");
+            y_key();
+            return 14;
+
+            case 67:
+              console.log("The 'c' key is pressed.");
+                      c_key();
               return 100;
         default:
           console.log("Pressed an unrecognized key!");
