@@ -322,6 +322,39 @@ function c_key() {
                     }
 }
 
+// blah123
+function o_key() {
+    curr = getCurrentNode();
+    $('#myModal').modal('show');  // pop up window
+
+    // set modal elements
+    curr.data ? (document.getElementById("title").value = curr.data) :  (document.getElementById("title").value = "");
+    curr.comment ? (document.getElementById("comment").value = curr.comment) : (document.getElementById("comment").value = "");
+    curr.assigned ? (document.getElementById("assigned_peeps").value = curr.assigned) : (document.getElementById("assigned_peeps").value = "");
+    curr.priority ? (document.getElementById("priority").value = curr.priority.toString()) : (document.getElementById("priority").value = 1);
+    curr.date ? (document.getElementById("date").value = curr.date) : (document.getElementById("date").value = ""); 
+    if (curr.actionable) {
+      document.getElementById("act_1").checked = true;  
+      document.getElementById("act_2").checked = false;
+    }
+    else {
+        document.getElementById("act_2").checked = true;  
+        document.getElementById("act_1").checked = false;
+    }
+
+    if (curr.completed) {
+      document.getElementById("comp_1").checked = true;  
+      document.getElementById("comp_2").checked = false;
+    }
+    else {
+        document.getElementById("comp_2").checked = true;  
+        document.getElementById("comp_1").checked = false;
+    }
+
+}
+
+// END blah123
+
 function keyPressed(e) {
   console.log(e.keyCode);
     switch (e.keyCode) {
@@ -330,6 +363,11 @@ function keyPressed(e) {
          console.log("The 'n' key is pressed.");
               n_key();
          return 0;
+
+         case 79:
+          console.log("The 'o' key is pressed.");
+          o_key();
+          return 100;  // arbitrary lol
 
 case 83:
       console.log("The 's' key is pressed.");
@@ -481,7 +519,7 @@ function Node(x, y, data) {
 
     this.connection = "line"; //types: line, arrow, custom
 
-    this.data = data;
+    this.data = data; // title
 
     this.depth = null;
     this.parent = null;
@@ -490,6 +528,15 @@ function Node(x, y, data) {
     this.children = [];
 
     this.toggle = 0;
+
+    // blah123
+    this.comment = "";  // comment box
+    this.assigned = "";    // who is assigned to this node - separated by commas (FIXME: we'll want to separate this out into an array at some point)
+    this.priority = 1;
+    this.date = "";
+    this.actionable = false;
+    this.completed = false;
+    // END blah123
 }
 
 
@@ -659,7 +706,6 @@ function drawNode(node) {
                                      .attr("font-size", "15px")
                                      .attr("font-style", "italic")
                                      .text( function(d) { return node.children[i].connection });
-
             }
       }
     }
@@ -903,7 +949,6 @@ function update(root){
        var node = getClickedNode( this );
        onSelect( node );
        setCurrentNode( node );
-
        center( node );
 
     })
@@ -1041,3 +1086,64 @@ function onSelect( node ) {
 
 
 var removedNodes = [];
+
+
+
+// blah123
+// FORM SCRIPT
+ $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'mm/dd/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+    
+        // triggered when modal window closes
+      $('#myModal').on('hidden.bs.modal', function() {
+          var title = document.getElementById("title").value;
+          var comment = document.getElementById("comment").value;
+          var assigned = document.getElementById("assigned_peeps").value;
+          var priority = document.getElementById("priority").value;
+          priority = parseInt(priority);
+          var date = document.getElementById("date").value;
+          var act_value;
+          if (document.getElementById('act_1').checked) {
+              act_value = true;
+           }
+          else if (document.getElementById('act_2').checked) {
+            act_value = false;
+          }
+          else assert(false); // one of yes or no should always be checked
+
+          var comp_value;
+           if (document.getElementById('comp_1').checked) {
+              comp_value = true;
+           }
+          else if (document.getElementById('comp_2').checked) {
+            comp_value = false;
+          }
+          else assert(false); // one of yes or no should always be checked
+
+          curr["data"] = title; // str
+          curr["comment"] = comment;  // str
+          curr["assigned"] = assigned;  // str (with commas)
+          curr["priority"] = priority;  // int
+          curr["date"] = date;  // str
+          curr["actionable"] = act_value;
+          curr["completed"] = comp_value;
+
+          console.log('title is: ' + curr.data);
+          console.log("priority is: " + curr.priority);
+          console.log('comment is: ' + curr.comment);
+          console.log('assigned string is: ' + curr.assigned);
+          console.log('date is: ' + curr.date);         
+          console.log('actionable: ' + curr.actionable);
+          console.log('completed: ' + curr.completed);
+      });
+
+      // END blah123
