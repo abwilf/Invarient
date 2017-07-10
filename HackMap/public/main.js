@@ -121,6 +121,34 @@ dragListener = d3.behavior.drag()
 
 window.addEventListener("keydown", keyPressed, false);
 
+
+  function u_key() {
+    sortByPriority(filteredlist);
+    update(root);
+  }
+
+  function i_key(){
+    sortByDate(filteredlist);
+    update(root);
+  }
+
+  function g_key() {
+
+    populateList(filteredlist, root);
+    update(root);
+
+  }
+
+  function h_key() {
+    filterActionableList(filteredlist);
+    update(root);
+  }
+
+  function j_key() {
+    filterCompletedList(filteredlist);
+    update(root);
+  }
+
   function n_key() {
            //Fetch the current active node.
             curr = getCurrentNode();
@@ -302,7 +330,7 @@ function y_key() {
             onSelect( curr );
 }
 function c_key() {
-                      curr = getCurrentNode();
+                    curr = getCurrentNode();
 
                     var lbl = prompt("Enter custom connection label.", "Lorem Ipsum");
                     if (!lbl){
@@ -321,13 +349,6 @@ function c_key() {
                       onSelect( tmp );
                     }
 }
-
-// prevent spacebar scroll
-window.onkeydown = function(e) {
-  if (e.keyCode == 32 && e.target == document.body) {
-    e.preventDefault();
-  }
-};
 
 // blah123
 function o_key() {
@@ -367,8 +388,37 @@ function keyPressed(e) {
     return;
   }
 
+
   console.log(e.keyCode);
     switch (e.keyCode) {
+
+        case 71:
+        console.log("The 'g' key is pressed.");
+        g_key();
+        return 71;
+
+        case 72:
+        console.log("The 'h' key is pressed.");
+        h_key();
+        return 72;
+
+        case 74:
+        console.log("The 'j' key is pressed.");
+        j_key();
+        return 74;
+
+        case 73:
+        console.log("The 'i' key is pressed.");
+        i_key();
+        return 73;
+
+        case 85:
+        console.log("The 'u' key is pressed.");
+        u_key();
+        return 85;
+
+
+
         case 78:
           // 0
          console.log("The 'n' key is pressed.");
@@ -490,6 +540,52 @@ function hydrateData(data) {
   })
 }
 
+function populateList(filteredlist, node){
+  filteredlist.length = 0;
+  traverseAndDo(node, function(d){
+      filteredlist.push(d);
+  });
+}
+
+function filterCompletedList(filteredlist){
+  result = new Array();
+  filteredlist.forEach(function(d){
+    if (d.completed){
+      result.push(d);
+    }
+  });
+}
+
+function filterActionableList(filteredlist){
+  result = new Array();
+  filteredlist.forEach(function(d){
+    if (d.actionable){
+      result.push(d);
+    }
+  });
+}
+
+function sortByPriority(filteredlist){
+  filteredlist.sort(function(a,b){
+    if (a.priority > b.priority){
+      return -1;
+    }
+    else {
+      return 1;
+    }
+  });
+}
+
+function sortByDate(filteredlist){
+  filteredlist.sort(function(a,b){
+
+    return new Date(b.date) - new Date(a.date);
+
+  });
+}
+
+
+
 //////////////////////////////////// BEGIN HERE /////////////////////////////////////////////
 var root;
 var currentNode;
@@ -497,6 +593,7 @@ var dragStarted;
 var dragTarget;
 var nodeOriginalState;
 var modalopen = false;
+var filteredlist = new Array();
 
 $(function() {
   if (App.RESULT != -1) {
@@ -656,7 +753,6 @@ function remove(node) {
               return;
           }
       }
-
 }
 
 
@@ -690,6 +786,40 @@ d3.select("svg").append("svg:defs").selectAll("marker")
     .attr("orient", "auto")
   .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
+
+function drawList(filteredlist, startx, starty){
+
+  filteredlist.forEach(function(node){
+
+    var text = gGroup.append("text")
+                           .attr("x", startx)
+                           .attr("y", starty)
+                           .attr("font-family", "sans-serif")
+                           .attr("font-size", "15px")
+                           .attr("id", "c" + id)
+                           .text( function(d) { return node.data });
+
+    node.textsize = document.getElementById("c" + id).getComputedTextLength();
+    text = wrap(text, 200);
+
+    var text2 = gGroup.append("text")
+                           .attr("x", startx)
+                           .attr("y", starty + 20)
+                           .attr("font-family", "sans-serif")
+                           .attr("font-size", "15px")
+                           .attr("id", "d" + id)
+                           .text( function(d) { return node.priority });
+
+   var text3 = gGroup.append("text")
+                          .attr("x", startx)
+                          .attr("y", starty + 40)
+                          .attr("font-family", "sans-serif")
+                          .attr("font-size", "15px")
+                          .attr("id", "e" + id)
+                          .text( function(d) { return node.date });
+  starty = starty + 70;
+  })
+}
 
 function drawNode(node) {
 
@@ -991,6 +1121,8 @@ function update(root){
         console.log("MOUSEOUT GHOST CIRCLE.");
         dragTarget = null;
       })
+
+    drawList(filteredlist, $(document).width()-250, 200);
 
 }
 
