@@ -322,6 +322,13 @@ function c_key() {
                     }
 }
 
+// prevent spacebar scroll
+window.onkeydown = function(e) {
+  if (e.keyCode == 32 && e.target == document.body) {
+    e.preventDefault();
+  }
+};
+
 // blah123
 function o_key() {
     curr = getCurrentNode();
