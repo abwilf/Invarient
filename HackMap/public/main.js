@@ -133,7 +133,6 @@ window.addEventListener("keydown", keyPressed, false);
   }
 
   function g_key() {
-
     populateList(filteredlist, root);
     update(root);
 
@@ -148,6 +147,18 @@ window.addEventListener("keydown", keyPressed, false);
     filteredlist = filterCompletedList(filteredlist);
     update(root);
   }
+
+
+//abc123
+  function k_key() {
+      var text = prompt("Filter by person assigned.", "Enter names separated by comma.");
+      text = text.toLowerCase();
+      var textArr = text.split(',');
+      filteredlist = filterPersonList(filteredlist, textArr);
+      console.log("filtered list" + filteredlist);
+      update(root);
+  }
+  //endabc123
 
   function n_key() {
            //Fetch the current active node.
@@ -360,6 +371,7 @@ function o_key() {
     curr.data ? (document.getElementById("title").value = curr.data) :  (document.getElementById("title").value = "");
     curr.comment ? (document.getElementById("comment").value = curr.comment) : (document.getElementById("comment").value = "");
     curr.assigned ? (document.getElementById("assigned_peeps").value = curr.assigned) : (document.getElementById("assigned_peeps").value = "");
+
     curr.priority ? (document.getElementById("priority").value = curr.priority.toString()) : (document.getElementById("priority").value = 1);
     curr.date ? (document.getElementById("date").value = curr.date) : (document.getElementById("date").value = "");
     if (curr.actionable) {
@@ -396,6 +408,11 @@ function keyPressed(e) {
         console.log("The 'g' key is pressed.");
         g_key();
         return 71;
+
+        case 75:
+        console.log("The 'k' key is pressed.");
+        k_key();
+        return 75;
 
         case 72:
         console.log("The 'h' key is pressed.");
@@ -567,6 +584,35 @@ function filterActionableList(filteredlist){
   return result;
 }
 
+
+
+//abc123
+
+function intersect(arr1, arr2) {
+   var temp = [];
+  for (var i in arr1) {
+    var element = arr1[i];
+    if (arr2.indexOf(element) > -1) {
+      temp.push(element);
+    }
+  }
+  if (temp.length > 0) return true;
+  return false;
+}
+
+function filterPersonList(filteredlist, nameArr) {
+  result = new Array();
+
+  filteredlist.forEach(function(d){
+    if (intersect(d.assignedArr, nameArr)) {
+      result.push(d);
+    }
+  });
+
+  return result;
+}
+//end abc123
+
 function sortByPriority(filteredlist){
   filteredlist.sort(function(a,b){
     if (a.priority > b.priority){
@@ -580,7 +626,6 @@ function sortByPriority(filteredlist){
 
 function sortByDate(filteredlist){
   filteredlist.sort(function(a,b){
-
     return new Date(a.date) - new Date(b.date);
 
   });
@@ -1233,8 +1278,6 @@ function onSelect( node ) {
 
 var removedNodes = [];
 
-
-
 // blah123
 // FORM SCRIPT
  $(document).ready(function(){
@@ -1249,7 +1292,7 @@ var removedNodes = [];
       date_input.datepicker(options);
     })
 
-        // triggered when modal window closes
+        // set node values: triggered when modal window closes
       $('#myModal').on('hidden.bs.modal', function() {
           modalopen = false;//when modal closes, stop suppressing keypresses
           var title = document.getElementById("title").value;
@@ -1275,6 +1318,7 @@ var removedNodes = [];
             comp_value = false;
           }
           else assert(false); // one of yes or no should always be checked
+        
 
           curr["data"] = title; // str
           curr["comment"] = comment;  // str
@@ -1283,11 +1327,23 @@ var removedNodes = [];
           curr["date"] = date;  // str
           curr["actionable"] = act_value;
           curr["completed"] = comp_value;
+           
+
+           // abc123
+           // NOTE: there can be no spaces in names
+         var tempStr = curr.assigned ? (curr.assigned.toLowerCase()) : ""; // only lower case in array for simplicity of filtration
+         if (tempStr) {
+          tempStr = tempStr.replace(/\s/g, ''); // replace all spaces
+         }
+         curr.assignedArr = tempStr ? (tempStr.split(',')) : [];  // parses input by commas
+          // end abc123
+
 
           console.log('title is: ' + curr.data);
           console.log("priority is: " + curr.priority);
           console.log('comment is: ' + curr.comment);
           console.log('assigned string is: ' + curr.assigned);
+          console.log('assigned array is: ' + curr.assignedArr);
           console.log('date is: ' + curr.date);
           console.log('actionable: ' + curr.actionable);
           console.log('completed: ' + curr.completed);
