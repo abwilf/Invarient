@@ -140,12 +140,12 @@ window.addEventListener("keydown", keyPressed, false);
   }
 
   function h_key() {
-    filterActionableList(filteredlist);
+    filteredlist = filterActionableList(filteredlist);
     update(root);
   }
 
   function j_key() {
-    filterCompletedList(filteredlist);
+    filteredlist = filterCompletedList(filteredlist);
     update(root);
   }
 
@@ -554,6 +554,7 @@ function filterCompletedList(filteredlist){
       result.push(d);
     }
   });
+  return result;
 }
 
 function filterActionableList(filteredlist){
@@ -563,6 +564,7 @@ function filterActionableList(filteredlist){
       result.push(d);
     }
   });
+  return result;
 }
 
 function sortByPriority(filteredlist){
@@ -579,7 +581,7 @@ function sortByPriority(filteredlist){
 function sortByDate(filteredlist){
   filteredlist.sort(function(a,b){
 
-    return new Date(b.date) - new Date(a.date);
+    return new Date(a.date) - new Date(b.date);
 
   });
 }
