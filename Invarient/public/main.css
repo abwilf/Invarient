@@ -7,6 +7,11 @@
     border: 1px solid black;
     width: 20%;
     float: right;
+    padding: 1%;
+}
+
+#list_and_container_wrapper {
+    width: 97%;
 }
 
 #tree-container {

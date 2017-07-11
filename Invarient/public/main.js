@@ -122,39 +122,56 @@ dragListener = d3.behavior.drag()
 window.addEventListener("keydown", keyPressed, false);
 
 
+  function modifySortBy(input) {
+    $( ".sb" ).empty();
+    $( ".sb" ).append("<p class='newElt'>Sorted by: " + input + "</p>");
+  }
+
+  function modifyFilterBy(input) {
+    $( ".fb" ).empty();
+    $( ".fb" ).append("<p class='newElt'>Filtered by: " + input + "</p>");
+  }
 
   function u_key() {
     sortByPriority(filteredlist);
+    modifySortBy("Priority");
     update(root);
   }
 
   function i_key(){
     sortByDate(filteredlist);
+    modifySortBy("Date");
     update(root);
   }
 
   function g_key() {
     populateList(filteredlist, root);
+    modifySortBy("");
+    modifyFilterBy("");
     update(root);
   }
 
   function h_key() {
     filteredlist = filterActionableList(filteredlist);
+    modifyFilterBy("Actionable");
     update(root);
   }
 
    function eight_key() {
     filteredlist = filterNotActionableList(filteredlist);
+    modifyFilterBy("Not actionable");
     update(root);
   }
 
   function j_key() {
     filteredlist = filterCompletedList(filteredlist);
+    modifyFilterBy("Completed");
     update(root);
   }
 
   function nine_key() {
     filteredlist = filterNotCompletedList(filteredlist);
+    modifyFilterBy("Not completed");
     update(root);
   }
 
@@ -162,11 +179,13 @@ window.addEventListener("keydown", keyPressed, false);
 //abc123
   function k_key() {
       var text = prompt("Filter by person assigned.", "Enter names separated by comma.");
-      text = text.toLowerCase();
-      var textArr = text.split(',');
-      filteredlist = filterPersonList(filteredlist, textArr);
-      console.log("filtered list" + filteredlist);
-      update(root);
+      if (text) {
+        text = text.toLowerCase();
+        var textArr = text.split(',');
+        filteredlist = filterPersonList(filteredlist, textArr);
+        modifyFilterBy("Person");
+        update(root);
+    }
   }
   //endabc123
 
