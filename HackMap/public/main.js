@@ -122,6 +122,7 @@ dragListener = d3.behavior.drag()
 window.addEventListener("keydown", keyPressed, false);
 
 
+
   function u_key() {
     sortByPriority(filteredlist);
     update(root);
@@ -135,7 +136,6 @@ window.addEventListener("keydown", keyPressed, false);
   function g_key() {
     populateList(filteredlist, root);
     update(root);
-
   }
 
   function h_key() {
@@ -143,8 +143,18 @@ window.addEventListener("keydown", keyPressed, false);
     update(root);
   }
 
+   function eight_key() {
+    filteredlist = filterNotActionableList(filteredlist);
+    update(root);
+  }
+
   function j_key() {
     filteredlist = filterCompletedList(filteredlist);
+    update(root);
+  }
+
+  function nine_key() {
+    filteredlist = filterNotCompletedList(filteredlist);
     update(root);
   }
 
@@ -434,7 +444,15 @@ function keyPressed(e) {
         u_key();
         return 85;
 
+        case 57:
+        console.log("The '9' key is pressed.");
+        nine_key();
+        return 57;
 
+        case 56:
+        console.log("The '8' key is pressed.");
+        eight_key();
+        return 56;
 
         case 78:
           // 0
@@ -574,10 +592,30 @@ function filterCompletedList(filteredlist){
   return result;
 }
 
+function filterNotCompletedList(filteredlist){
+  result = new Array();
+  filteredlist.forEach(function(d){
+    if (!d.completed){
+      result.push(d);
+    }
+  });
+  return result;
+}
+
 function filterActionableList(filteredlist){
   result = new Array();
   filteredlist.forEach(function(d){
     if (d.actionable){
+      result.push(d);
+    }
+  });
+  return result;
+}
+
+function filterNotActionableList(filteredlist){
+  result = new Array();
+  filteredlist.forEach(function(d){
+    if (!d.actionable){
       result.push(d);
     }
   });
