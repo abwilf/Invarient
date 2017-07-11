@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invarient</title>
+    <link rel="stylesheet" type="text/css" href="/public/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <script src="https://d3js.org/d3-path.v1.min.js"></script>
+    <script src="https://d3js.org/d3-selection.v1.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3-shape.v1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+</head>
+
+<body>
+<div id = "shortcuts_wrapper">
+    <div id = "shortcuts">
+        <button id = "n" onclick="n_key()"> New Comes From Node (n) </button>
+        <button id = "d" onclick="d_key()"> New Definition Node (d) </button>
+        <button id = "c" onclick="c_key()"> Custom (c) </button>
+        <button id = "y" onclick="y_key()"> Change Connection Type (y) </button>
+        <button id = "e" onclick="e_key()"> Edit Node (e) </button>
+        <button id = "sp" onclick="space_key()"> Toggle Subtree (space) </button>
+        <button id = "del" onclick="del_key()"> Delete Node (delete) </button>
+        <button id = "←" onclick="left_key()"> ← </button>
+        <button id = "→" onclick="right_key()"> → </button>
+        <button id = "↑" onclick="up_key()"> ↑ </button>
+        <button id = "↓" onclick="down_key()"> ↓ </button>
+        <button id="o" onclick="o_key()"> Open Node (o) </button>
+        <button id="g" onclick="g_key()"> Render Task List (g) </button>
+        <button id="u" onclick="u_key()"> Sort List by Priority (u) </button>
+        <button id="i" onclick="i_key()"> Sort List by Due Date (i) </button>
+        <button id="h" onclick="h_key()"> Filter List to Actionable Items (h) </button>
+        <button id="8" onclick="eight_key()"> Filter List by not Actionable Items (8) </button>
+        <button id="9" onclick="nine_key()"> Filter List by not Completed Items (9) </button>
+        <button id="j" onclick="j_key()"> Filter List by Completed Items (j) </button>
+        <button id="j" onclick="k_key()"> Filter List by Person Assigned (k) </button>
+
+        <!--
+        <button id = "f" onclick="f_key()"> New Forested Node (f) </button>
+        -->
+    </div>    
+</div>
+
+<div id = list_and_container_wrapper>
+
+<div id = "taskList">
+  <div class="sb">
+    <p>Sorted by: </p>
+  </div>
+  <div class = "fb">
+    <p>Filtered by: </p>
+  </div>
+  <h3> Task List </h3>
+  <div class="taskListP">
+  </div>
+</div>
+
+<div id="tree-container"> <div>
+
+<!-- Modal -->
+<div class="modal-container">
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Edit Node</h3>
+        </div>
+        <div class="modal-body">
+      
+
+
+      
+ <!-- FORM -->   
+    
+<div class="bootstrap-iso">
+ <div class="container-fluid">
+  <div class="row">
+   <div class="col-md-6 col-sm-6 col-xs-12">
+       
+<form class="form" id="frm1">
+    <div class="form-group">
+        <label for = "title">Node Title</label>
+        <input type="text" class="form-control" id="title" placeholder="Enter title" value = "">
+    </div> 
+  
+
+    <div class="form-group">
+            <label id = "actionable_label" for = "radios_act">Is this actionable?</label>
+            <br>
+            <input type="radio" name="radios_act" id = "act_1" value="Yes">Yes<br>
+            <input type="radio" name="radios_act" id = "act_2" value="No">No<br>
+    </div> 
+    
+    <div class="form-group">
+            <label id = "completed_label" for = "radios_comp">Has this been completed?</label>
+            <br>
+            <input type="radio" name="radios_comp" id = "comp_1" value="Yes">Yes<br>
+            <input type="radio" name="radios_comp" id = "comp_2" value="No">No<br>
+    </div> 
+
+    <div class="form-group">
+      <label for="comment">Comments</label>
+      <textarea class="form-control" rows="5" id="comment"></textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for = "title">Who is assigned to this? (enter names separated by a comma, case insensitive)</label>
+        <input type="text" class="form-control" id="assigned_peeps" placeholder="Enter names">
+    </div> 
+    
+      <div class="form-group">
+      <label for="priority">Priority</label>
+      <select class="form-control" id="priority" value = "1">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+
+    <div class="form-group"> <!-- Date input -->
+        <label class="control-label" for="date">Date</label>
+            <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+    </div>
+    
+</form>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- END FORM  (script is at the end of main.js - look for "FORM SCRIPT")-->
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+
+</div>
+<!-- handlebars template for the rest -->
+    {{{body}}}
+
+    <script>
+	{{{state}}}
+    </script>
+    
+</div>
+</body>
+
+<script src="/public/main.js"></script>
+
+</html>
+

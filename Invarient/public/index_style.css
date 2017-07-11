@@ -1,0 +1,113 @@
+html {
+	font-family: Times, serif;
+}
+
+body {
+	margin: 0 auto;
+}
+#first_wrapper {
+	background-image: url("background_img.jpg");
+	background-size: cover;
+	background-height: 100%;
+	height:650px;
+	margin: 0;
+}
+.nav_bar {
+	width: 100%;
+	height: 100px;
+	/*border: 1px solid red;*/
+	margin: auto;
+	right: 0; left: 0;
+	padding: 10px 30px;
+}
+
+.name {
+	font-family: 'Montserrat';
+	font-size: 40px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333333;
+	display: inline-block;
+	position: relative;
+	top: 6px;
+	/*border: 1px solid red;*/
+}
+
+.right {
+	/*border: 1px solid red;*/
+	text-align: center;
+	display: inline-block;
+	margin-left: 600px;
+	margin-right: 50px;
+}
+.nav_elt {
+	display: inline-block;
+	font-family: 'Montserrat', sans-serif;
+	border: .2px solid black;
+	padding: 10px;
+	color: black;
+	text-decoration: none;
+	margin: 0 20px;
+}
+/*
+.nav_button {
+	display: inline-block;
+	font-family: 'Montserrat', sans-serif;
+	border: .2px solid black;
+	padding: 10px;
+	color: black;
+	text-decoration: none;
+	margin: 0 20px;
+}*/
+
+#banner {
+	font-family: 'Montserrat';
+	font-size: 20px;
+	font-weight: bold;
+	color: #333333;
+	display: inline-block;
+	/*border: 1px solid black;*/
+	margin: 100px 40px 0px 710px;
+	top: 30px;
+	position: relative;
+	text-align: center;
+}
+
+.learn {
+	font-size: 15px;
+	text-decoration: none;
+	border: .3px solid black;
+	padding: 10px;
+	color: #333333;
+}
+
+/* unvisited link 
+a.nav_elt:link {}
+
+/* visited link */
+a.nav_elt:visited {}
+
+/* mouse over link */
+a.nav_elt:hover {
+	transition: background-color 0.2s ease;
+	transition: color 0.1s ease;
+	color: white;
+	background-color: hsla(178, 0%, 13%, 0.8);
+}
+/*
+button.nav_button:hover {
+	transition: background-color 0.2s ease;
+	transition: color 0.1s ease;
+	color: white;
+	background-color: hsla(178, 0%, 13%, 0.8);
+}*/
+
+a.learn:visited {}
+
+/* mouse over link */
+a.learn:hover {
+	transition: background-color 0.2s ease;
+	transition: color 0.1s ease;
+	color: white;
+	background-color: hsla(178, 0%, 13%, 0.8);
+}

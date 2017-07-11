@@ -1,0 +1,54 @@
+#shortcuts_wrapper {
+/*    border: 1px solid black;*/
+    padding: 2%;
+    text-align: center;
+}
+#taskList {
+    border: 1px solid black;
+    width: 20%;
+    float: right;
+    padding: 1%;
+}
+
+#list_and_container_wrapper {
+    width: 97%;
+}
+
+#tree-container {
+    /*border: 1px solid black;*/
+    float: left;
+    width: 80%;
+}
+button {
+    margin: 20px;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+.container {
+	width: 70%;
+	margin: 0 auto;
+}
+.ghostCircle.show{
+  display:block;
+}
+
+.ghostCircle, .activeDrag .ghostCircle{
+  display: none;
+}
+
+
+/* mouse over button */
+
+button:hover {
+	transition: background-color 0.2s ease;
+	background-color: #008CBA;
+}
