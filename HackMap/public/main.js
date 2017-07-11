@@ -123,29 +123,58 @@ window.addEventListener("keydown", keyPressed, false);
 
 
   function u_key() {
-    sortByPriority(filteredlist);
+    if sortByPriorityOn){
+      sortByPriorityOn = false;
+    }
+    else{
+      sortByPriorityOn = true;
+    }
+    runListActions(filteredlist);
     update(root);
   }
 
   function i_key(){
-    sortByDate(filteredlist);
+    if sortByDateOn){
+      sortByDateOn = false;
+    }
+    else{
+      sortByDateOn = true;
+    }
+    runListActions(filteredlist);
     update(root);
   }
 
   function g_key() {
 
-    populateList(filteredlist, root);
+    runListActions(filteredList);
+
     update(root);
 
   }
 
   function h_key() {
-    filteredlist = filterActionableList(filteredlist);
+
+    if actionableFilterOn){
+      actionableFilterOn = false;
+    }
+    else{
+      actionableFilterOn = true;
+    }
+
+    runListActions(filteredlist);
     update(root);
   }
 
   function j_key() {
-    filteredlist = filterCompletedList(filteredlist);
+
+    if completedFilterOn){
+      completedFilterOn = false;
+    }
+    else{
+      completedFilterOn = true;
+    }
+
+    runListActions(filteredlist);
     update(root);
   }
 
@@ -547,6 +576,24 @@ function populateList(filteredlist, node){
   });
 }
 
+function runListActions(filteredlist){
+
+  populateList(filteredlist, root);
+
+  if (sortByPriorityOn){
+    sortByPriority(filteredlist);
+  }
+  if (sortByDateOn){
+    sortByDate(filteredlist);
+  }
+  if (actionableFilterOn){
+    filteredlist = filterActionableList(filteredlist);
+  }
+  if (completedFilterOn){
+    filteredlist = filterCompletedList(filteredlist);
+  }
+}
+
 function filterCompletedList(filteredlist){
   result = new Array();
   filteredlist.forEach(function(d){
@@ -601,6 +648,10 @@ var dragTarget;
 var nodeOriginalState;
 var modalopen = false;
 var filteredlist = new Array();
+var actionableFilterOn = false;
+var completedFilterOn = false;
+var sortByPriorityOn = false;
+var sortByDateOn = false;
 
 $(function() {
   if (App.RESULT != -1) {
@@ -1206,7 +1257,7 @@ function center( node ) {
     x = -source.property("cx").baseVal.value;
     y = -source.property("cy").baseVal.value;
     x = x * scale + $(document).width() / 2;
-    y = y * scale + $(document).height() / 3;
+    y = y * scale + $(document).height() / 4;
     d3.select('g').transition()
         .duration(250)
         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
