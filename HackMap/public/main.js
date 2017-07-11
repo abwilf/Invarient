@@ -123,7 +123,7 @@ window.addEventListener("keydown", keyPressed, false);
 
 
   function u_key() {
-    if sortByPriorityOn){
+    if (sortByPriorityOn){
       sortByPriorityOn = false;
     }
     else{
@@ -133,8 +133,32 @@ window.addEventListener("keydown", keyPressed, false);
     update(root);
   }
 
+  function v_key(){
+    if (notCompletedFilterOn){
+      notCompletedFilterOn = false;
+    }
+    else{
+      notCompletedFilterOn = true;
+    }
+
+    runListActions(filteredlist);
+    update(root);
+  }
+
+  function p_key(){
+    if (notActionableFilterOn){
+      notActionableFilterOn = false;
+    }
+    else{
+      notActionableFilterOn = true;
+    }
+
+    runListActions(filteredlist);
+    update(root);
+  }
+
   function i_key(){
-    if sortByDateOn){
+    if (sortByDateOn){
       sortByDateOn = false;
     }
     else{
@@ -147,14 +171,13 @@ window.addEventListener("keydown", keyPressed, false);
   function g_key() {
 
     runListActions(filteredList);
-
     update(root);
 
   }
 
   function h_key() {
 
-    if actionableFilterOn){
+    if (actionableFilterOn){
       actionableFilterOn = false;
     }
     else{
@@ -167,7 +190,7 @@ window.addEventListener("keydown", keyPressed, false);
 
   function j_key() {
 
-    if completedFilterOn){
+    if (completedFilterOn){
       completedFilterOn = false;
     }
     else{
@@ -436,6 +459,16 @@ function keyPressed(e) {
         j_key();
         return 74;
 
+        case 86:
+        console.log("The 'v' key is pressed.");
+        v_key();
+        return 86;
+
+        case 80:
+        console.log("The 'v' key is pressed.");
+        p_key();
+        return 80;
+
         case 73:
         console.log("The 'i' key is pressed.");
         i_key();
@@ -592,6 +625,35 @@ function runListActions(filteredlist){
   if (completedFilterOn){
     filteredlist = filterCompletedList(filteredlist);
   }
+
+  if (notCompletedFilterOn){
+    filteredlist = filterNotCompletedList(filteredlist);
+  }
+
+  if (notActionableFilterOn){
+    filteredlist = filterNotActionableList(filteredlist);
+  }
+
+}
+
+function filterNotCompletedList(filteredlist){
+  result = new Array();
+  filteredlist.forEach(function(d){
+    if (d.completed == false){
+      result.push(d);
+    }
+  });
+  return result;
+}
+
+function filterNotActionableList(filteredlist){
+  result = new Array();
+  filteredlist.forEach(function(d){
+    if (d.actionable == false){
+      result.push(d);
+    }
+  });
+  return result;
 }
 
 function filterCompletedList(filteredlist){
@@ -650,6 +712,7 @@ var modalopen = false;
 var filteredlist = new Array();
 var actionableFilterOn = false;
 var completedFilterOn = false;
+var notCompletedFilterOn = false;
 var sortByPriorityOn = false;
 var sortByDateOn = false;
 
