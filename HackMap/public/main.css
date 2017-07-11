@@ -3,6 +3,17 @@
     padding: 2%;
     text-align: center;
 }
+#taskList {
+    border: 1px solid black;
+    width: 20%;
+    float: right;
+}
+
+#tree-container {
+    /*border: 1px solid black;*/
+    float: left;
+    width: 80%;
+}
 button {
     margin: 20px;
     border: none;

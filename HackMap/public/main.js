@@ -873,36 +873,13 @@ d3.select("svg").append("svg:defs").selectAll("marker")
     .attr("d", "M0,-5L10,0L0,5");
 
 function drawList(filteredlist, startx, starty){
-
+  $( ".taskListP" ).empty();
   filteredlist.forEach(function(node){
-
-    var text = gGroup.append("text")
-                           .attr("x", startx)
-                           .attr("y", starty)
-                           .attr("font-family", "sans-serif")
-                           .attr("font-size", "15px")
-                           .attr("id", "c" + id)
-                           .text( function(d) { return node.data });
-
-    node.textsize = document.getElementById("c" + id).getComputedTextLength();
-    text = wrap(text, 200);
-
-    var text2 = gGroup.append("text")
-                           .attr("x", startx)
-                           .attr("y", starty + 20)
-                           .attr("font-family", "sans-serif")
-                           .attr("font-size", "15px")
-                           .attr("id", "d" + id)
-                           .text( function(d) { return node.priority });
-
-   var text3 = gGroup.append("text")
-                          .attr("x", startx)
-                          .attr("y", starty + 40)
-                          .attr("font-family", "sans-serif")
-                          .attr("font-size", "15px")
-                          .attr("id", "e" + id)
-                          .text( function(d) { return node.date });
-  starty = starty + 70;
+    if (node.data) {
+      $( ".taskListP" ).append("<p class='newElt'>" +node.data+ "</p>");
+      $( ".taskListP" ).append("<p class= 'newElt' style='margin-left: 20px;'>    Priority: " + node.priority+ "</p>");
+      $( ".taskListP" ).append("<p class='newElt' style='margin-left: 20px;'>    Due Date: " + node.date+ "</p>");
+    }
   })
 }
 
