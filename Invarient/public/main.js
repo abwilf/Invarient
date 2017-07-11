@@ -503,6 +503,7 @@ case 83:
       return 3;
         case 32:
               console.log("The '(space)' key is pressed.");
+              e.preventDefault();
               space_key();
               return 4;
 
