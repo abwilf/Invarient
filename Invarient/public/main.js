@@ -140,7 +140,7 @@ window.addEventListener("keydown", keyPressed, false);
     else{
       sortByPriorityOn = true;
     }
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     update(root);
   }
 
@@ -152,7 +152,7 @@ window.addEventListener("keydown", keyPressed, false);
       notCompletedFilterOn = true;
     }
 
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     update(root);
   }
 
@@ -164,7 +164,7 @@ window.addEventListener("keydown", keyPressed, false);
       notActionableFilterOn = true;
     }
 
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     update(root);
   }
 
@@ -175,13 +175,13 @@ window.addEventListener("keydown", keyPressed, false);
     else{
       sortByDateOn = true;
     }
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     modifySortBy("Date");
     update(root);
   }
 
   function g_key() {
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     modifySortBy("");
     modifyFilterBy("");
     update(root);
@@ -197,9 +197,9 @@ window.addEventListener("keydown", keyPressed, false);
       actionableFilterOn = true;
       // modifyFilterBy("Actionable");
     }
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     console.log("filteredlist length: " + filteredlist.length);
-    
+
     update(root);
   }
 
@@ -212,7 +212,7 @@ window.addEventListener("keydown", keyPressed, false);
       completedFilterOn = true;
     }
 
-    runListActions(filteredlist);
+    filteredlist = runListActions(filteredlist);
     update(root);
   }
 
@@ -678,6 +678,7 @@ function runListActions(filteredlist){
     filteredlist = filterNotActionableList(filteredlist);
   }
     console.log("filteredlist length: " + filteredlist.length);
+    return filteredlist;
 }
 
 function filterCompletedList(filteredlist){
@@ -1444,7 +1445,7 @@ var removedNodes = [];
             comp_value = false;
           }
           else assert(false); // one of yes or no should always be checked
-        
+
 
           curr["data"] = title; // str
           curr["comment"] = comment;  // str
@@ -1453,7 +1454,7 @@ var removedNodes = [];
           curr["date"] = date;  // str
           curr["actionable"] = act_value;
           curr["completed"] = comp_value;
-           
+
 
            // abc123
            // NOTE: there can be no spaces in names
