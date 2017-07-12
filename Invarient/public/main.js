@@ -256,13 +256,16 @@ window.addEventListener("keydown", keyPressed, false);
       personAssignedText = prompt("Filter by person assigned.", "Enter names separated by comma (or enter none).");
       if (personAssignedText && personAssignedText != "none"  && personAssignedText != "Enter names separated by comma (or enter none).") {
           filtersDict.peopleOn = true;
-          runListActions(filteredlist);
+          filteredlist = runListActions(filteredlist);
       }
      else {  // if cancel or no text or "none", turn off filter
         filtersDict.peopleOn = false;
      }
-     console.log("people length: " + filtersDict.people.length);
      modifyFilterBy();
+     console.log("filteredlist: ");
+     filteredlist.forEach(function(d) {
+        console.log(d.data); 
+     })
      update(root);
   }
 
@@ -716,7 +719,7 @@ function runListActions(filteredlist){
   if (filtersDict.peopleOn) {
     personAssignedText = personAssignedText.toLowerCase();
     filtersDict.people = personAssignedText.split(',');
-    filteredlist = filterPersonList(filteredlist, filtersDict.people);  
+    filteredlist = filterPersonList(filteredlist, filtersDict.people); 
   }
   return filteredlist;
 }
@@ -781,7 +784,6 @@ function intersect(arr1, arr2) {
 
 function filterPersonList(filteredlist, nameArr) {
   result = new Array();
-
   filteredlist.forEach(function(d){
     if (intersect(d.assignedArr, nameArr)) {
       result.push(d);
