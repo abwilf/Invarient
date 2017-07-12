@@ -132,46 +132,87 @@ window.addEventListener("keydown", keyPressed, false);
     $( ".fb" ).append("<p class='newElt'>Filtered by: " + input + "</p>");
   }
 
-  function u_key() {
-    sortByPriority(filteredlist);
-    modifySortBy("Priority");
+
+ function u_key() {
+    if (sortByPriorityOn){
+      sortByPriorityOn = false;
+    }
+    else{
+      sortByPriorityOn = true;
+    }
+    runListActions(filteredlist);
+    update(root);
+  }
+
+  function v_key(){
+    if (notCompletedFilterOn){
+      notCompletedFilterOn = false;
+    }
+    else{
+      notCompletedFilterOn = true;
+    }
+
+    runListActions(filteredlist);
+    update(root);
+  }
+
+  function p_key(){
+    if (notActionableFilterOn){
+      notActionableFilterOn = false;
+    }
+    else{
+      notActionableFilterOn = true;
+    }
+
+    runListActions(filteredlist);
     update(root);
   }
 
   function i_key(){
-    sortByDate(filteredlist);
+    if (sortByDateOn){
+      sortByDateOn = false;
+    }
+    else{
+      sortByDateOn = true;
+    }
+    runListActions(filteredlist);
     modifySortBy("Date");
     update(root);
   }
 
   function g_key() {
-    populateList(filteredlist, root);
+    runListActions(filteredlist);
     modifySortBy("");
     modifyFilterBy("");
     update(root);
   }
 
   function h_key() {
-    filteredlist = filterActionableList(filteredlist);
-    modifyFilterBy("Actionable");
-    update(root);
-  }
 
-   function eight_key() {
-    filteredlist = filterNotActionableList(filteredlist);
-    modifyFilterBy("Not actionable");
+    if (actionableFilterOn){
+      actionableFilterOn = false;
+      // modifyFilterBy("");
+    }
+    else{
+      actionableFilterOn = true;
+      // modifyFilterBy("Actionable");
+    }
+    runListActions(filteredlist);
+    console.log("filteredlist length: " + filteredlist.length);
+    
     update(root);
   }
 
   function j_key() {
-    filteredlist = filterCompletedList(filteredlist);
-    modifyFilterBy("Completed");
-    update(root);
-  }
 
-  function nine_key() {
-    filteredlist = filterNotCompletedList(filteredlist);
-    modifyFilterBy("Not completed");
+    if (completedFilterOn){
+      completedFilterOn = false;
+    }
+    else{
+      completedFilterOn = true;
+    }
+
+    runListActions(filteredlist);
     update(root);
   }
 
@@ -438,10 +479,20 @@ function keyPressed(e) {
         g_key();
         return 71;
 
-        case 75:
-        console.log("The 'k' key is pressed.");
-        k_key();
-        return 75;
+        // case 75:
+        // console.log("The 'k' key is pressed.");
+        // k_key();
+        // return 75;
+
+        case 86:
+        console.log("The 'v' key is pressed.");
+        v_key();
+        return 86;
+
+        case 80:
+        console.log("The 'v' key is pressed.");
+        p_key();
+        return 80;
 
         case 72:
         console.log("The 'h' key is pressed.");
@@ -463,15 +514,15 @@ function keyPressed(e) {
         u_key();
         return 85;
 
-        case 57:
-        console.log("The '9' key is pressed.");
-        nine_key();
-        return 57;
+        // case 57:
+        // console.log("The '9' key is pressed.");
+        // nine_key();
+        // return 57;
 
-        case 56:
-        console.log("The '8' key is pressed.");
-        eight_key();
-        return 56;
+        // case 56:
+        // console.log("The '8' key is pressed.");
+        // eight_key();
+        // return 56;
 
         case 78:
           // 0
@@ -602,10 +653,37 @@ function populateList(filteredlist, node){
   });
 }
 
+function runListActions(filteredlist){
+
+  populateList(filteredlist, root);
+
+  if (sortByPriorityOn){
+    sortByPriority(filteredlist);
+  }
+  if (sortByDateOn){
+    sortByDate(filteredlist);
+  }
+  if (actionableFilterOn){
+    filteredlist = filterActionableList(filteredlist);
+  }
+  if (completedFilterOn){
+    filteredlist = filterCompletedList(filteredlist);
+  }
+
+  if (notCompletedFilterOn){
+    filteredlist = filterNotCompletedList(filteredlist);
+  }
+
+  if (notActionableFilterOn){
+    filteredlist = filterNotActionableList(filteredlist);
+  }
+    console.log("filteredlist length: " + filteredlist.length);
+}
+
 function filterCompletedList(filteredlist){
   result = new Array();
   filteredlist.forEach(function(d){
-    if (d.completed){
+    if (d.completed == true){
       result.push(d);
     }
   });
@@ -615,7 +693,7 @@ function filterCompletedList(filteredlist){
 function filterNotCompletedList(filteredlist){
   result = new Array();
   filteredlist.forEach(function(d){
-    if (!d.completed){
+    if (d.completed == false){
       result.push(d);
     }
   });
@@ -624,8 +702,10 @@ function filterNotCompletedList(filteredlist){
 
 function filterActionableList(filteredlist){
   result = new Array();
+  // FIXME: remove
   filteredlist.forEach(function(d){
-    if (d.actionable){
+    if (d.actionable == true){
+      console.log("bad");
       result.push(d);
     }
   });
@@ -635,7 +715,7 @@ function filterActionableList(filteredlist){
 function filterNotActionableList(filteredlist){
   result = new Array();
   filteredlist.forEach(function(d){
-    if (!d.actionable){
+    if (d.actionable == false){
       result.push(d);
     }
   });
@@ -684,6 +764,12 @@ function sortByPriority(filteredlist){
 
 function sortByDate(filteredlist){
   filteredlist.sort(function(a,b){
+    if (!a.date){
+      return 1;
+    }
+    else if (!b.date){
+      return -1;
+    }
     return new Date(a.date) - new Date(b.date);
 
   });
@@ -699,6 +785,12 @@ var dragTarget;
 var nodeOriginalState;
 var modalopen = false;
 var filteredlist = new Array();
+var actionableFilterOn = false;
+var notActionableFilterOn = false;
+var completedFilterOn = false;
+var notCompletedFilterOn = false;
+var sortByPriorityOn = false;
+var sortByDateOn = false;
 
 $(function() {
   if (App.RESULT != -1) {
@@ -892,19 +984,18 @@ d3.select("svg").append("svg:defs").selectAll("marker")
   .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
 
-function drawList(filteredlist, startx, starty){
+function drawList(filteredlist){
   $( ".taskListP" ).empty();
   filteredlist.forEach(function(node){
     if (node.data) {
       $( ".taskListP" ).append("<p class='newElt'>" +node.data+ "</p>");
-      $( ".taskListP" ).append("<p class= 'newElt' style='margin-left: 20px;'>    Priority: " + node.priority+ "</p>");
-      $( ".taskListP" ).append("<p class='newElt' style='margin-left: 20px;'>    Due Date: " + node.date+ "</p>");
+      $( ".taskListP" ).append("<p class= 'newElt' style='margin-left: 20px;'>    Priority: " + node.priority + "</p>");
+      $( ".taskListP" ).append("<p class='newElt' style='margin-left: 20px;'>    Due Date: " + node.date + "</p>");
     }
   })
 }
 
 function drawNode(node) {
-
     if (node.children) {
       for (var i = 0; i < node.children.length; ++i) {
         if (node.children[i].connection != "neoroot") {
@@ -1204,7 +1295,7 @@ function update(root){
         dragTarget = null;
       })
 
-    drawList(filteredlist, $(document).width()-250, 200);
+    drawList(filteredlist);
 
 }
 
@@ -1281,7 +1372,7 @@ function center( node ) {
     x = -source.property("cx").baseVal.value;
     y = -source.property("cy").baseVal.value;
     x = x * scale + $(document).width() / 2;
-    y = y * scale + $(document).height() / 3;
+    y = y * scale + $(document).height() / 4;
     d3.select('g').transition()
         .duration(250)
         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
