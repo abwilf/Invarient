@@ -127,11 +127,33 @@ window.addEventListener("keydown", keyPressed, false);
     $( ".sb" ).append("<p class='newElt'>Sorted by: " + input + "</p>");
   }
 
-  function modifyFilterBy(input) {
-    $( ".fb" ).empty();
-    $( ".fb" ).append("<p class='newElt'>Filtered by: " + input + "</p>");
-  }
 
+  function modifyFilterBy() {
+    $( ".fb" ).empty();
+    var str = "";
+    if (filtersDict.actionableFilterOn) {
+       str += "Actionable ";
+    }
+    if (filtersDict.notActionableFilterOn) {
+      str += "Not Actionable ";
+      if (filtersDict.actionableFilterOn) console.log("PROBLEM: actionableFilterOn and notActionableFilterOn are on at same time!");
+    }
+    if (filtersDict.completedFilterOn) {
+      str += "Completed ";
+    }
+    if (filtersDict.notCompletedFilterOn) {
+      str += "Not Completed "
+      if (filtersDict.completedFilterOn) console.log("PROBLEM: completedFilterOn and notCompletedFilterOn are on at same time!");
+    }
+    if (filtersDict.peopleOn) {
+      str += "People Assigned: "
+      filtersDict.people.forEach(function(person) {
+        str += person + " ";
+      });
+    }
+
+    $( ".fb" ).append("<p class='newElt'>Filtered by: " +  str + "</p>");
+  }
 
  function u_key() {
     if (sortByPriorityOn){
@@ -141,34 +163,11 @@ window.addEventListener("keydown", keyPressed, false);
       sortByPriorityOn = true;
     }
     filteredlist = runListActions(filteredlist);
+    modifySortBy("Priority");
     update(root);
   }
 
-  function v_key(){
-    if (notCompletedFilterOn){
-      notCompletedFilterOn = false;
-    }
-    else{
-      notCompletedFilterOn = true;
-    }
-
-    filteredlist = runListActions(filteredlist);
-    update(root);
-  }
-
-  function p_key(){
-    if (notActionableFilterOn){
-      notActionableFilterOn = false;
-    }
-    else{
-      notActionableFilterOn = true;
-    }
-
-    filteredlist = runListActions(filteredlist);
-    update(root);
-  }
-
-  function i_key(){
+   function i_key(){
     if (sortByDateOn){
       sortByDateOn = false;
     }
@@ -179,56 +178,93 @@ window.addEventListener("keydown", keyPressed, false);
     modifySortBy("Date");
     update(root);
   }
+ 
 
   function g_key() {
     filteredlist = runListActions(filteredlist);
     modifySortBy("");
-    modifyFilterBy("");
+    modifyFilterBy();
     update(root);
   }
 
   function h_key() {
-
-    if (actionableFilterOn){
-      actionableFilterOn = false;
-      // modifyFilterBy("");
+    if (filtersDict["actionableFilterOn"]) {
+      filtersDict["actionableFilterOn"] = false;
     }
     else{
-      actionableFilterOn = true;
-      // modifyFilterBy("Actionable");
+      if (filtersDict["notActionableFilterOn"]) {
+        filtersDict["notActionableFilterOn"] = false;
+      }
+      filtersDict["actionableFilterOn"] = true;
     }
     filteredlist = runListActions(filteredlist);
-    console.log("filteredlist length: " + filteredlist.length);
-
+    modifyFilterBy();
     update(root);
   }
+
+
+  function p_key(){
+    if (filtersDict["notActionableFilterOn"]){
+      filtersDict["notActionableFilterOn"] = false;
+    }
+    else{
+      if (filtersDict["actionableFilterOn"]) {
+        filtersDict["actionableFilterOn"] = false; 
+      }
+      filtersDict["notActionableFilterOn"] = true;
+    }
+    filteredlist = runListActions(filteredlist);
+    modifyFilterBy();
+    update(root);
+  }
+
 
   function j_key() {
-
-    if (completedFilterOn){
-      completedFilterOn = false;
+    if (filtersDict["completedFilterOn"]){
+        filtersDict["completedFilterOn"] = false;
     }
     else{
-      completedFilterOn = true;
+      if (filtersDict["notCompletedFilterOn"]) {
+        filtersDict["notCompletedFilterOn"] = false;
+      }
+        filtersDict["completedFilterOn"] = true;
     }
 
     filteredlist = runListActions(filteredlist);
+    modifyFilterBy();
     update(root);
   }
 
-
-//abc123
-  function k_key() {
-      var text = prompt("Filter by person assigned.", "Enter names separated by comma.");
-      if (text) {
-        text = text.toLowerCase();
-        var textArr = text.split(',');
-        filteredlist = filterPersonList(filteredlist, textArr);
-        modifyFilterBy("Person");
-        update(root);
+  function v_key(){
+    if (filtersDict.notCompletedFilterOn){
+      filtersDict.notCompletedFilterOn = false;
     }
+    else {
+      if (filtersDict.completedFilterOn) {  // turn off completed filter
+        filtersDict.completedFilterOn = false;
+      }
+      filtersDict.notCompletedFilterOn = true;
+    }
+    filteredlist = runListActions(filteredlist);
+    modifyFilterBy();
+    update(root);
   }
-  //endabc123
+
+  // yay globals
+  var personAssignedText = "";
+  function k_key() {
+      personAssignedText = prompt("Filter by person assigned.", "Enter names separated by comma (or enter none).");
+      if (personAssignedText && personAssignedText != "none"  && personAssignedText != "Enter names separated by comma (or enter none).") {
+          filtersDict.peopleOn = true;
+          runListActions(filteredlist);
+      }
+     else {  // if cancel or no text or "none", turn off filter
+        filtersDict.peopleOn = false;
+     }
+     console.log("people length: " + filtersDict.people.length);
+     modifyFilterBy();
+     update(root);
+  }
 
   function n_key() {
            //Fetch the current active node.
@@ -479,10 +515,10 @@ function keyPressed(e) {
         g_key();
         return 71;
 
-        // case 75:
-        // console.log("The 'k' key is pressed.");
-        // k_key();
-        // return 75;
+        case 75:
+        console.log("The 'k' key is pressed.");
+        k_key();
+        return 75;
 
         case 86:
         console.log("The 'v' key is pressed.");
@@ -663,22 +699,26 @@ function runListActions(filteredlist){
   if (sortByDateOn){
     sortByDate(filteredlist);
   }
-  if (actionableFilterOn){
+  if (filtersDict.actionableFilterOn){
     filteredlist = filterActionableList(filteredlist);
   }
-  if (completedFilterOn){
+  if (filtersDict.completedFilterOn){
     filteredlist = filterCompletedList(filteredlist);
   }
 
-  if (notCompletedFilterOn){
+  if (filtersDict.notCompletedFilterOn){
     filteredlist = filterNotCompletedList(filteredlist);
   }
 
-  if (notActionableFilterOn){
+  if (filtersDict.notActionableFilterOn){
     filteredlist = filterNotActionableList(filteredlist);
   }
-    console.log("filteredlist length: " + filteredlist.length);
-    return filteredlist;
+  if (filtersDict.peopleOn) {
+    personAssignedText = personAssignedText.toLowerCase();
+    filtersDict.people = personAssignedText.split(',');
+    filteredlist = filterPersonList(filteredlist, filtersDict.people);  
+  }
+  return filteredlist;
 }
 
 function filterCompletedList(filteredlist){
@@ -786,12 +826,9 @@ var dragTarget;
 var nodeOriginalState;
 var modalopen = false;
 var filteredlist = new Array();
-var actionableFilterOn = false;
-var notActionableFilterOn = false;
-var completedFilterOn = false;
-var notCompletedFilterOn = false;
 var sortByPriorityOn = false;
 var sortByDateOn = false;
+var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: []};
 
 $(function() {
   if (App.RESULT != -1) {
