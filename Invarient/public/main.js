@@ -158,24 +158,32 @@ window.addEventListener("keydown", keyPressed, false);
  function u_key() {
     if (sortByPriorityOn){
       sortByPriorityOn = false;
+      modifySortBy("");
     }
     else{
+      if (sortByDateOn) {
+        sortByDateOn = false;
+      }
       sortByPriorityOn = true;
+      modifySortBy("Priority");
     }
     filteredlist = runListActions(filteredlist);
-    modifySortBy("Priority");
     update(root);
   }
 
    function i_key(){
     if (sortByDateOn){
       sortByDateOn = false;
+      modifySortBy("");
     }
-    else{
+    else {
+      if (sortByPriorityOn) {
+        sortByPriorityOn = false;
+      }
       sortByDateOn = true;
+      modifySortBy("Date");
     }
     filteredlist = runListActions(filteredlist);
-    modifySortBy("Date");
     update(root);
   }
  
