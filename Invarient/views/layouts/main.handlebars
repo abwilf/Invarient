@@ -46,6 +46,8 @@
         <button id="9" onclick="v_key()"> Filter List by not Completed Items (v) </button>
         <button id="j" onclick="j_key()"> Filter List by Completed Items (j) </button>
         <button id="j" onclick="k_key()"> Filter List by Person Assigned (k) </button>
+        <button id= "save" onclick="saveMap()"> SAVE </button>
+        <button id="create" onclick="createMap()"> CREATE </button>
 
         <!--
         <button id = "f" onclick="f_key()"> New Forested Node (f) </button>
@@ -99,7 +101,13 @@
     </div> 
   
 
- 1
+  <div class="form-group">
+            <label id = "actionable_label" for = "radios_act">Is this actionable?</label>
+            <br>
+            <input type="radio" name="radios_act" id = "act_1" value="Yes">Yes<br>
+            <input type="radio" name="radios_act" id = "act_2" value="No">No<br>
+    </div>
+
     
     <div class="form-group">
             <label id = "completed_label" for = "radios_comp">Has this been completed?</label>
@@ -120,7 +128,7 @@
     
       <div class="form-group">
       <label for="priority">Priority</label>
-      <select class="form-control" id="priority" value = "1">
+      <select class="form-control" id="priority" value = "5">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>

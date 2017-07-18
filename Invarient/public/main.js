@@ -280,7 +280,7 @@ window.addEventListener("keydown", keyPressed, false);
   function n_key() {
            //Fetch the current active node.
             curr = getCurrentNode();
-             var txt = prompt("Edit node text.", "Lorem Ipsum");
+             var txt = prompt("", "Enter comes from node text");
 
               if (txt) {
                 var tmp = new Node(root.x, 0, txt);
@@ -324,7 +324,7 @@ function e_key() {
 function d_key() {
                     //Fetch the current active node.
                          curr = getCurrentNode();
-                         var txt = prompt("Enter new node text.", "Lorem Ipsum");
+                         var txt = prompt("", "Enter definition node text.");
                          if (txt) {
                            var tmp = new Node(root.x, 0, txt);
 
@@ -418,7 +418,7 @@ function del_key() {
 }
 
 function f_key() {
-        var txt = prompt("Enter forested node text.", "Lorem Ipsum");
+        var txt = prompt("", "Enter node text here");
 
         if (txt) {
           var tmp = new Node(root.x, 0, txt);
@@ -435,7 +435,7 @@ function f_key() {
 function y_key() {
             curr = getCurrentNode();
 
-            var lbl = prompt("Enter label connection type. [comes from], [definition], [custom]", "custom");
+            var lbl = prompt("", "Enter label connection type. [comes from], [definition], [custom]");
             if (!lbl){
                 lbl = curr.connection;
             }
@@ -448,7 +448,7 @@ function y_key() {
             }
 
             else if (lbl == "custom" || lbl == "c") {
-              var lbl = prompt("Enter custom connection type.", "Lorem Ipsum");
+              var lbl = prompt("", "Enter custom connection type");
             }
 
             curr.connection = lbl;
@@ -460,11 +460,11 @@ function y_key() {
 function c_key() {
                     curr = getCurrentNode();
 
-                    var lbl = prompt("Enter custom connection label.", "Lorem Ipsum");
+                    var lbl = prompt("", "Enter custom connection label");
                     if (!lbl){
                       lbl = "line";
                     }
-                    var txt = prompt("Enter new node text.", "Lorem Ipsum");
+                    var txt = prompt("", "Enter custom node text");
 
                     if (txt) {
                       var tmp = new Node(root.x, 0, txt);
@@ -489,7 +489,7 @@ function o_key() {
     curr.comment ? (document.getElementById("comment").value = curr.comment) : (document.getElementById("comment").value = "");
     curr.assigned ? (document.getElementById("assigned_peeps").value = curr.assigned) : (document.getElementById("assigned_peeps").value = "");
 
-    curr.priority ? (document.getElementById("priority").value = curr.priority.toString()) : (document.getElementById("priority").value = 1);
+    curr.priority ? (document.getElementById("priority").value = curr.priority.toString()) : (document.getElementById("priority").value = 5);
     curr.date ? (document.getElementById("date").value = curr.date) : (document.getElementById("date").value = "");
     if (curr.actionable) {
       document.getElementById("act_1").checked = true;
@@ -517,49 +517,47 @@ function keyPressed(e) {
     return;
   }
 
-
   console.log(e.keyCode);
     switch (e.keyCode) {
-
         case 71:
         console.log("The 'g' key is pressed.");
         g_key();
-        return 71;
+        break;
 
         case 75:
         console.log("The 'k' key is pressed.");
         k_key();
-        return 75;
+        break;
 
         case 86:
         console.log("The 'v' key is pressed.");
         v_key();
-        return 86;
+        break;
 
         case 80:
         console.log("The 'v' key is pressed.");
         p_key();
-        return 80;
+        break;
 
         case 72:
         console.log("The 'h' key is pressed.");
         h_key();
-        return 72;
+        break;
 
         case 74:
         console.log("The 'j' key is pressed.");
         j_key();
-        return 74;
+        break;
 
         case 73:
         console.log("The 'i' key is pressed.");
         i_key();
-        return 73;
+        break;
 
         case 85:
         console.log("The 'u' key is pressed.");
         u_key();
-        return 85;
+        break;
 
         // case 57:
         // console.log("The '9' key is pressed.");
@@ -575,90 +573,93 @@ function keyPressed(e) {
           // 0
          console.log("The 'n' key is pressed.");
               n_key();
-         return 0;
+         break;
 
          case 79:
           console.log("The 'o' key is pressed.");
           o_key();
-          return 100;  // arbitrary lol
+          break;
 
 case 83:
       console.log("The 's' key is pressed.");
       s_key();
-      return 100;
+      break;
 
         case 69:
           // 1
          console.log("The 'e' key is pressed.");
          e_key();
-         return 1;
+         break;
         case 82:
              console.log("The 'r' key is pressed.");
-             return 2;
+             break;
         case 68:
       console.log("The 'd' key is pressed.");
       d_key();
-      return 3;
+      break;
         case 32:
               console.log("The '(space)' key is pressed.");
               e.preventDefault();
               space_key();
-              return 4;
+              break;
 
         case 38:
               console.log("The 'up arrow' key is pressed.");
               up_key();
-              return 5;
+              break;
         case 40:
               console.log("The 'down arrow' key is pressed.");
               down_key();
-              return 6;
+              break;
         case 37:
               console.log("The 'left arrow' key is pressed.");
               left_key();
-              return 7;
+              break;
 
           case 39:
               console.log("The 'right arrow' key is pressed.");
               right_key();
-              return 8;
+              break;
 
           case 90:
               console.log("The 'z' key is pressed.");
               z_key();
-              return 9;
+              break;
 
     case 8:
       console.log("The 'delete' key is pressed.");
       del_key();
-      return 10;
+      break;
 
     case 65:
       console.log("The 'a' key is pressed.");
-      return 11;
+      break;
 
     case 70:
         console.log("The 'f' key is pressed.");
         f_key();
-        return 12;
+        break;
 
     case 77:
             console.log("The 'm' key is pressed.");
-            return 13;
+            break;
 
     case 89:
             console.log("The 'y' key is pressed.");
             y_key();
-            return 14;
+            break;
 
             case 67:
               console.log("The 'c' key is pressed.");
                       c_key();
-              return 100;
+              break;
         default:
           console.log("Pressed an unrecognized key!");
-          return -1;
+          break;
     }
+
+    console.log("about to run list actions!");
+    g_key(); // update list
 }
 
 // catches from server side to redirect
@@ -839,15 +840,16 @@ var filteredlist = new Array();
 var sortByPriorityOn = false;
 var sortByDateOn = false;
 var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: []};
-
+var uniqueId; // for finding map in db
 $(function() {
   if (App.RESULT != -1) {
     root = App.RESULT;
     root = JSON.parse(root.data);
     root = root[0];
+    uniqueId = App.uniqueId;
+    console.log('UNIQUE ID: ' + uniqueId);
   }
   else {
-    ///////////////////////////// TODO: REMOVE THIS //////////////////////////////////////
     root = new Node($(document).width() / 2, 50, "Enter your text here.");
   }
 
@@ -899,11 +901,10 @@ function Node(x, y, data) {
 
 // remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
 function saveToJSON(node_in) {
-  var obj = JSONHelper(root, []);
+      var obj = JSONHelper(root, []);
       obj = JSON.stringify(obj);
-      console.log(obj);
       socket.emit('save', obj);
-
+      return obj;
   // // write to JSON
  //      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
  //          console.log(data);
@@ -1453,8 +1454,8 @@ function onSelect( node ) {
 
 var removedNodes = [];
 
-// blah123
 // FORM SCRIPT
+// this is just for the date input
  $(document).ready(function(){
       var date_input=$('input[name="date"]'); //our date input has the name "date"
       var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -1474,7 +1475,9 @@ var removedNodes = [];
           var comment = document.getElementById("comment").value;
           var assigned = document.getElementById("assigned_peeps").value;
           var priority = document.getElementById("priority").value;
+          
           priority = parseInt(priority);
+
           var date = document.getElementById("date").value;
           var act_value;
           if (document.getElementById('act_1').checked) {
@@ -1528,3 +1531,30 @@ var removedNodes = [];
       });
 
       // END blah123
+
+
+function saveMap() {
+  var dataTemp = saveToJSON(root);
+  var URL = window.location.pathname ;
+    $.post(URL,
+    {
+        type: "save", // save or create
+        data: dataTemp,
+        id: uniqueId
+    },
+    function(data, status){
+        console.log("client side check save");
+    });
+};
+
+function createMap() {
+    var URL = window.location.pathname ;
+    $.post(URL,
+    {
+        type: "create", // save or create
+    },
+    function(data, status){
+        // REDIRECT
+        window.location.pathname = data.redirect;
+    });
+};
