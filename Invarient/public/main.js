@@ -21,6 +21,12 @@ dragListener = d3.behavior.drag()
     console.log("Drag starting.");
     var node = getClickedNode( this );
 
+    // for filterByNode
+    if (filtersDict.filterByNodeOn) {
+        filtersDict.nodeFilteredBy = node;
+        m_helper();
+    }       
+
     if (node == root) {
         return;
     }
@@ -151,6 +157,14 @@ window.addEventListener("keydown", keyPressed, false);
         str += person + " ";
       });
     }
+    if (filtersDict.filterByNodeOn) {
+        if (!filtersDict.nodeFilteredBy) {
+            console.log("ERROR: Node should have been set by now.");
+        }
+        else {
+            str += "Node Filtered By: " + filtersDict.nodeFilteredBy.data;
+        }
+    }
 
     $( ".fb" ).append("<p class='newElt'>Filtered by: " +  str + "</p>");
   }
@@ -194,6 +208,26 @@ window.addEventListener("keydown", keyPressed, false);
     modifyFilterBy();
     update(root);
   }
+
+function m_helper() {
+    console.log("node data is: " + filtersDict.nodeFilteredBy.data);
+    filteredlist = runListActions(filteredlist);
+    modifyFilterBy();
+    update(root);
+}
+
+function m_key() {
+    if (filtersDict.filterByNodeOn) {
+        filtersDict.filterByNodeOn = false;
+        filtersDict.nodeFilteredBy = null;
+    }
+    else {
+        filtersDict.filterByNodeOn = true;
+        alert("Click on the node you would like to filter by.");
+
+        // "drag starting" will update filtersDict.nodeFilteredBy and call m_helper()
+    }
+}
 
   function h_key() {
     if (filtersDict["actionableFilterOn"]) {
@@ -642,6 +676,7 @@ case 83:
 
     case 77:
             console.log("The 'm' key is pressed.");
+            m_key();
             break;
 
     case 89:
@@ -657,7 +692,12 @@ case 83:
           console.log("Pressed an unrecognized key!");
           break;
     }
-    g_key(); // update list
+
+    // waiting for click to set node
+    if (!filtersDict.filterByNodeOn) {
+        g_key(); // update list
+    }
+    
     // console.log("about to run list actions!");
           // console.log("Pressed an unrecognized key!");
 }
@@ -702,7 +742,6 @@ function populateList(filteredlist, node){
 }
 
 function runListActions(filteredlist){
-
   populateList(filteredlist, root);
 
   if (sortByPriorityOn){
@@ -730,7 +769,26 @@ function runListActions(filteredlist){
     filtersDict.people = personAssignedText.split(',');
     filteredlist = filterPersonList(filteredlist, filtersDict.people); 
   }
+  if (filtersDict.filterByNodeOn) {
+    filteredlist = filterNodeList(filteredlist);
+  }
   return filteredlist;
+}
+
+// EFFECTS: take filteredlist and filter by only those nodes that are underneath filtersDict.nodeFilteredBy
+function filterNodeList(filteredlist) {
+    if (!filtersDict.nodeFilteredBy) {
+        console.log("ERROR: nodeFilteredBy should not be null at this point");
+    }
+    else {
+        console.log('node title: ' + filtersDict.nodeFilteredBy.data);
+
+        // TODO: fill in filtration code here
+
+
+        ///////////////////
+    }
+    return filteredlist;
 }
 
 function filterCompletedList(filteredlist){
@@ -839,8 +897,9 @@ var modalopen = false;
 var filteredlist = new Array();
 var sortByPriorityOn = false;
 var sortByDateOn = false;
-var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: []};
+var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: [], filterByNodeOn: false, nodeFilteredBy: null};
 var uniqueId; // for finding map in db
+
 $(function() {
   if (App.RESULT != -1) {
     root = App.RESULT;
@@ -1311,7 +1370,6 @@ function update(root){
       }
     })
      .on("click", function() {
-
        var node = getClickedNode( this );
        onSelect( node );
        setCurrentNode( node );
