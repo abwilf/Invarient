@@ -654,20 +654,12 @@ case 83:
                       c_key();
               break;
         default:
-<<<<<<< Updated upstream
           console.log("Pressed an unrecognized key!");
           break;
     }
-
-    console.log("about to run list actions!");
-=======
-          // console.log("Pressed an unrecognized key!");
-          break;
-    }
-
-    // console.log("about to run list actions!");
->>>>>>> Stashed changes
     g_key(); // update list
+    // console.log("about to run list actions!");
+          // console.log("Pressed an unrecognized key!");
 }
 
 // catches from server side to redirect
@@ -912,11 +904,8 @@ function saveToJSON(node_in) {
       var obj = JSONHelper(root, []);
       obj = JSON.stringify(obj);
       socket.emit('save', obj);
-<<<<<<< Updated upstream
-=======
         //console.log(root);
       hydrateData(root);
->>>>>>> Stashed changes
       return obj;
   // // write to JSON
  //      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {

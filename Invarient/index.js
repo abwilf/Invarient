@@ -134,26 +134,16 @@ app.post('/maps/:id', function(req, res) {
             m.data = req.body.data;
             m.save(function(err) {
                 if (err) throw err;
-<<<<<<< Updated upstream
                 console.log("Successfully altered map");
             });
-            console.log("MY SAVE POST!!!");
-=======
                 console.log("Successfully saved map");
             });
->>>>>>> Stashed changes
-        })
-    }
+        }
 
     else if (req.body.type == "create") {
-<<<<<<< Updated upstream
         console.log("MY CREATE POST !!!");
         var newUrl = createNewMap();
-        
-=======
-        var newUrl = createNewMap();
         console.log("Successfully created map");
->>>>>>> Stashed changes
         // redirect is in client portion b/c of ajax post request
         res.send({redirect: newUrl});
     }
