@@ -775,16 +775,17 @@ function runListActions(filteredlist){
   return filteredlist;
 }
 
-// EFFECTS: take filteredlist and filter by only those nodes that are underneath filtersDict.nodeFilteredBy
+// EFFECTS: take filteredlist and filter by only those nodes that are children of (and including) the node
 function filterNodeList(filteredlist) {
-    if (!filtersDict.nodeFilteredBy) {
+    var node = filtersDict.nodeFilteredBy
+    if (!node) {
         console.log("ERROR: nodeFilteredBy should not be null at this point");
     }
     else {
-        console.log('node title: ' + filtersDict.nodeFilteredBy.data);
+        console.log('node title: ' + node.data);
 
         // TODO: fill in filtration code here
-
+        
 
         ///////////////////
     }
