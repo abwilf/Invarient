@@ -299,7 +299,7 @@ function s_key() {
         console.log('Cannot save with null root');
       }
       else {
-        saveToJSON(root);
+        saveMap();
       }
 }
 
@@ -654,11 +654,19 @@ case 83:
                       c_key();
               break;
         default:
+<<<<<<< Updated upstream
           console.log("Pressed an unrecognized key!");
           break;
     }
 
     console.log("about to run list actions!");
+=======
+          // console.log("Pressed an unrecognized key!");
+          break;
+    }
+
+    // console.log("about to run list actions!");
+>>>>>>> Stashed changes
     g_key(); // update list
 }
 
@@ -683,7 +691,7 @@ function getClickedNode(clicked) {
 // }
 
 function hydrateData(data) {
-  console.log("Hydrating node (stay thirsty):" , data);
+  // console.log("Hydrating node (stay thirsty):" , data);
 
   traverseAndDo(data, function(d) {
     if( typeof(d.children) !== 'undefined') {
@@ -860,7 +868,7 @@ $(function() {
   currentNode = root;
 
   update(root);
-  console.log("Done");
+  // console.log("Done");
   onSelect(root.children[0]);
   g_key();
 });
@@ -904,6 +912,11 @@ function saveToJSON(node_in) {
       var obj = JSONHelper(root, []);
       obj = JSON.stringify(obj);
       socket.emit('save', obj);
+<<<<<<< Updated upstream
+=======
+        //console.log(root);
+      hydrateData(root);
+>>>>>>> Stashed changes
       return obj;
   // // write to JSON
  //      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
@@ -919,7 +932,7 @@ function JSONHelper(node_in, nodes) {
 }
 
 function dehydrateNode(node_in) {
-    console.log("Dehydrating node:" , node_in);
+    // console.log("Dehydrating node:");
     node_in.parent = null;
     if (typeof(node_in.children) !== 'undefined')  {
       node_in.children.forEach(function(child, elem) {
@@ -992,7 +1005,6 @@ function add(parent, child) {
 
 
 function remove(node) {
-
       for (var i = 0; i < node.parent.children.length; i++) {
           if (node.parent.children[i] === node) {
               node.parent.children.splice(i, 1);
@@ -1157,19 +1169,19 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
 
 function nodeWidthFunctor(node) {
 
-    console.log(node.textsize);
+    // console.log(node.textsize);
     if (node.textsize) {
       if (node.textsize>300){
-        console.log("Case A");
+        // console.log("Case A");
         return 355;
       }
       else{
-        console.log("Case B");
+        // console.log("Case B");
         return node.textsize + 55;
       }
     }
     else{
-      console.log("Case C");
+      // console.log("Case C");
       return 20;
     }
 
@@ -1314,7 +1326,7 @@ function update(root){
        var node = getClickedNode( this );
        onSelect( node );
        setCurrentNode( node );
-       center( node );
+       // center( node );
 
     })
     .on("dblclick", function() {
@@ -1327,7 +1339,7 @@ function update(root){
 
       update(root);
 
-      center( node );
+      // center( node );
 
       })
     .call(dragListener);
@@ -1444,7 +1456,7 @@ function onSelect( node ) {
   }
   d3.select("#a" + getCurrentNode().id).attr('fill', '#302E1C');
 
-  center( node );
+  // center( node );
 
 }
 
