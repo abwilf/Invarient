@@ -521,30 +521,36 @@ function o_key() {
     // set modal elements
     curr.data ? (document.getElementById("title").value = curr.data) :  (document.getElementById("title").value = "");
     curr.comment ? (document.getElementById("comment").value = curr.comment) : (document.getElementById("comment").value = "");
-    curr.assigned ? (document.getElementById("assigned_peeps").value = curr.assigned) : (document.getElementById("assigned_peeps").value = "");
 
-    curr.priority ? (document.getElementById("priority").value = curr.priority.toString()) : (document.getElementById("priority").value = 5);
-    curr.date ? (document.getElementById("date").value = curr.date) : (document.getElementById("date").value = "");
-    if (curr.actionable) {
-      document.getElementById("act_1").checked = true;
-      document.getElementById("act_2").checked = false;
-    }
-    else {
-        document.getElementById("act_2").checked = true;
-        document.getElementById("act_1").checked = false;
-    }
+    
+    //////////////////////////////////////////////////////// MATTYB //////////////////////////////////////////////////////////////////////
+    $("#getLinkText").empty();
+    // $("#getLinkText").append("DEM_BOYS");    // appends node's link
 
-    if (curr.completed) {
-      document.getElementById("comp_1").checked = true;
-      document.getElementById("comp_2").checked = false;
-    }
-    else {
-        document.getElementById("comp_2").checked = true;
-        document.getElementById("comp_1").checked = false;
-    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // curr.assigned ? (document.getElementById("assigned_peeps").value = curr.assigned) : (document.getElementById("assigned_peeps").value = "");
+    // curr.priority ? (document.getElementById("priority").value = curr.priority.toString()) : (document.getElementById("priority").value = 5);
+    // curr.date ? (document.getElementById("date").value = curr.date) : (document.getElementById("date").value = "");
+    // if (curr.actionable) {
+    //   document.getElementById("act_1").checked = true;
+    //   document.getElementById("act_2").checked = false;
+    // }
+    // else {
+    //     document.getElementById("act_2").checked = true;
+    //     document.getElementById("act_1").checked = false;
+    // }
+
+    // if (curr.completed) {
+    //   document.getElementById("comp_1").checked = true;
+    //   document.getElementById("comp_2").checked = false;
+    // }
+    // else {
+    //     document.getElementById("comp_2").checked = true;
+    //     document.getElementById("comp_1").checked = false;
+    // }
 }
 
-// END blah123
 
 function keyPressed(e) {
   if (modalopen) {
@@ -1533,58 +1539,67 @@ var removedNodes = [];
           modalopen = false;//when modal closes, stop suppressing keypresses
           var title = document.getElementById("title").value;
           var comment = document.getElementById("comment").value;
-          var assigned = document.getElementById("assigned_peeps").value;
-          var priority = document.getElementById("priority").value;
+          var newLink = $("#linkToText").val();
+
+          // var assigned = document.getElementById("assigned_peeps").value;
+          // var priority = document.getElementById("priority").value;
           
-          priority = parseInt(priority);
+          // priority = parseInt(priority);
 
-          var date = document.getElementById("date").value;
-          var act_value;
-          if (document.getElementById('act_1').checked) {
-              act_value = true;
-           }
-          else if (document.getElementById('act_2').checked) {
-            act_value = false;
-          }
-          else assert(false); // one of yes or no should always be checked
+          // var date = document.getElementById("date").value;
+          // var act_value;
+          // if (document.getElementById('act_1').checked) {
+          //     act_value = true;
+          //  }
+          // else if (document.getElementById('act_2').checked) {
+          //   act_value = false;
+          // }
+          // else assert(false); // one of yes or no should always be checked
 
-          var comp_value;
-           if (document.getElementById('comp_1').checked) {
-              comp_value = true;
-           }
-          else if (document.getElementById('comp_2').checked) {
-            comp_value = false;
-          }
-          else assert(false); // one of yes or no should always be checked
+          // var comp_value;
+          //  if (document.getElementById('comp_1').checked) {
+          //     comp_value = true;
+          //  }
+          // else if (document.getElementById('comp_2').checked) {
+          //   comp_value = false;
+          // }
+          // else assert(false); // one of yes or no should always be checked
 
 
+          // FIXME: set linkTo element of node
           curr["data"] = title; // str
           curr["comment"] = comment;  // str
-          curr["assigned"] = assigned;  // str (with commas)
-          curr["priority"] = priority;  // int
-          curr["date"] = date;  // str
-          curr["actionable"] = act_value;
-          curr["completed"] = comp_value;
+
+
+
+          // curr["assigned"] = assigned;  // str (with commas)
+          // curr["priority"] = priority;  // int
+          // curr["date"] = date;  // str
+          // curr["actionable"] = act_value;
+          // curr["completed"] = comp_value;
 
 
            // abc123
            // NOTE: there can be no spaces in names
-         var tempStr = curr.assigned ? (curr.assigned.toLowerCase()) : ""; // only lower case in array for simplicity of filtration
-         if (tempStr) {
-          tempStr = tempStr.replace(/\s/g, ''); // replace all spaces
-         }
-         curr.assignedArr = tempStr ? (tempStr.split(',')) : [];  // parses input by commas
+         // var tempStr = curr.assigned ? (curr.assigned.toLowerCase()) : ""; // only lower case in array for simplicity of filtration
+         // if (tempStr) {
+         //  tempStr = tempStr.replace(/\s/g, ''); // replace all spaces
+         // }
+         // curr.assignedArr = tempStr ? (tempStr.split(',')) : [];  // parses input by commas
           // end abc123
 
 
           console.log('title is: ' + curr.data);
-          console.log("priority is: " + curr.priority);
           console.log('comment is: ' + curr.comment);
-          console.log('assigned string is: ' + curr.assigned);
-          console.log('assigned array is: ' + curr.assignedArr);
-          console.log('date is: ' + curr.date);
-          console.log('actionable: ' + curr.actionable);
-          console.log('completed: ' + curr.completed);
+          // console.log("link to node url is: ");
+
+
+          // console.log("priority is: " + curr.priority);
+          // console.log('assigned string is: ' + curr.assigned);
+          // console.log('assigned array is: ' + curr.assignedArr);
+          // console.log('date is: ' + curr.date);
+          // console.log('actionable: ' + curr.actionable);
+          // console.log('completed: ' + curr.completed);
 
           //Update tree to display the changes.
           update(root);

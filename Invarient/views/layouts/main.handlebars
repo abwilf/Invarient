@@ -81,8 +81,6 @@
           <h3 class="modal-title">Edit Node</h3>
         </div>
         <div class="modal-body">
-      
-
 
       
  <!-- FORM -->   
@@ -99,6 +97,7 @@
     </div> 
   
 
+<!--
   <div class="form-group">
             <label id = "actionable_label" for = "radios_act">Is this actionable?</label>
             <br>
@@ -113,12 +112,24 @@
             <input type="radio" name="radios_comp" id = "comp_1" value="Yes">Yes<br>
             <input type="radio" name="radios_comp" id = "comp_2" value="No">No<br>
     </div> 
-
+-->
     <div class="form-group">
       <label for="comment">Comments</label>
       <textarea class="form-control" rows="5" id="comment"></textarea>
     </div>
-    
+
+    <div class="form-group">
+        <label for="getLinkText">Get Link to This Node</label>
+        <p class="form-control" id="getLinkText"></p>
+    </div> 
+  
+    <div class="form-group">
+        <label for = "linkToText">Link to Another Node</label>
+        <input type="text" class="form-control" id="linkToText" placeholder="Enter url of node to link to" value = "">
+    </div>
+  
+    <!--
+
     <div class="form-group">
         <label for = "title">Who is assigned to this? (enter names separated by a comma, case insensitive)</label>
         <input type="text" class="form-control" id="assigned_peeps" placeholder="Enter names">
@@ -135,11 +146,13 @@
       </select>
     </div>
 
-    <div class="form-group"> <!-- Date input -->
+    <div class="form-group">
         <label class="control-label" for="date">Date</label>
             <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
     </div>
-    
+
+    -->
+
 </form>
 </div>
 </div>
