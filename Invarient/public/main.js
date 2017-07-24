@@ -125,192 +125,6 @@ dragListener = d3.behavior.drag()
     onSelect( node );
 });
 
-window.addEventListener("keydown", keyPressed, false);
-
-
-  function modifySortBy(input) {
-    $( ".sb" ).empty();
-    $( ".sb" ).append("<p class='newElt'>Sorted by: " + input + "</p>");
-  }
-
-
-  function modifyFilterBy() {
-    $( ".fb" ).empty();
-    var str = "";
-    if (filtersDict.actionableFilterOn) {
-       str += "Actionable ";
-    }
-    if (filtersDict.notActionableFilterOn) {
-      str += "Not Actionable ";
-      if (filtersDict.actionableFilterOn) console.log("PROBLEM: actionableFilterOn and notActionableFilterOn are on at same time!");
-    }
-    if (filtersDict.completedFilterOn) {
-      str += "Completed ";
-    }
-    if (filtersDict.notCompletedFilterOn) {
-      str += "Not Completed "
-      if (filtersDict.completedFilterOn) console.log("PROBLEM: completedFilterOn and notCompletedFilterOn are on at same time!");
-    }
-    if (filtersDict.peopleOn) {
-      str += "People Assigned: "
-      filtersDict.people.forEach(function(person) {
-        str += person + " ";
-      });
-    }
-    if (filtersDict.filterByNodeOn) {
-        if (!filtersDict.nodeFilteredBy) {
-            console.log("ERROR: Node should have been set by now.");
-        }
-        else {
-            str += "Node Filtered By: " + filtersDict.nodeFilteredBy.data;
-        }
-    }
-
-    $( ".fb" ).append("<p class='newElt'>Filtered by: " +  str + "</p>");
-  }
-
- function u_key() {
-    if (sortByPriorityOn){
-      sortByPriorityOn = false;
-      modifySortBy("");
-    }
-    else{
-      if (sortByDateOn) {
-        sortByDateOn = false;
-      }
-      sortByPriorityOn = true;
-      modifySortBy("Priority");
-    }
-    filteredlist = runListActions(filteredlist);
-    update(root);
-  }
-
-   function i_key(){
-    if (sortByDateOn){
-      sortByDateOn = false;
-      modifySortBy("");
-    }
-    else {
-      if (sortByPriorityOn) {
-        sortByPriorityOn = false;
-      }
-      sortByDateOn = true;
-      modifySortBy("Date");
-    }
-    filteredlist = runListActions(filteredlist);
-    update(root);
-  }
- 
-
-  function g_key() {
-    filteredlist = runListActions(filteredlist);
-    modifySortBy("");
-    modifyFilterBy();
-    update(root);
-  }
-
-function m_helper() {
-    console.log("node data is: " + filtersDict.nodeFilteredBy.data);
-    filteredlist = runListActions(filteredlist);
-    modifyFilterBy();
-    update(root);
-}
-
-function m_key() {
-    if (filtersDict.filterByNodeOn) {
-        filtersDict.filterByNodeOn = false;
-        filtersDict.nodeFilteredBy = null;
-    }
-    else {
-        filtersDict.filterByNodeOn = true;
-        alert("Click on the node you would like to filter by.");
-
-        // "drag starting" will update filtersDict.nodeFilteredBy and call m_helper()
-    }
-}
-
-  function h_key() {
-    if (filtersDict["actionableFilterOn"]) {
-      filtersDict["actionableFilterOn"] = false;
-    }
-    else{
-      if (filtersDict["notActionableFilterOn"]) {
-        filtersDict["notActionableFilterOn"] = false;
-      }
-      filtersDict["actionableFilterOn"] = true;
-    }
-    filteredlist = runListActions(filteredlist);
-    modifyFilterBy();
-    update(root);
-  }
-
-
-  function p_key(){
-    if (filtersDict["notActionableFilterOn"]){
-      filtersDict["notActionableFilterOn"] = false;
-    }
-    else{
-      if (filtersDict["actionableFilterOn"]) {
-        filtersDict["actionableFilterOn"] = false; 
-      }
-      filtersDict["notActionableFilterOn"] = true;
-    }
-    filteredlist = runListActions(filteredlist);
-    modifyFilterBy();
-    update(root);
-  }
-
-
-  function j_key() {
-    if (filtersDict["completedFilterOn"]){
-        filtersDict["completedFilterOn"] = false;
-    }
-    else{
-      if (filtersDict["notCompletedFilterOn"]) {
-        filtersDict["notCompletedFilterOn"] = false;
-      }
-        filtersDict["completedFilterOn"] = true;
-    }
-
-    filteredlist = runListActions(filteredlist);
-    modifyFilterBy();
-    update(root);
-  }
-
-  function v_key(){
-    if (filtersDict.notCompletedFilterOn){
-      filtersDict.notCompletedFilterOn = false;
-    }
-    else {
-      if (filtersDict.completedFilterOn) {  // turn off completed filter
-        filtersDict.completedFilterOn = false;
-      }
-      filtersDict.notCompletedFilterOn = true;
-    }
-    filteredlist = runListActions(filteredlist);
-    modifyFilterBy();
-    update(root);
-  }
-
-  // yay globals
-  var personAssignedText = "";
-  function k_key() {
-      personAssignedText = prompt("Filter by person assigned.", "Enter names separated by comma (or enter none).");
-      if (personAssignedText && personAssignedText != "none"  && personAssignedText != "Enter names separated by comma (or enter none).") {
-          filtersDict.peopleOn = true;
-          filteredlist = runListActions(filteredlist);
-      }
-     else {  // if cancel or no text or "none", turn off filter
-        filtersDict.peopleOn = false;
-     }
-     modifyFilterBy();
-     console.log("filteredlist: ");
-     filteredlist.forEach(function(d) {
-        console.log(d.data); 
-     })
-     update(root);
-  }
-
   function n_key() {
            //Fetch the current active node.
             curr = getCurrentNode();
@@ -512,7 +326,7 @@ function c_key() {
                     }
 }
 
-// blah123
+
 function o_key() {
     curr = getCurrentNode();
     modalopen = true;
@@ -540,77 +354,18 @@ function o_key() {
     //     document.getElementById("act_2").checked = true;
     //     document.getElementById("act_1").checked = false;
     // }
-
-    // if (curr.completed) {
-    //   document.getElementById("comp_1").checked = true;
-    //   document.getElementById("comp_2").checked = false;
-    // }
-    // else {
-    //     document.getElementById("comp_2").checked = true;
-    //     document.getElementById("comp_1").checked = false;
-    // }
 }
 
+window.addEventListener("keydown", keyPressed, false);
 
 function keyPressed(e) {
   if (modalopen) {
     return;
   }
-
   console.log(e.keyCode);
     switch (e.keyCode) {
-        case 71:
-        console.log("The 'g' key is pressed.");
-        g_key();
-        break;
-
-        case 75:
-        console.log("The 'k' key is pressed.");
-        k_key();
-        break;
-
-        case 86:
-        console.log("The 'v' key is pressed.");
-        v_key();
-        break;
-
-        case 80:
-        console.log("The 'v' key is pressed.");
-        p_key();
-        break;
-
-        case 72:
-        console.log("The 'h' key is pressed.");
-        h_key();
-        break;
-
-        case 74:
-        console.log("The 'j' key is pressed.");
-        j_key();
-        break;
-
-        case 73:
-        console.log("The 'i' key is pressed.");
-        i_key();
-        break;
-
-        case 85:
-        console.log("The 'u' key is pressed.");
-        u_key();
-        break;
-
-        // case 57:
-        // console.log("The '9' key is pressed.");
-        // nine_key();
-        // return 57;
-
-        // case 56:
-        // console.log("The '8' key is pressed.");
-        // eight_key();
-        // return 56;
 
         case 78:
-          // 0
          console.log("The 'n' key is pressed.");
               n_key();
          break;
@@ -620,23 +375,21 @@ function keyPressed(e) {
           o_key();
           break;
 
-case 83:
-      console.log("The 's' key is pressed.");
-      s_key();
-      break;
+        case 83:
+          console.log("The 's' key is pressed.");
+          s_key();
+          break;
 
         case 69:
           // 1
          console.log("The 'e' key is pressed.");
          e_key();
          break;
-        case 82:
-             console.log("The 'r' key is pressed.");
-             break;
+        
         case 68:
-      console.log("The 'd' key is pressed.");
-      d_key();
-      break;
+          console.log("The 'd' key is pressed.");
+          d_key();
+          break;
         case 32:
               console.log("The '(space)' key is pressed.");
               e.preventDefault();
@@ -671,19 +424,10 @@ case 83:
       del_key();
       break;
 
-    case 65:
-      console.log("The 'a' key is pressed.");
-      break;
-
     case 70:
         console.log("The 'f' key is pressed.");
         f_key();
         break;
-
-    case 77:
-            console.log("The 'm' key is pressed.");
-            m_key();
-            break;
 
     case 89:
             console.log("The 'y' key is pressed.");
@@ -697,11 +441,6 @@ case 83:
         default:
           console.log("Pressed an unrecognized key!");
           break;
-    }
-
-    // waiting for click to set node
-    if (!filtersDict.filterByNodeOn) {
-        g_key(); // update list
     }
     
     // console.log("about to run list actions!");
@@ -722,15 +461,7 @@ function getClickedNode(clicked) {
 
 }
 
-// function getMapById(id, callback) {
-//   $.getJSON('/data/' + id, function(data, status) {
-//     callback(data);
-//   });
-// }
-
 function hydrateData(data) {
-  // console.log("Hydrating node (stay thirsty):" , data);
-
   traverseAndDo(data, function(d) {
     if( typeof(d.children) !== 'undefined') {
       d.children.forEach(function(child, elem){
@@ -740,161 +471,6 @@ function hydrateData(data) {
   })
 }
 
-function populateList(filteredlist, node){
-  filteredlist.length = 0;
-  traverseAndDo(node, function(d){
-      filteredlist.push(d);
-  });
-}
-
-function runListActions(filteredlist){
-  populateList(filteredlist, root);
-
-  if (sortByPriorityOn){
-    sortByPriority(filteredlist);
-  }
-  if (sortByDateOn){
-    sortByDate(filteredlist);
-  }
-  if (filtersDict.actionableFilterOn){
-    filteredlist = filterActionableList(filteredlist);
-  }
-  if (filtersDict.completedFilterOn){
-    filteredlist = filterCompletedList(filteredlist);
-  }
-
-  if (filtersDict.notCompletedFilterOn){
-    filteredlist = filterNotCompletedList(filteredlist);
-  }
-
-  if (filtersDict.notActionableFilterOn){
-    filteredlist = filterNotActionableList(filteredlist);
-  }
-  if (filtersDict.peopleOn) {
-    personAssignedText = personAssignedText.toLowerCase();
-    filtersDict.people = personAssignedText.split(',');
-    filteredlist = filterPersonList(filteredlist, filtersDict.people); 
-  }
-  if (filtersDict.filterByNodeOn) {
-    filteredlist = filterNodeList(filteredlist);
-  }
-  return filteredlist;
-}
-
-// EFFECTS: take filteredlist and filter by only those nodes that are children of (and including) the node
-function filterNodeList(filteredlist) {
-    var node = filtersDict.nodeFilteredBy
-    if (!node) {
-        console.log("ERROR: nodeFilteredBy should not be null at this point");
-    }
-    else {
-        console.log('node title: ' + node.data);
-
-        // TODO: fill in filtration code here
-        
-
-        ///////////////////
-    }
-    return filteredlist;
-}
-
-function filterCompletedList(filteredlist){
-  result = new Array();
-  filteredlist.forEach(function(d){
-    if (d.completed == true){
-      result.push(d);
-    }
-  });
-  return result;
-}
-
-function filterNotCompletedList(filteredlist){
-  result = new Array();
-  filteredlist.forEach(function(d){
-    if (d.completed == false){
-      result.push(d);
-    }
-  });
-  return result;
-}
-
-function filterActionableList(filteredlist){
-  result = new Array();
-  // FIXME: remove
-  filteredlist.forEach(function(d){
-    if (d.actionable == true){
-      console.log("bad");
-      result.push(d);
-    }
-  });
-  return result;
-}
-
-function filterNotActionableList(filteredlist){
-  result = new Array();
-  filteredlist.forEach(function(d){
-    if (d.actionable == false){
-      result.push(d);
-    }
-  });
-  return result;
-}
-
-
-
-//abc123
-
-function intersect(arr1, arr2) {
-   var temp = [];
-  for (var i in arr1) {
-    var element = arr1[i];
-    if (arr2.indexOf(element) > -1) {
-      temp.push(element);
-    }
-  }
-  if (temp.length > 0) return true;
-  return false;
-}
-
-function filterPersonList(filteredlist, nameArr) {
-  result = new Array();
-  filteredlist.forEach(function(d){
-    if (intersect(d.assignedArr, nameArr)) {
-      result.push(d);
-    }
-  });
-
-  return result;
-}
-//end abc123
-
-function sortByPriority(filteredlist){
-  filteredlist.sort(function(a,b){
-    if (a.priority > b.priority){
-      return -1;
-    }
-    else {
-      return 1;
-    }
-  });
-}
-
-function sortByDate(filteredlist){
-  filteredlist.sort(function(a,b){
-    if (!a.date){
-      return 1;
-    }
-    else if (!b.date){
-      return -1;
-    }
-    return new Date(a.date) - new Date(b.date);
-
-  });
-}
-
-
-
-//////////////////////////////////// BEGIN HERE /////////////////////////////////////////////
 var root;
 var currentNode;
 var dragStarted;
@@ -928,7 +504,6 @@ $(function() {
   update(root);
   // console.log("Done");
   onSelect(root.children[0]);
-  g_key();
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -951,15 +526,6 @@ function Node(x, y, data) {
     this.children = [];
 
     this.toggle = 0;
-
-    // blah123
-    this.comment = "";  // comment box
-    this.assigned = "";    // who is assigned to this node - separated by commas (FIXME: we'll want to separate this out into an array at some point)
-    this.priority = 1;
-    this.date = "";
-    this.actionable = false;
-    this.completed = false;
-    // END blah123
 }
 
 
@@ -973,11 +539,6 @@ function saveToJSON(node_in) {
         //console.log(root);
       hydrateData(root);
       return obj;
-  // // write to JSON
- //      $.post('/data', {data: JSON.stringify(obj)}, function(data, status, xhr) {
- //          console.log(data);
- //          console.log(status);
- //      })
 }
 // call with root
 function JSONHelper(node_in, nodes) {
@@ -1100,17 +661,6 @@ d3.select("svg").append("svg:defs").selectAll("marker")
     .attr("orient", "auto")
   .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
-
-function drawList(filteredlist){
-  $( ".taskListP" ).empty();
-  filteredlist.forEach(function(node){
-    if (node.data) {
-      $( ".taskListP" ).append("<p class='newElt'>" +node.data+ "</p>");
-      $( ".taskListP" ).append("<p class= 'newElt' style='margin-left: 20px;'>    Priority: " + node.priority + "</p>");
-      $( ".taskListP" ).append("<p class='newElt' style='margin-left: 20px;'>    Due Date: " + node.date + "</p>");
-    }
-  })
-}
 
 function drawNode(node) {
     if (node.children) {
@@ -1341,8 +891,6 @@ function sortByConnection(root) {
 }
 
 function update(root){
-
-
   node_map = new Array(); // clear node_map
 
   id = 0; //clear id
@@ -1410,9 +958,6 @@ function update(root){
         console.log("MOUSEOUT GHOST CIRCLE.");
         dragTarget = null;
       })
-
-    drawList(filteredlist);
-
 }
 
 function getColor(node) {
@@ -1541,71 +1086,16 @@ var removedNodes = [];
           var comment = document.getElementById("comment").value;
           var newLink = $("#linkToText").val();
 
-          // var assigned = document.getElementById("assigned_peeps").value;
-          // var priority = document.getElementById("priority").value;
-          
-          // priority = parseInt(priority);
-
-          // var date = document.getElementById("date").value;
-          // var act_value;
-          // if (document.getElementById('act_1').checked) {
-          //     act_value = true;
-          //  }
-          // else if (document.getElementById('act_2').checked) {
-          //   act_value = false;
-          // }
-          // else assert(false); // one of yes or no should always be checked
-
-          // var comp_value;
-          //  if (document.getElementById('comp_1').checked) {
-          //     comp_value = true;
-          //  }
-          // else if (document.getElementById('comp_2').checked) {
-          //   comp_value = false;
-          // }
-          // else assert(false); // one of yes or no should always be checked
-
-
-          // FIXME: set linkTo element of node
           curr["data"] = title; // str
           curr["comment"] = comment;  // str
-
-
-
-          // curr["assigned"] = assigned;  // str (with commas)
-          // curr["priority"] = priority;  // int
-          // curr["date"] = date;  // str
-          // curr["actionable"] = act_value;
-          // curr["completed"] = comp_value;
-
-
-           // abc123
-           // NOTE: there can be no spaces in names
-         // var tempStr = curr.assigned ? (curr.assigned.toLowerCase()) : ""; // only lower case in array for simplicity of filtration
-         // if (tempStr) {
-         //  tempStr = tempStr.replace(/\s/g, ''); // replace all spaces
-         // }
-         // curr.assignedArr = tempStr ? (tempStr.split(',')) : [];  // parses input by commas
-          // end abc123
-
 
           console.log('title is: ' + curr.data);
           console.log('comment is: ' + curr.comment);
           // console.log("link to node url is: ");
 
-
-          // console.log("priority is: " + curr.priority);
-          // console.log('assigned string is: ' + curr.assigned);
-          // console.log('assigned array is: ' + curr.assignedArr);
-          // console.log('date is: ' + curr.date);
-          // console.log('actionable: ' + curr.actionable);
-          // console.log('completed: ' + curr.completed);
-
           //Update tree to display the changes.
           update(root);
       });
-
-      // END blah123
 
 
 function saveMap() {
