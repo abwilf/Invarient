@@ -1,0 +1,87 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    title Invarient
+
+    link(rel='stylesheet', type='text/css', href='/css/map.css')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    script(src='https://d3js.org/d3-path.v1.min.js')
+    script(src='https://d3js.org/d3-selection.v1.min.js')
+    script(src='https://d3js.org/d3.v3.min.js')
+    script(src='https://d3js.org/d3-shape.v1.min.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='http://code.jquery.com/jquery-1.10.2.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    // Bootstrap Date-Picker Plugin
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css')
+
+  body
+
+    #shortcuts_wrapper
+      #shortcuts
+        button#n(onclick='n_key()')  New Comes From Node (n) 
+        button#d(onclick='d_key()')  New Definition Node (d) 
+        button#c(onclick='c_key()')  Custom (c) 
+        button#f(onclick='f_key()')  New Forested Node (f) 
+        button#y(onclick='y_key()')  Change Connection Type (y) 
+        button#e(onclick='e_key()')  Edit Node (e) 
+        button#sp(onclick='space_key()')  Toggle Subtree (space) 
+        button#del(onclick='del_key()')  Delete Node (delete) 
+        button(id='←', onclick='left_key()')  ← 
+        button(id='→', onclick='right_key()')  → 
+        button(id='↑', onclick='up_key()')  ↑ 
+        button(id='↓', onclick='down_key()')  ↓ 
+        button#o(onclick='o_key()')  Open Node (o) 
+        button#g(onclick='g_key()')  Render Task List (g) 
+        button#u(onclick='u_key()')  Sort List by Priority (u) 
+        button#i(onclick='i_key()')  Sort List by Due Date (i) 
+        button#h(onclick='h_key()')  Filter List by Actionable Items Only (h) 
+        button#j(onclick='j_key()')  Filter List by Completed Items (j) 
+        button#j(onclick='k_key()')  Filter List by Person Assigned (k) 
+        button#m(onclick='m_key()')  Filter List by Node (m) 
+        button#save(onclick='saveMap()')  SAVE 
+        button#create(onclick='createMap()')  CREATE 
+
+
+    #tree-container
+        div
+        // Modal
+        .modal-container
+          #myModal.modal.fade(role='dialog')
+            .modal-dialog
+              // Modal content
+              .modal-content
+                .modal-header
+                  button.close(type='button', data-dismiss='modal') ×
+                  h3.modal-title Edit Node
+                .modal-body
+                  // FORM
+                  .bootstrap-iso
+                    .container-fluid
+                      .row
+                        .col-md-6.col-sm-6.col-xs-12
+                          form#frm1.form
+                            .form-group
+                              label(for='title') Node Title
+                              input#title.form-control(type='text', placeholder='Enter title', value='')
+                            .form-group
+                              label(for='comment') Comments
+                              textarea#comment.form-control(rows='5')
+                            .form-group
+                              label(for='getLinkText') Get Link to This Node
+                              p#getLinkText.form-control
+                            .form-group
+                              label(for='linkToText') Link to Another Node
+                              input#linkToText.form-control(type='text', placeholder='Enter url of node to link to', value='')
+                .modal-footer
+                  button.btn.btn-default(type='button', data-dismiss='modal') Close
+                  
+        div
+            input#mapData(type="hidden", value=mapData)
+            input#mapId(type="hidden", value=mapId)
+            input#_csrf(type="hidden", value=_csrf)
+            script(src="/js/map.js")

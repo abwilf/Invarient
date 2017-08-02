@@ -1,27 +1,17 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var mapSchema = new mongoose.Schema({
-    // title: {
-    //     type: String,
-    //     required: true
-    // },
-    // year: {
-    //     type: Number,
-    //     min: 0,
-    //     max: 2017,
-    //     required: true
-    // },
-    // genre: {
-    //     type: String,
-    //     required: true
-    // },
-    // reviews: [reviewSchema]
+
+var mapSchema = new mongoose.Schema(
+{
     data: {
         type: String,
         required: true
     }
-});
+},
+{ 
+    collection: 'random_maps' 
+}
+);
 
 var Map = mongoose.model('Map', mapSchema);
-
 module.exports = Map;
