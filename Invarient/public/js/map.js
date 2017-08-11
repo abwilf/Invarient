@@ -243,7 +243,6 @@ function eventTraverseRight() {
     var nodesAtDepth = [];
 
     traverseAndDo(root, function (d) {
-
         if (d.depth == depth) {
             nodesAtDepth.push(d);
         }
@@ -337,6 +336,17 @@ function eventNewCustomNode() {
     }
 }
 
+function eventLinkNode() {
+
+    curr = getCurrentNode();
+
+    var txt = prompt("", "Enter the link to the tree.");
+    if (txt) {
+        curr.link = txt;
+        update(root);
+    }
+}
+
 function eventModal() {
 
     curr = getCurrentNode();
@@ -374,6 +384,7 @@ function keyPressed(e) {
     if (modalopen) {
         return;
     }
+
     console.log(e.keyCode);
     switch (e.keyCode) {
 
@@ -382,7 +393,7 @@ function keyPressed(e) {
             eventNewComesFromNode();
             break;
 
-         case 79:
+        case 79:
             console.log("The 'o' key is pressed.");
             eventModal();
             break;
@@ -511,7 +522,6 @@ $(function() {
         root = new Node($(document).width() / 2, 50, "Enter your text here.");
     }
 
-
     hydrateData(root);
     root.depth = 0;
     currentNode = root;
@@ -521,8 +531,6 @@ $(function() {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 //Constructor for Nodes
 function Node(x, y, data) {
@@ -537,6 +545,7 @@ function Node(x, y, data) {
     this.depth = null;
     this.parent = null;
     this.id = null;
+    this.link = null;
 
     this.children = [];
 
@@ -576,7 +585,6 @@ function dehydrateNode(node_in) {
 
 //Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d) {
-
     temp = traverseAndDo;
 
     d(node);
@@ -706,15 +714,15 @@ function drawNode(node) {
     }
 
     var circle = gGroup.append("circle")
-                             .attr("cx", node.x - 10)
-                             .attr("cy", node.y - 5)
-                             .attr("r", 5)
-                             .attr("fill", function (d) {
-                               return getColor( node );
-                             })
-                             .attr("stroke", "black")
-                             .attr("stroke-width", 1)
-                             .attr("id", "a" + id);
+       .attr("cx", node.x - 10)
+       .attr("cy", node.y - 5)
+       .attr("r", 5)
+       .attr("fill", function (d) {
+         return getColor( node );
+       })
+       .attr("stroke", "black")
+       .attr("stroke-width", 1)
+       .attr("id", "a" + id);
 
     if (node == root){
         circle.attr("display", "none");
@@ -723,12 +731,12 @@ function drawNode(node) {
     node_map["" + id] = node;
     node.id = id;
 
-
     var text = gGroup.append("text")
                            .attr("x", node.x)
                            .attr("y", node.y)
                            .attr("font-family", "sans-serif")
                            .attr("font-size", "15px")
+                           .attr("fill", "light-blue")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
 
@@ -748,6 +756,10 @@ function drawNode(node) {
     }
 
     id++;
+}
+
+function drawTree(node){
+  traverseAndDo(node, drawNode);
 }
 
 //Hide/Show the subtree of the selected node
@@ -896,7 +908,7 @@ function update(root){
     id = 0; //clear id
     gGroup.selectAll("*").remove();
 
-    traverseAndDo(root, drawNode);
+    drawTree(root);
 
     gGroup.selectAll("*").remove();
 
@@ -904,11 +916,11 @@ function update(root){
 
     sortByConnection(root);
 
-    postTraverseAndDo(root, calculateSubtreeWidths);
+    calculateSubtreeWidths(root);
 
     balance(root, root.x - root.subtreeWidth/2);
 
-    traverseAndDo(root, drawNode);
+    drawTree(root);
 
     gGroup.selectAll("circle")
         .on("mouseover", function() {
