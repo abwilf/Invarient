@@ -126,8 +126,9 @@ dragListener = d3.behavior.drag()
 
     if (dragStarted == false){
         d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
+        update( root );
+
     }
-    //update( root );
     onSelect( node );
 });
 
