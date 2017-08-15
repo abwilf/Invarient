@@ -45,7 +45,6 @@ dragListener = d3.behavior.drag()
     node.x = Number(d3.select(this).attr("cx"));
     node.y = Number(d3.select(this).attr("cy"));
 
-    d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
 
     dragStarted = true;
 
@@ -60,8 +59,8 @@ dragListener = d3.behavior.drag()
     }
 
     if (dragStarted == true) {
-
-      ( node );
+      d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
+      dragStarted = false;
     }
 
     var svgnode = d3.select(this);
@@ -76,60 +75,59 @@ dragListener = d3.behavior.drag()
 
   })
   .on("dragend", function() {
-    var node = getClickedNode( this );
+    var node = getClickedNode(this);
 
     if (node == root) {
         return;
     }
 
     if (dragTarget && dragTarget != node){
-      console.log("Drag target present!")
-      //Remove node from previous parent
-      for (var i = 0; i < node.parent.children.length; i++) {
-          if (node.parent.children[i] === node) {
-              node.parent.children.splice(i, 1);
-          }
-      }
-      node.parent = null;
+        console.log("Drag target present!")
+        //Remove node from previous parent
+        for (var i = 0; i < node.parent.children.length; i++) {
+            if (node.parent.children[i] === node) {
+                node.parent.children.splice(i, 1);
+            }
+        }
+        node.parent = null;
 
-      if (node.connection == "neoroot"){
-        node.connection = "arrow";
-      }
+        if (node.connection == "neoroot"){
+            node.connection = "arrow";
+        }
 
-      add(dragTarget, node);
+        add(dragTarget, node);
 
-      dragTarget = null;
+        dragTarget = null;
     }
 
     else if (!dragTarget){
-      for (var i = 0; i < node.parent.children.length; i++) {
-          if (node.parent.children[i] === node) {
-              node.parent.children.splice(i, 1);
-          }
-      }
-      node.parent = null;
+        for (var i = 0; i < node.parent.children.length; i++) {
+            if (node.parent.children[i] === node) {
+                node.parent.children.splice(i, 1);
+            }
+        }
+        node.parent = null;
 
-      node.connection = "neoroot";
+        node.connection = "neoroot";
 
-      add(root, node);
+        add(root, node);
 
-      dragTarget = null;
-
+        dragTarget = null;
     }
     else{
-      console.log("Weird!");
-      console.log(dragTarget);
-
+        console.log("Weird!");
+        console.log(dragTarget);
     }
 
     if (nodeInitialState == 0) {
-      toggleSubtree( node );
-      nodeInitialState = -1;
+        toggleSubtree(node);
+        nodeInitialState = -1;
     }
 
-    d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
-
-    update( root );
+    if (dragStarted == false){
+        d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
+    }
+    //update( root );
     onSelect( node );
 });
 
@@ -350,17 +348,18 @@ function eventLinkNode() {
 function eventModal() {
 
     curr = getCurrentNode();
+    console.log(curr.link);
     modalopen = true;
     $('#myModal').modal('show');  // pop up window
 
     // set modal elements
     curr.data ? (document.getElementById("title").value = curr.data) :  (document.getElementById("title").value = "");
     curr.comment ? (document.getElementById("comment").value = curr.comment) : (document.getElementById("comment").value = "");
-
+    curr.link ? (document.getElementById("linkToText").value = curr.link) : (document.getElementById("linkToText").value = "");
 
     //////////////////////////////////////////////////////// MATTYB //////////////////////////////////////////////////////////////////////
     $("#getLinkText").empty();
-    // $("#getLinkText").append("DEM_BOYS");    // appends node's link
+    $("#getLinkText").append(uniqueId);    // appends node's link
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -375,6 +374,7 @@ function eventModal() {
     //     document.getElementById("act_2").checked = true;
     //     document.getElementById("act_1").checked = false;
     // }
+
 }
 
 window.addEventListener("keydown", keyPressed, false);
@@ -722,7 +722,8 @@ function drawNode(node) {
        })
        .attr("stroke", "black")
        .attr("stroke-width", 1)
-       .attr("id", "a" + id);
+       .attr("id", "a" + id)
+
 
     if (node == root){
         circle.attr("display", "none");
@@ -926,13 +927,13 @@ function update(root){
         .on("mouseover", function() {
             this.style.cursor = "pointer";
             d3.select(this).attr('fill', '#302E1C');
-            dragTarget = getClickedNode( this );
+            dragTarget = getClickedNode(this);
         })
         .on("mouseout", function() {
             dragTarget = null;
             if (getCurrentNode() != getClickedNode( this )) {
                 d3.select(this).attr('fill', function (d) {
-                    return getColor(getClickedNode( this ));
+                    return getColor(getClickedNode(this));
                 });
             }
         })
@@ -940,6 +941,11 @@ function update(root){
             var node = getClickedNode( this );
             onSelect(node);
             setCurrentNode(node);
+            console.log(node.link);
+            if (node.link) {
+              console.log("Clicked the link.")
+              openNewTabId(node.link);
+            }
             // center( node );
         })
         .on("dblclick", function() {
@@ -1080,6 +1086,7 @@ $(document).ready(function() {
   // set node values: triggered when modal window closes
 $('#myModal').on('hidden.bs.modal', function() {
 
+    var curr = getCurrentNode();
     modalopen = false;//when modal closes, stop suppressing keypresses
     var title = document.getElementById("title").value;
     var comment = document.getElementById("comment").value;
@@ -1087,9 +1094,11 @@ $('#myModal').on('hidden.bs.modal', function() {
 
     curr["data"] = title; // str
     curr["comment"] = comment;  // str
+    curr["link"] = newLink;
 
     console.log('title is: ' + curr.data);
     console.log('comment is: ' + curr.comment);
+    console.log('link is: ' + curr.link);
     // console.log("link to node url is: ");
 
     //Update tree to display the changes.
@@ -1124,3 +1133,7 @@ function createMap() {
         window.location.pathname = data.redirect;
     });
 };
+
+function openNewTabId(id) {
+  window.open(id, "_blank");
+}
