@@ -139,7 +139,8 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 // ADDED
 app.post('/account/createMap', passportConfig.isAuthenticated, userController.postCreateMap);
 app.get('/maps/:id', userController.getMapById);
-app.post('/maps/:id', userController.saveCreateMap);
+app.get('/maps/:urlId/:nodeId', userController.getMapNode);
+app.post('/maps/:urlId', userController.saveCreateMap);
 
 
 

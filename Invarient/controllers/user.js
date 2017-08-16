@@ -343,10 +343,16 @@ exports.postCreateMap = (req, res, next) => {
   });
 }
 
-exports.getMapById = (req, res, next) => {
-    console.log("id is: " + req.params.id);
-    Map.findOne({ _id: req.params.id}, function(err, m) {
-        if (err) throw err;
+
+// kind of a hacky fix to get around routing between exports functions
+function getMapHelper(req, res, next) {
+    console.log("NODE ID IS: " + req.params.nodeId);
+    console.log("URL ID IS: " + req.params.urlId);
+
+    Map.findOne({ _id: req.params.urlId}, function(err, m) {
+        if (err){ 
+          console.log("ERROR IN FINDING MAP: " + err);
+        }
         if (!m) {
             console.log('No map found with that ID.');
             res.send("Sorry!  No map found with that ID.");
@@ -356,10 +362,21 @@ exports.getMapById = (req, res, next) => {
         res.render('map', {
           mapId: m.id,
           mapData: JSON.parse(m.data)[0],
-          _csrf: res.locals._csrf
+          _csrf: res.locals._csrf,
+          nodeId: req.params.nodeId
         });
       })
-  }
+}
+
+exports.getMapNode = (req, res, next) => {
+   console.log("NODE");
+   getMapHelper(req, res, next);
+}
+
+exports.getMapById = (req, res, next) => {
+  console.log('MAP');
+  getMapHelper(req, res, next);  
+}
 
 exports.saveCreateMap = (req, res, next) => {
      if (req.body.type == "save") {

@@ -505,6 +505,7 @@ var sortByPriorityOn = false;
 var sortByDateOn = false;
 var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: [], filterByNodeOn: false, nodeFilteredBy: null};
 var uniqueId; // for finding map in db
+var nodeId; // for centering on a certain node when linked to           // MATT - HERE'S THE NODE ID <3
 
 // BEGIN HERE
 $(function() {
@@ -517,6 +518,8 @@ $(function() {
         console.log('UNIQUE ID: ' + uniqueId);
         _csrf = $('#_csrf').val();
         console.log("CSRF IS: " + _csrf);
+        nodeId = $('#nodeId').val();
+        console.log("NODE ID : " + nodeId);
     }
     else {
         console.log("ERROR: Didn't load correctly'");
