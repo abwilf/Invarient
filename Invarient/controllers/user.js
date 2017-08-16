@@ -314,7 +314,7 @@ exports.getForgot = (req, res) => {
 // returns newURL
 function createNewMap() {
     var newMap = new Map ({
-            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
+            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
          });
         newMap.save(function(err) {
             if (err) throw err;
@@ -350,7 +350,7 @@ function getMapHelper(req, res, next) {
     console.log("URL ID IS: " + req.params.urlId);
 
     Map.findOne({ _id: req.params.urlId}, function(err, m) {
-        if (err){ 
+        if (err){
           console.log("ERROR IN FINDING MAP: " + err);
         }
         if (!m) {
@@ -375,7 +375,7 @@ exports.getMapNode = (req, res, next) => {
 
 exports.getMapById = (req, res, next) => {
   console.log('MAP');
-  getMapHelper(req, res, next);  
+  getMapHelper(req, res, next);
 }
 
 exports.saveCreateMap = (req, res, next) => {
@@ -409,7 +409,7 @@ exports.saveCreateMap = (req, res, next) => {
 function createNewMap() {
     var newMap = new Map ({
             // NOTE: if you ever need to get an updated version of this "starter json" just go into whatever test page you have and in the dev. console type saveToJSON(root) and it will give it to you
-            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
+            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
          });
         newMap.save(function(err) {
             if (err) throw err;
