@@ -135,7 +135,7 @@ dragListener = d3.behavior.drag()
 function eventNewComesFromNode() {
 
     //Fetch the current active node.
-    curr = getCurrentNode();
+    var curr = getCurrentNode();
     var txt = prompt("", "Enter comes from node text");
 
     if (txt) {
@@ -143,10 +143,10 @@ function eventNewComesFromNode() {
 
         tmp.connection = "arrow";
 
-        add( curr, tmp );
+        add(curr, tmp);
 
         update(root);
-        onSelect( tmp );
+        onSelect(tmp);
     }
 }
 
@@ -346,6 +346,39 @@ function eventLinkNode() {
     }
 }
 
+function isLocalId(id) {
+  var arr = id.split("/");
+
+  //If the link is a local id
+  if (arr[0] === uniqueId){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+function getParsedId(id){
+  var arr = id.split("/");
+  return arr;
+}
+
+function eventLinkClicked() {
+
+    var node = getCurrentNode();
+
+    if (!isLocalId(node.link)){
+        openNewTabId(node.link);
+    }
+    else {
+        var localId = getParsedId(node.link)[1];
+        node = getNodeByPermId(localId);
+        setCurrentNode(node);
+        onSelect(node);
+        update(root);
+    }
+}
+
 function eventModal() {
 
     curr = getCurrentNode();
@@ -360,7 +393,7 @@ function eventModal() {
 
     //////////////////////////////////////////////////////// MATTYB //////////////////////////////////////////////////////////////////////
     $("#getLinkText").empty();
-    $("#getLinkText").append(uniqueId);    // appends node's link
+    $("#getLinkText").append(uniqueId + "/" + curr.permId);    // appends node's link
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -506,6 +539,7 @@ var sortByDateOn = false;
 var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: [], filterByNodeOn: false, nodeFilteredBy: null};
 var uniqueId; // for finding map in db
 var nodeId; // for centering on a certain node when linked to           // MATT - HERE'S THE NODE ID <3
+var permId = 0;
 
 // BEGIN HERE
 $(function() {
@@ -528,10 +562,16 @@ $(function() {
 
     hydrateData(root);
     root.depth = 0;
-    currentNode = root;
-
+    setCurrentNode(root.children[0]);
     update(root);
     onSelect(root.children[0]);
+
+    if (nodeId){
+      var temp = getNodeByPermId(nodeId);
+      setCurrentNode(temp);
+      onSelect(temp);
+      update(root);
+    }
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -549,6 +589,8 @@ function Node(x, y, data) {
     this.depth = null;
     this.parent = null;
     this.id = null;
+    this.permId = permId;
+    permId++;
     this.link = null;
 
     this.children = [];
@@ -722,7 +764,7 @@ function drawNode(node) {
        .attr("cy", node.y - 5)
        .attr("r", 5)
        .attr("fill", function (d) {
-         return getColor( node );
+         return getColor(node);
        })
        .attr("stroke", "black")
        .attr("stroke-width", 1)
@@ -807,7 +849,7 @@ function nodeWidthFunctor(node) {
         }
         else{
             // console.log("Case B");
-            return node.textsize + 55;
+            return node.textsize + 45;
         }
     }
     else{
@@ -817,12 +859,14 @@ function nodeWidthFunctor(node) {
 }
 
 function calculateSubtreeWidths(node){
-    __calculateSubtreeWidths(node, nodeWidthFunctor);
+    postTraverseAndDo(root, function(node){
+        __calculateSubtreeWidths(node, nodeWidthFunctor);
+    });
 }
 
 function balance(root){
 
-    calculateSubtreeWidths(root, nodeWidthFunctor);
+    calculateSubtreeWidths(root);
 
     //toggling the root or its subtrees can move it around the page
     //instead we'll find the difference in position and then shift the whole
@@ -876,6 +920,17 @@ function updateDepths(root) {
     });
 }
 
+function getNodeByPermId(id) {
+
+    var result = null;
+    traverseAndDo(root, function(node){
+        if (node.permId == id) {
+            result = node;
+        }
+    });
+    return result;
+}
+
 function sortByConnection(root) {
 
     traverseAndDo(root, function(node){
@@ -925,6 +980,8 @@ function update(root){
 
     balance(root, root.x - root.subtreeWidth/2);
 
+    id = 0;
+
     drawTree(root);
 
     gGroup.selectAll("circle")
@@ -946,9 +1003,9 @@ function update(root){
             onSelect(node);
             setCurrentNode(node);
             console.log(node.link);
+
             if (node.link) {
-              console.log("Clicked the link.")
-              openNewTabId(node.link);
+              eventLinkClicked();
             }
             // center( node );
         })
@@ -1052,7 +1109,7 @@ function center(node) {
     //console.log( d3.select("#a" + root.id).property("cy").baseVal.value );
 }
 
-function onSelect( node ) {
+function onSelect(node) {
 
     var temp = currentNode;
     currentNode = node;
