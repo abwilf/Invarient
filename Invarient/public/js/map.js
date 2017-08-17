@@ -736,10 +736,10 @@ function drawNode(node) {
             if (node.children[i].connection != "neoroot") {
 
                 var line = gGroup.append("line")
-                   .attr("x1", node.x-10)
-                   .attr("y1", node.y-5)
-                   .attr("x2", node.children[i].x-10)
-                   .attr("y2", node.children[i].y-5)
+                   .attr("x1", node.x)
+                   .attr("y1", node.y + 20)
+                   .attr("x2", node.children[i].x)
+                   .attr("y2", node.children[i].y - 20)
                    .attr("stroke-width", 2)
                    .attr("stroke", "black");
 
@@ -750,7 +750,7 @@ function drawNode(node) {
                     line.attr("marker-end", "url(#end)");
                     var lbl = gGroup.append("text")
                                      .attr("x", (node.x + node.children[i].x)/2 + 5)
-                                     .attr("y", (node.y + node.children[i].y)/2)
+                                     .attr("y", (node.y + node.children[i].y)/2 - 20)
                                      .attr("font-family", "sans-serif")
                                      .attr("font-size", "15px")
                                      .attr("font-style", "italic")
@@ -760,27 +760,27 @@ function drawNode(node) {
         }
     }
 
-    var circle = gGroup.append("circle")
-       .attr("cx", node.x - 10)
-       .attr("cy", node.y - 5)
-       .attr("r", 5)
-       .attr("fill", function (d) {
-         return getColor(node);
-       })
-       .attr("stroke", "black")
-       .attr("stroke-width", 1)
-       .attr("id", "a" + id)
-
-
-    if (node == root){
-        circle.attr("display", "none");
-    }
+    // var circle = gGroup.append("circle")
+    //    .attr("cx", node.x - 10)
+    //    .attr("cy", node.y - 5)
+    //    .attr("r", 5)
+    //    .attr("fill", function (d) {
+    //      return getColor(node);
+    //    })
+    //    .attr("stroke", "black")
+    //    .attr("stroke-width", 1)
+    //    .attr("id", "a" + id)
+    //
+    //
+    // if (node == root){
+    //     circle.attr("display", "none");
+    // }
 
     node_map["" + id] = node;
     node.id = id;
 
     var text = gGroup.append("text")
-                           .attr("x", node.x)
+                           .attr("x", node.x - node.textsize/2)
                            .attr("y", node.y)
                            .attr("font-family", "sans-serif")
                            .attr("font-size", "15px")
@@ -790,6 +790,27 @@ function drawNode(node) {
 
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
     text = wrap(text, 200);
+    if (node.textsize > 200) {
+        node.textsize = 355;
+    }
+
+    var roundedRectangle = gGroup.append("rect")
+        .attr("x", node.x - node.textsize/2)
+        .attr("y", node.y - 20)
+        .attr("width", node.textsize)
+        .attr("height", 40)
+        .attr("rx", 5)
+        .attr("ry", 5)
+        .attr("fill", function (d) {
+          return getColor(node);
+        })
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .attr("id", "a" + id)
+
+    if (node==root){
+        roundedRectangle.attr("display", "none");
+    }
 
     if (node != root) {
       var ghost = gGroup.append("circle")
@@ -805,6 +826,13 @@ function drawNode(node) {
 
     id++;
 }
+
+
+d3.selection.prototype.moveToFront = function() {
+    return this.each(function(){
+        this.parentNode.appendChild(this);
+    });
+};
 
 function drawTree(node){
   traverseAndDo(node, drawNode);
@@ -985,7 +1013,8 @@ function update(root){
 
     drawTree(root);
 
-    gGroup.selectAll("circle")
+    //gGroup.selectAll("circle")
+    gGroup.selectAll("rect")
         .on("mouseover", function() {
             this.style.cursor = "pointer";
             d3.select(this).attr('fill', '#302E1C');
@@ -1024,6 +1053,8 @@ function update(root){
         })
         .call(dragListener);
 
+        gGroup.selectAll("text").moveToFront();
+
         gGroup.selectAll(".ghostcircle")
             .on("mouseover", function() {
                 this.style.cursor = "pointer";
@@ -1039,14 +1070,17 @@ function update(root){
 
 function getColor(node) {
 
+    //If the node has a toggled subtree, fill light blue
     if (node.toggle == 1) {
         //console.log("#ADD8E6");
         return "#ADD8E6";
     }
+    //If the node is currently selected, fill black
     else if (node == getCurrentNode()) {
         //console.log("#302E1C");
         return "#302E1C";
     }
+    //Otherwise, fill white
     else {
         //console.log("white");
         return "white";
