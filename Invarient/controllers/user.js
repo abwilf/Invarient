@@ -379,6 +379,7 @@ exports.getMapById = (req, res, next) => {
 }
 
 exports.saveCreateMap = (req, res, next) => {
+  console.log("SAVECREATE");
      if (req.body.type == "save") {
         Map.findOne({ _id: req.body.id}, function(err, m) {
             if (err) throw err;

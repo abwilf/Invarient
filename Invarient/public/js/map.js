@@ -560,7 +560,6 @@ $(function() {
         root = new Node($(document).width() / 2, 50, "Enter your text here.");
     }
 
-    console.log(root.permId);
     hydrateData(root);
     root.depth = 0;
     setCurrentNode(root.children[0]);
@@ -1201,9 +1200,9 @@ $('#myModal').on('hidden.bs.modal', function() {
     update(root);
 });
 
+
 function saveMap() {
     var dataTemp = saveToJSON(root);
-    console.log(dataTemp);
     var URL = window.location.pathname;
     $.post(URL,
     {
