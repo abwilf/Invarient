@@ -13,9 +13,24 @@ const transporter = nodemailer.createTransport({
  * Contact form page.
  */
 exports.getContact = (req, res) => {
-  res.render('contact', {
-    title: 'Contact'
-  });
+  
+  // REMEMBER: res.locals.user becomes just user in pug - can access here as res.locals.user
+  // console.log('USER IS: ' + res.locals.user);
+
+  // passport native func
+  if (req.isAuthenticated()) {
+    res.render('contact', {
+      title: 'Contact',
+      headerType: 'logged'
+    });
+  }
+  else {
+    res.render('contact', {
+      title: 'Contact',
+      headerType: 'notLogged',
+    });
+  }
+  
 };
 
 /**

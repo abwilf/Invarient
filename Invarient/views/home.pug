@@ -1,27 +1,35 @@
 extends layout
 
 block content
-  h1 Invarient
-  p.lead Yay
-  hr
-  .row
-    .col-sm-6
-      h2 Heading
-      p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-      p
-        a.btn.btn-default(href='#', role='button') View details »
-    .col-sm-6
-      h2 Heading
-      p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-      p
-        a.btn.btn-default(href='#', role='button') View details »
-    .col-sm-6
-      h2 Heading
-      p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-      p
-        a.btn.btn-default(href='#', role='button') View details »
-    .col-sm-6
-      h2 Heading
-      p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-      p
-        a.btn.btn-default(href='#', role='button') View details »
+    // body
+    #body.container-fluid
+      img#treelogo(src='css/mat/tree.png', alt='tree img', style='width:36em;')
+      // Tree description paragraph
+      .container-fluid
+        p#Treeparagraph
+          | Paraphgraph Holder: Under the reluctance graons a threatening fire. The celebrated library trails under the terrible theorem. A pro messes the correspondent.
+      // Tree Try it button
+      #TreeTry.container-fluid
+        button#Tryit.button.button2 Try it
+      hr
+      // Synthesize
+      #Synthesizebox.container-fluid
+        img.col-xs-12.col-sm-3.col-md-3.col-lg-3.col-sm-offset-1.col-md-offset-1.col-lg-offset-1(src='css/mat/synthesize.png', alt='synthesize img', style='width:200px;')
+        h2#Synword.col-xs-8.col-sm-6.col-md-6.col-lg-7 Synthesize
+        button#Tryitsub.button.button2 Try it
+        p#subpar.col-xs-12.col-sm-8.col-md-8.col-lg-8
+          | Synthesize Paragraph: A considerable novel untidies her spike. Will the layer resent the religion? Why does the advocate conduct every taxi? The damned prints a formula around a practiced joke.
+      // Communicate
+      #Synthesizebox.container-fluid
+        img.col-xs-12.col-sm-3.col-md-3.col-lg-3.col-sm-offset-1.col-md-offset-1.col-lg-offset-1(src='css/mat/communicate.png', alt='synthesize img', style='width:200px;')
+        h2#Synword.col-xs-8.col-sm-6.col-md-6.col-lg-7 Communicate
+        button#Tryitsub.button.button2 Try it
+        p#subpar.col-xs-12.col-sm-8.col-md-8.col-lg-8
+          | Communicate Paragraph: A considerable novel untidies her spike. Will the layer resent the religion? Why does the advocate conduct every taxi? The damned prints a formula around a practiced joke.
+      // Grow
+      #Synthesizebox.container-fluid
+        img.col-xs-12.col-sm-3.col-md-3.col-lg-3.col-sm-offset-1.col-md-offset-1.col-lg-offset-1(src='css/mat/grow.png', alt='synthesize img', style='width:200px;')
+        h2#Synword.col-xs-8.col-sm-6.col-md-6.col-lg-7 Grow
+        button#Tryitsub.button.button2 Try it
+        p#subpar.col-xs-12.col-sm-8.col-md-8.col-lg-8
+          | Grow Paragraph: A considerable novel untidies her spike. Will the layer resent the religion? Why does the advocate conduct every taxi? The damned prints a formula around a practiced joke.

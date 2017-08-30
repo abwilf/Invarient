@@ -1,17 +1,31 @@
 doctype html
-html
+html(lang='en')
   head
     meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    meta(name='theme-color' content='#4DA5F4')
-    meta(name='csrf-token', content=_csrf)
-    title #{title} - Hackathon Starter
-    link(rel='shortcut icon', href='/favicon.png')
-    link(rel='stylesheet', href='/css/main.css')
+    // Bootstrap
+    // Core CSS
+    link(rel='stylesheet', type='text/css', href='css/site.css')
+    // Latest compiled and minified CSS
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    // jQuery library
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    // Latest compiled JavaScript
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // To add a google font and paste the link
+    style.
+      @import url('https://fonts.googleapis.com/css?family=Raleway');
+    link(href='https://fonts.googleapis.com/css?family=Raleway', rel='stylesheet')
+  
+    block titleChange
+      title Invarient
 
   body
-    include partials/header
+    // - console.log('HEADERTYPE IS: ' + headerType);
+    if headerType == "logged"
+      include partials/headerLogged
+    else 
+      include partials/headerNotLogged
 
     .container
       include partials/flash
@@ -31,3 +45,7 @@ html
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', 'UA-XXXXX-X', 'auto');
       ga('send', 'pageview');
+
+
+
+
