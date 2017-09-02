@@ -21,15 +21,14 @@ html(lang='en')
       title Invarient
 
   body
-    // - console.log('HEADERTYPE IS: ' + headerType);
+    // - console.log('HEADERTYPE IS: ' + headerType); - NOTE: res.locals.user shows up as user variable in all pug dogs
     if headerType == "logged"
       include partials/headerLogged
     else 
       include partials/headerNotLogged
 
-    .container
-      include partials/flash
-      block content
+    include partials/flash
+    block content
 
     include partials/footer
 

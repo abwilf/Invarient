@@ -3,7 +3,17 @@
  * Home page.
  */
 exports.index = (req, res) => {
-  res.render('home', {
-    title: 'Invarient'
-  });
+   // passport native func
+  if (req.isAuthenticated()) {
+    res.render('account/userspace', {
+      title: 'Invarient',
+      headerType: 'logged'
+    });
+  }
+  else {
+    res.render('home', {
+      title: 'Invarient',
+      headerType: 'notLogged'
+    });
+  }
 };

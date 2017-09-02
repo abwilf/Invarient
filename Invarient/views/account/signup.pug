@@ -1,24 +1,18 @@
 extends ../layout
 
-block content
-  .page-header
-    h3 Sign up
-  form.form-horizontal(id='signup-form', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='email') Email
-      .col-sm-7
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-    .form-group
-      label.col-sm-3.control-label(for='password') Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password', placeholder='Password', required)
-    .form-group
-      label.col-sm-3.control-label(for='confirmPassword') Confirm Password
-      .col-sm-7
-        input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', required)
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.btn.btn-success(type='submit')
-          i.fa.fa-user-plus
-          | Signup
+block content 
+  // body
+  #Contacttitle.container-fluid
+    h2#Contactword.col-xs-11.col-sm-10.col-md-9.col-lg-8.col-xs-offset-1.col-sm-offset-1.col-md-offset-1.col-lg-offset-1 Sign Up
+    hr
+    .container-fluid
+      form(method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input#userid.col-xs-12.col-sm-12(type='text', name='email', placeholder='Email Address', required)
+        .col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input#password(type='password', name='password', placeholder='Password', required)
+        .col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input#conpas(type='password', name='confirmPassword', placeholder='Confirm Password', required)
+        .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input(type='submit', value='Register')

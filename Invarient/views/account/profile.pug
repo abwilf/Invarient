@@ -1,52 +1,26 @@
 extends ../layout
 
 block content
-  .page-header
-    h3 Maps
+  // body
+  #Changepwtitle.container-fluid
+    h2#Contactword.col-xs-11.col-sm-10.col-md-9.col-lg-8.col-xs-offset-1.col-sm-offset-1.col-md-offset-1.col-lg-offset-1 Change Password
+    hr
+    .container-fluid
+      form(action='/account/password', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .col-xs-12.col-sm-5.col-md-4.col-lg-4.col-sm-offset-1.col-md-offset-2.col-2.col-lg-offset-2
+          input#fname.col-xs-12.col-sm-12(type='password', name='password', placeholder='New Password')
+        .col-xs-12.col-sm-5.col-md-4.col-lg-4
+          input#lname(type='password', name='confirmPassword', placeholder='Confirm New Password')
+        .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input(type='submit', value='Confirm')
 
-  #maps
-    each val in user.maps
-      a#maps_btns(href=val.url, target="_blank")= val.title
-      br
-
-  form.form-horizontal(action='/account/createMap', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
-      .form-group
-        .col-sm-7
-          input.form-control(type='hidden', name='emailAddress', value=user.email)
-      .form-group
-        .col-sm-offset-3.col-sm-4
-          button.btn.btn-primary(type='submit')
-            i.fa.fa-plus-square
-            | Create Map
-
-  .page-header
-    h3 Change Password
-
-  form.form-horizontal(action='/account/password', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='password') New Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password')
-    .form-group
-      label.col-sm-3.control-label(for='confirmPassword') Confirm Password
-      .col-sm-7
-        input.form-control(type='password', name='confirmPassword', id='confirmPassword')
-    .form-group
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn-primary(type='submit')
-          i.fa.fa-lock
-          | Change Password
-
-  .page-header
-    h3 Delete Account
-
-  form.form-horizontal(action='/account/delete', method='POST')
-    .form-group
-      p.col-sm-offset-3.col-sm-4 You can delete your account, but keep in mind this action is irreversible.
-      input(type='hidden', name='_csrf', value=_csrf)
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn-danger(type='submit')
-          i.fa.fa-trash
-          | Delete my account
+  #Deletetitle.container-fluid
+    h2#Contactword.col-xs-11.col-sm-10.col-md-9.col-lg-8.col-xs-offset-1.col-sm-offset-1.col-md-offset-1.col-lg-offset-1 Delete Account
+    hr
+    .container-fluid
+      form(action="/account/delete", method="POST")
+        input(type='hidden', name='_csrf', value=_csrf)   
+        p#deletemessage.col-xs-10.col-sm-8.col-md-8.col-lg-8.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2 You can delete your account, but keep in mind that this action is irreversible
+        .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input#deletebutton(type='submit', value='Delete Account')

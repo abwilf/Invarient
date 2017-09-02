@@ -104,6 +104,7 @@ exports.postSignup = (req, res, next) => {
         if (err) {
           return next(err);
         }
+        req.flash('success', { msg: 'Welcome to Invarient!  You are now logged in.'});
         res.redirect('/');
       });
     });
@@ -115,9 +116,20 @@ exports.postSignup = (req, res, next) => {
  * Profile page.
  */
 exports.getAccount = (req, res) => {
-  res.render('account/profile', {
-    title: 'Account Management'
-  });
+
+  if (req.isAuthenticated()) {
+    res.render('account/profile', {
+      title: 'Account Management',
+      headerType: 'logged'
+    });
+  }
+  else {
+    res.render('login', {
+      title: 'Account Management',
+      headerType: 'notLogged'
+    });
+  }
+
 };
 
 /**

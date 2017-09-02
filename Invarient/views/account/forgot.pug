@@ -1,15 +1,16 @@
 extends ../layout
 
 block content
-  .col-sm-8.col-sm-offset-2
-    form(method='POST')
-      legend Forgot Password
-      input(type='hidden', name='_csrf', value=_csrf)
-      .form-group
-        p Enter your email address below and we will send you password reset instructions.
-        label.control-label(for='email') Email
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-      .form-group
-        button.btn.btn-primary(type='submit')
-          i.fa.fa-key
-          | Reset Password
+  #Contacttitle.container-fluid
+    h2#Contactword.col-xs-11.col-sm-10.col-md-9.col-lg-8.col-xs-offset-1.col-sm-offset-1.col-md-offset-1.col-lg-offset-1 Forgot Password
+    hr
+    .container-fluid
+      form(method='POST')
+        h5.col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2 Enter your e-mail below and we will send you password reset instructions
+        .col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input#conpas(type='text', name='enter', placeholder='Please enter your e-mail here')
+        .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input(type='submit', value='Reset Password')
+
+
+

@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const Contact = require('../models/Contact');
+
 
 const transporter = nodemailer.createTransport({
   service: 'SendGrid',
@@ -49,6 +51,24 @@ exports.postContact = (req, res) => {
     return res.redirect('/contact');
   }
 
+  // console.log("EMAIL: " + req.body.email);
+  // console.log("NAME: "+  req.body.name + "MESSAGE: " + req.body.message);
+  var newMessage = new Contact({
+    email: req.body.email,
+    name: req.body.name,
+    message: req.body.message
+  })
+  newMessage.save(function(err) {
+    if (err) {
+      throw err;
+    }
+    else {
+      req.flash('success', { msg: 'Email has been sent successfully!' });
+      res.redirect('/contact');
+    }
+  });
+
+/* FOR NOW - STORE IN DATABASE.  IN FUTURE, WILL USE MAILING FEATURE
   const mailOptions = {
     to: 'your@email.com',
     from: `${req.body.name} <${req.body.email}>`,
@@ -64,4 +84,5 @@ exports.postContact = (req, res) => {
     req.flash('success', { msg: 'Email has been sent successfully!' });
     res.redirect('/contact');
   });
+  */
 };

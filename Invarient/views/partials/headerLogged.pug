@@ -1,9 +1,8 @@
 #header.container-fluid
-  h1#headertext.col-xs-8.col-sm-9.col-md-9.col-lg-9 Invarient
+  h1#headertext.col-xs-8.col-sm-9.col-md-9.col-lg-9(onclick="location.href='/'") Invarient
   #headerbuttons.container-fluid
     .dropdown
-    	// NOTE: res.locals.user is available here as user
       button.dropbtn #{user.email}
       .dropdown-content
-        a(href='account.html') My Account
+        a(href='/account') My Account
         a(href='/logout') Log Out

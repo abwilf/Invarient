@@ -11,6 +11,18 @@ input[type=text], select {
     font-style: italic;
 }
 
+input[type=password], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: "Georgia", serif;
+    font-style: italic;
+}
+
 input[type=submit] {
     width: 100%;
     background-color: #0076a3;
@@ -28,7 +40,7 @@ input[type=submit]:hover {
     background-color: #e6841a;
 }
 
-input[type=delbut] {
+input[id=deletebutton] {
     width: 100%;
     background-color: #df4444;
     color: white;
@@ -42,10 +54,10 @@ input[type=delbut] {
     font-size: 16px;
 }
 
-input[type=delbut]:hover {
+input[id=deletebutton]:hover {
     background-color: #a22034;
 }
-/*---------------------------- Dropdown Styles ----------------------------*/
+/*---------------------------- Button Styles ----------------------------*/
   .button {
         background-color: #4CAF50; /* Green */
         border: none;
@@ -104,6 +116,9 @@ input[type=delbut]:hover {
     background-color: white;
     color: black;
     border: 2px solid #e7e7e7;
+    text-align: left;
+    content: 20px 200px;
+    padding: 20px 200px;
 }
 
 .button4:hover {background-color: #e7e7e7;}
@@ -118,7 +133,10 @@ input[type=delbut]:hover {
     background-color: #555555;
     color: white;
 }
-/*---------------------------- Buttons Styles ----------------------------*/
+
+
+
+/*---------------------------- Dropdown Styles ----------------------------*/
  .dropbtn {
             background-color: #3c96ad;
             color: white;
@@ -181,12 +199,30 @@ p {
     color: black;
     font-family: "Georgia", serif;
     font-style: italic;
-} 
+}
+
+h2 {
+    color:black !important;
+    font-family:'Raleway', sans-serif !important;
+        }
+
+hr {
+            width: 80% !important;
+            border-color: #e6841a !important;
+            border-bottom: 3px solid #e6841a !important;
+            
+        }
 
 #h3 {
     color: white;
     font-size: 14px;
     text-align: center;
+}
+
+h5{
+    font-size: 20px !important;
+    font-family: "Raleway", sans-serif!important;
+    font-style: italic !important;
 }
 
 #header {
@@ -202,8 +238,8 @@ p {
 #headertext {
     font-size: 40pt;
     color: white;
-    
     top: 10px;
+    cursor: pointer;
 }
 
 #headerbuttons {
@@ -312,6 +348,32 @@ hr {
     margin-top: 38px;
     text-align: right;
 }
+
+#userid {
+    max-width: 425px;
+}
+
+#password {
+    max-width: 425px;
+}
+
+#conpas {
+    max-width: 425px;
+}
+
+#subtite {
+    text-align: right;
+}
+
+#test {
+    
+}
+
+#boop2 {
+    margin-top:10px;
+   
+}
+
 .button {
     background-color: #4CAF50; /* Green */
     border: none;
@@ -325,53 +387,107 @@ hr {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
+    }
+
+    .button1 {
+        background-color: #3c96ad;
+        padding: 8px 15px;
+        color: white; 
+        border: 2px solid #e6841a;
+        border-radius: 8px;
+        min-width: 92px;
+    }
+
+    .button1:hover {
+        background-color: #e6841a;
+        color: white;
+    }
+
+    .button2 {
+        background-color: #3c96ad; 
+        color: white; 
+        border: 2px solid #3c96ad;
+        border-radius: 8px;
+    }
+
+    .button2:hover {
+        background-color: #1c6a7e;
+        color: white;
+    }
+
+    .button3 {
+        background-color: #3c96ad; 
+        color: white; 
+        border: 3px solid #e6841a;
+        border-radius: 10px;
+        font-size: 28px;
+        padding: 12px 36px;
+    }
+
+    .button3:hover {
+        background-color: #e6841a;
+        color: white;
+    }
+
+    .button4 {
+        background-color: white;
+        color: black;
+        border: 2px solid #e7e7e7;
+    }
+
+    .button4:hover {background-color: #e7e7e7;}
+
+    .button5 {
+        background-color: white;
+        color: black;
+        border: 2px solid #555555;
+    }
+
+    .button5:hover {
+        background-color: #555555;
+        color: white;
+    }
+
+
+h1 {
+    font-family:'Raleway', sans-serif;
 }
-.button1 {
-    background-color: #3c96ad;
-    padding: 8px 15px;
-    color: white;
-    border: 2px solid #e6841a;
-    border-radius: 8px;
-    min-width: 92px;
+
+hr {
+    width: 80% !important;
+    border-color: #e6841a !important;
+    border-bottom: 3px solid #e6841a !important;
+    
 }
-.button1:hover {
-    background-color: #e6841a;
-    color: white;
+
+a, figure {
+    display: inline-block;
 }
-.button2 {
-    background-color: #3c96ad;
-    color: white;
-    border: 2px solid #3c96ad;
-    border-radius: 8px;
-}
-.button2:hover {
-    background-color: #1c6a7e;
-    color: white;
-}
-.button3 {
-    background-color: #3c96ad;
-    color: white;
-    border: 3px solid #e6841a;
-    border-radius: 10px;
-    font-size: 28px;
-    padding: 12px 36px;
-}
-.button3:hover {
-    background-color: #e6841a;
-    color: white;
-}
-.button4 {
-    background-color: white;
+figcaption {
+    margin: 0 0 0 0;
+    margin-left: 10px;
+    font-variant: small-caps;
+    font-family: 'Raleway', san-serif;
+    font-weight: bold;
+    color: #bb3333;
+    max-width: 240px;
     color: black;
-    border: 2px solid #e7e7e7;
+    padding-bottom: 0px;
+    
 }
-.button4:hover {background-color: #e7e7e7;}
-.button5 {
-    background-color: white;
-    color: black;
-    border: 2px solid #555555;
+figure {
+    padding: 0 0 0 0;
 }
-.button5:hover {
-    background-color: #555555;
-    color: white;
+img:hover {
+    transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+}
+img {
+    transition: transform 0.2s;
+    -webkit-transition: -webkit-transform 0.2s;
+    -moz-transition: -moz-transform 0.2s;
+    -o-transition: -o-transform 0.2s;
 }
