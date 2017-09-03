@@ -295,10 +295,14 @@ hr {
     top: 20px;
 }
 
-#Tryitsub {
-    margin-top: 15px;
-    margin-left: 15px;
+#botButtonBox {
+    margin: 0 auto;
+    padding-top: 4%;
+    width: 100%;
+    /*border: 1px solid black;*/
+    text-align: center;
 }
+
 
 #Footer {
     margin-top: 80px;

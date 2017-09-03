@@ -63,7 +63,7 @@ exports.postContact = (req, res) => {
       throw err;
     }
     else {
-      req.flash('success', { msg: 'Email has been sent successfully!' });
+      req.flash('success', { msg: "Thanks for reaching out!  We'll be in touch within a few days."});
       res.redirect('/contact');
     }
   });
