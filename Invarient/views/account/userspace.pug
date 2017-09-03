@@ -4,6 +4,18 @@ block content
     #Contacttitle.container-fluid
     h2#Contactword.col-xs-11.col-sm-10.col-md-9.col-lg-8.col-xs-offset-1.col-sm-offset-1.col-md-offset-1.col-lg-offset-1 Maps
     hr
+
+    form.form-horizontal(action='/account/createMap', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        .col-sm-7
+        input.form-control(type='hidden', name='emailAddress', value=user.email)
+      .form-group
+        .col-sm-offset-3.col-sm-4
+          button.btn.btn-primary(type='submit')
+            | Create Map
+
+
     // Link 1
     .container-fluid
       each val in user.maps

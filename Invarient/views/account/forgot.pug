@@ -6,9 +6,10 @@ block content
     hr
     .container-fluid
       form(method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
         h5.col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2 Enter your e-mail below and we will send you password reset instructions
         .col-xs-11.col-sm-12.col-md-12.col-lg-12.col-xs-offset-1.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
-          input#conpas(type='text', name='enter', placeholder='Please enter your e-mail here')
+          input#conpas(type='text', name='email', placeholder='Please enter your e-mail here')
         .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
           input(type='submit', value='Reset Password')
 
