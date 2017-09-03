@@ -18,12 +18,82 @@ html(lang='en')
     // Bootstrap Date-Picker Plugin
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css')
+      
+    style.
+      //button {
+        background-color: yellow;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        }
+        
+      //- button#00 {
+      //- background: url('public/icons/add-button') #00EADE center no-repeat;
+      //- border: 1px solid white; 
+      //- width: 35px;
+      //- height: 35px;
+      //- }  
+      
+      button {
+      text-align: center;
+      // FIXME: svg file not connecting
+      background: #00EADE url(/public/icons/add-button.svg) right no-repeat;
+      border: 1px solid white; 
+      width: 4em;
+      height: 4em;
+      //- background: url('../public/icons/browser-visualization.svg') #00EADE center no-repeat;
+      //- background-image: url(public/icons/browser-visualization.svg);
+      //- background-repeat: no-repeat;
+      //- background: url('public/icons/browser-visualization.svg')
+      //- background-repeat: no-repeat;
+      }
+
+      //- // FIXME: doesn't work
+      //- toolbar {
+      //- position:absolute;
+      //- top: 10%;
+      //- left: 10%;
+      //- }
+      //- 
+       {
+      //- _00 {
+      //- background-image: url('public/icons/add-button.svg')
+      //- }
+    //-   background-size: contain;
+    //- | cursor: pointer;
+    //- | display: inline-block;
+    //- | height: 52px;
+    //- | width: 40px;
+      }
 
   body
+    
+    #toolbar
+      #toolbarFirstRow
+        button._00
+          //- svg(url='public/icons/add-button.svg')
+          //- url('public/icons/add-button.svg')
+          //- svg 
+          //-   url('public/icons/add-button.svg')
+          //- svg
+          //-   use(xlink:href='public/icons/add-button.svg')
+        button._01
+        button._02
+        button._03
+      
+      #toolbarSecondRow  
+        button._10
+        button._11
+        button._12
+        button._13
 
-    #shortcuts_wrapper
+    //#shortcuts_wrapper
       #shortcuts
-        button#n(onclick='n_key()')  New Comes From Node (n) 
+        button#n(onclick='n_key()')  New Comes From Node (n)
         button#d(onclick='d_key()')  New Definition Node (d) 
         button#c(onclick='c_key()')  Custom (c) 
         button#f(onclick='f_key()')  New Forested Node (f) 
@@ -45,7 +115,7 @@ html(lang='en')
         button#m(onclick='m_key()')  Filter List by Node (m) 
         button#save(onclick='saveMap()')  SAVE 
         button#create(onclick='createMap()')  CREATE 
-
+        
 
     #tree-container
         div
