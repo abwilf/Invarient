@@ -59,7 +59,7 @@ dragListener = d3.behavior.drag()
     }
 
     if (dragStarted == true) {
-      d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
+      // d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
       dragStarted = false;
     }
 
@@ -541,6 +541,14 @@ var uniqueId; // for finding map in db
 var nodeId; // for centering on a certain node when linked to           // MATT - HERE'S THE NODE ID <3
 var permId = 0;
 
+var nodeWidthPercent = 16
+var nodeHeightPercent = nodeWidthPercent/6
+var nodeHeightScale = 20;
+
+var nodeWidth = $(document).width()*(nodeWidthPercent/100)
+var nodeHalfWidth = ($(document).width()*(nodeWidthPercent/100)) / 2
+var nodeHeightPadding = $(document).width()*(nodeHeightPercent/100)
+
 // BEGIN HERE
 $(function() {
 
@@ -596,6 +604,9 @@ function Node(x, y, data) {
     this.children = [];
 
     this.toggle = 0;
+
+    this.numLines = 1;
+    this.height = null;
 }
 
 // remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
@@ -717,7 +728,7 @@ function dragOn(node) {
 // define marker
 d3.select("svg").append("svg:defs").selectAll("marker")
     .data(["end"])      // Different link/path types can be defined here
-    .enter().append("svg:marker")    // This section adds in the arrows
+    // .enter().append("svg:marker")    // This section adds in the arrows
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 15)
@@ -736,15 +747,16 @@ function drawNode(node) {
 
                 var line = gGroup.append("line")
                    .attr("x1", node.x)
-                   .attr("y1", node.y + 20)
+                   .attr("y1", node.y + node.height/2)
                    .attr("x2", node.children[i].x)
-                   .attr("y2", node.children[i].y - 20)
+                   .attr("y2", node.children[i].y + node.children[i].height/2)
                    .attr("stroke-width", 2)
-                   .attr("stroke", "black");
-
+                   .attr("stroke", "#00CEF4");
+                //Arrow connection
                 if (node.children[i].connection == "arrow") {
                     line.attr("marker-end", "url(#end)");
                 }
+                //Custom connection
                 else if (node.children[i].connection != "line"){
                     line.attr("marker-end", "url(#end)");
                     var lbl = gGroup.append("text")
@@ -759,6 +771,7 @@ function drawNode(node) {
         }
     }
 
+    //TODO: do we want a visual drag indicator? Maybe a rounded rectangle around the node
     // var circle = gGroup.append("circle")
     //    .attr("cx", node.x - 10)
     //    .attr("cy", node.y - 5)
@@ -779,32 +792,54 @@ function drawNode(node) {
     node.id = id;
 
     var text = gGroup.append("text")
-                           .attr("x", node.x - node.textsize/2)
+                           .attr("x", node.x)
                            .attr("y", node.y)
+                           .attr("text-anchor", "middle")
+                           // FIXME: change font
                            .attr("font-family", "sans-serif")
-                           .attr("font-size", "15px")
-                           .attr("fill", "light-blue")
+                           .attr("font-size", "14px")
+                           .attr("font-color", "white")
+                           .attr("fill", "white")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
 
+    //TODO: compute height and where to wrap
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    text = wrap(text, 200);
-    if (node.textsize > 200) {
-        node.textsize = 355;
+    // text = wrap(text, 200);
+    var wrapTuple = wrap(text, nodeWidth, node.numLines);
+    text = wrapTuple[0];
+    node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
+    // text = wrap(text, nodeWidth, node.numLines);
+
+    if (node.textsize > nodeWidth) {
+        //TODO: what is this for?
+        node.textsize = nodeWidth;
+        // node.height = 40*()
     }
 
     var roundedRectangle = gGroup.append("rect")
-        .attr("x", node.x - node.textsize/2)
+        //TODO: calculate numerical equivalent of 6%
+        // .attr("x", node.x - node.textsize/2)
+
+        // .attr("width", node.textsize)
+        .attr("width", nodeWidthPercent+"%")
+        // .attr("x", node.x - node.textsize/2)
+        .attr("x", node.x - nodeHalfWidth)
+
+        // console.log(window.innerWidth)
+        // .attr("x", node.x - width/2)
+
         .attr("y", node.y - 20)
-        .attr("width", node.textsize)
-        .attr("height", 40)
-        .attr("rx", 5)
-        .attr("ry", 5)
+        //TODO: variable height based on numRows
+        //FIXME
+        // .attr("height", node.height)
+        .attr("height", node.height)
+        .attr("rx", 10)
+        .attr("ry", 10)
         .attr("fill", function (d) {
           return getColor(node);
         })
-        .attr("stroke", "black")
-        .attr("stroke-width", 1)
+
         .attr("id", "a" + id)
 
     if (node==root){
@@ -864,26 +899,28 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
         }
     }
     node.subtreeWidth = sum;
-    node.width = nodeWidthFunctor(node);
+    // node.width = nodeWidthFunctor(node
+    node.width = nodeWidth*1.5;
     node.subtreeWidth = Math.max(node.subtreeWidth, node.width);
 }
 
 function nodeWidthFunctor(node) {
     // console.log(node.textsize);
-    if (node.textsize) {
-        if (node.textsize>300){
-            // console.log("Case A");
-            return 355;
-        }
-        else{
-            // console.log("Case B");
-            return node.textsize + 45;
-        }
-    }
-    else{
-        // console.log("Case C");
-        return 20;
-    }
+    // if (node.textsize) {
+    //     if (node.textsize>300){
+    //         // console.log("Case A");
+    //         return 355;
+    //     }
+    //     else{
+    //         // console.log("Case B");
+    //         return node.textsize + 45;
+    //     }
+    // }
+    // else{
+    //     // console.log("Case C");
+    //     return 20;
+    // }
+    return nodeWidth;
 }
 
 function calculateSubtreeWidths(node){
@@ -1016,7 +1053,8 @@ function update(root){
     gGroup.selectAll("rect")
         .on("mouseover", function() {
             this.style.cursor = "pointer";
-            d3.select(this).attr('fill', '#302E1C');
+            //TODO: pick a color for mouseover
+            // d3.select(this).attr('fill', '#302E1C');
             dragTarget = getClickedNode(this);
         })
         .on("mouseout", function() {
@@ -1038,6 +1076,7 @@ function update(root){
             }
             // center( node );
         })
+        // TODO: change from toggling subtree to modal view
         .on("dblclick", function() {
 
             var node = getClickedNode( this );
@@ -1069,20 +1108,24 @@ function update(root){
 
 function getColor(node) {
 
-    //If the node has a toggled subtree, fill light blue
+    //If the node has a toggled subtree
     if (node.toggle == 1) {
         //console.log("#ADD8E6");
         return "#ADD8E6";
     }
-    //If the node is currently selected, fill black
+    //If the node is currently selected
     else if (node == getCurrentNode()) {
         //console.log("#302E1C");
-        return "#302E1C";
+        return "#24A5F4";
+    }
+    //If the node is a definition node
+    else if (node.connection == "line") {
+        return "#03EB9B"
     }
     //Otherwise, fill white
     else {
         //console.log("white");
-        return "white";
+        return "#00CEF4";
     }
 }
 
@@ -1100,8 +1143,7 @@ function wrap(text, width) {
 
     text.attr("dy",0);
     var x = text.attr("x");
-    //console.log(x);
-
+    var numberLines = 1;
     text.each(function() {
         var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
@@ -1121,9 +1163,12 @@ function wrap(text, width) {
                 tspan.text(line.join(" "));
                 line = [word];
                 tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                numberLines = 1 + lineNumber;
             }
         }
     });
+
+    return [text, numberLines];
 }
 
 function center(node) {
@@ -1154,7 +1199,7 @@ function onSelect(node) {
             return getColor(temp);
         });
     }
-    d3.select("#a" + getCurrentNode().id).attr('fill', '#302E1C');
+    d3.select("#a" + getCurrentNode().id).attr('fill', '#24A5F4');
     // center(node);
 }
 
