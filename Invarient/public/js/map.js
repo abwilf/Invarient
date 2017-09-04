@@ -39,25 +39,39 @@ function drawToolbar() {
   var toolbarPlacement = 1;
   var buttonSpacing = 4.15;
 
-  console.log("toolbar function");
-  svgContainer.append("svg:pattern")
-    .attr("id", "add_icon")
-    .attr("width", "5%")
-    .attr("height", "5%")
-    .attr("patternUnits", "userSpaceOnUse")
-    .append("svg:image")
-    .attr("xlink:href", "public/icons/add-button.svg")
-    .attr("width", "5%")
-    .attr("height", "5%")
-    .attr("x", 10)
-    .attr("y", 10);
+  svgContainer.append("defs")
+    .append("pattern")
+    .attr("id", "add_button")
+    .attr('patternUnits', 'userSpaceOnUse')
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .append("image")
+    // .attr("fill", "#00EADE")
+    .attr("xlink:href", '/icons/add-button.svg')
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em");
+
+  // svgContainer.append("image")
+
+  // console.log("toolbar function");
+  // svgContainer.append("svg:pattern")
+  //   .attr("id", "add_icon")
+  //   .attr("width", "5%")
+  //   .attr("height", "5%")
+  //   .attr("patternUnits", "userSpaceOnUse")
+  //   .append("svg:image")
+  //   .attr("xlink:href", "icons/add-button.svg")
+  //   .attr("width", "5%")
+  //   .attr("height", "5%")
+  //   .attr("x", 10)
+  //   .attr("y", 10);
 
   // svgContainer.append("svg:image")
   //   .attr('x',10)
   //   .attr('y',10)
   //   .attr('width', 30)
   //   .attr('height', 30)
-  //   .attr("xlink:href","public/icons/add-button.svg")
+  //   .attr("xlink:href","icons/add-button.svg")
     // .attr("xlink:href","public/icons/add-button.svg")
 
   // var rect00 = svgContainer.append("path")
@@ -74,6 +88,7 @@ function drawToolbar() {
     .attr("width", buttonWidth+"em")
     .attr("height", buttonWidth+"em")
     .attr("fill", "#00EADE")
+    .attr("fill", "url(#add_button)")
     .on("click", function() {
       eventNewComesFromNode()
     });
@@ -666,6 +681,7 @@ var nodeId; // for centering on a certain node when linked to           // MATT 
 var permId = 0;
 
 var nodeWidthPercent = 16
+var nodeWidthMargin = $(document).width()*(nodeWidthPercent/700)
 var nodeHeightPercent = nodeWidthPercent/6
 var nodeHeightScale = 20;
 
@@ -695,7 +711,7 @@ $(function() {
     hydrateData(root);
     root.depth = 0;
     setCurrentNode(root.children[0]);
-    drawToolbar();
+    // drawToolbar();
     update(root);
     onSelect(root.children[0]);
 
@@ -916,9 +932,12 @@ function drawNode(node) {
     node_map["" + id] = node;
     node.id = id;
 
+    console.log(node.numLines);
+
     var text = gGroup.append("text")
                            .attr("x", node.x)
-                           .attr("y", node.y)
+                           .attr("y", node.y - (node.numLines - 1)*(nodeHeightScale/2))
+                          //  .attr("y", node.y - (node.numLines-1)*(nodeHeightScale/2))
                            .attr("text-anchor", "middle")
                            // FIXME: change font
                            .attr("font-family", "sans-serif")
@@ -930,8 +949,9 @@ function drawNode(node) {
 
     //TODO: compute height and where to wrap
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    var wrapTuple = wrap(text, nodeWidth, node.numLines);
+    var wrapTuple = wrap(text, nodeWidth-nodeWidthMargin, node.numLines);
     text = wrapTuple[0];
+    node.numLines = wrapTuple[1]
     node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
     // text = wrap(text, nodeWidth, node.numLines);
 
@@ -953,7 +973,7 @@ function drawNode(node) {
         // console.log(window.innerWidth)
         // .attr("x", node.x - width/2)
 
-        .attr("y", node.y - 20)
+        .attr("y", node.y - node.height/2)
         //TODO: variable height based on numRows
         //FIXME
         // .attr("height", node.height)
