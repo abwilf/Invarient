@@ -681,6 +681,7 @@ var nodeId; // for centering on a certain node when linked to           // MATT 
 var permId = 0;
 
 var nodeWidthPercent = 16
+var nodeWidthMargin = $(document).width()*(nodeWidthPercent/700)
 var nodeHeightPercent = nodeWidthPercent/6
 var nodeHeightScale = 20;
 
@@ -931,9 +932,12 @@ function drawNode(node) {
     node_map["" + id] = node;
     node.id = id;
 
+    console.log(node.numLines);
+
     var text = gGroup.append("text")
                            .attr("x", node.x)
-                           .attr("y", node.y)
+                           .attr("y", node.y - (node.numLines - 1)*(nodeHeightScale/2))
+                          //  .attr("y", node.y - (node.numLines-1)*(nodeHeightScale/2))
                            .attr("text-anchor", "middle")
                            // FIXME: change font
                            .attr("font-family", "sans-serif")
@@ -945,8 +949,9 @@ function drawNode(node) {
 
     //TODO: compute height and where to wrap
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    var wrapTuple = wrap(text, nodeWidth, node.numLines);
+    var wrapTuple = wrap(text, nodeWidth-nodeWidthMargin, node.numLines);
     text = wrapTuple[0];
+    node.numLines = wrapTuple[1]
     node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
     // text = wrap(text, nodeWidth, node.numLines);
 
@@ -968,7 +973,7 @@ function drawNode(node) {
         // console.log(window.innerWidth)
         // .attr("x", node.x - width/2)
 
-        .attr("y", node.y - 20)
+        .attr("y", node.y - node.height/2)
         //TODO: variable height based on numRows
         //FIXME
         // .attr("height", node.height)
