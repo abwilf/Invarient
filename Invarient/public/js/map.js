@@ -25,6 +25,130 @@ var svgContainer = d3.select("#tree-container").append("svg")
 
 var gGroup = d3.select("svg").append("g");
 
+function rightRoundedRect(x, y, width, height, radius) {
+  return "M" + (x+width) + "," + y
+       + "h" + (x + radius)
+       + "a" + radius + "," + radius + " 0 0 1 " + -radius + "," + radius
+       + "v" + (height - 2 * radius)
+       + "h" + (radius - width)
+       + "z";
+}
+
+function drawToolbar() {
+  var buttonWidth = 4;
+  var toolbarPlacement = 1;
+  var buttonSpacing = 4.15;
+
+  console.log("toolbar function");
+  svgContainer.append("svg:pattern")
+    .attr("id", "add_icon")
+    .attr("width", "5%")
+    .attr("height", "5%")
+    .attr("patternUnits", "userSpaceOnUse")
+    .append("svg:image")
+    .attr("xlink:href", "public/icons/add-button.svg")
+    .attr("width", "5%")
+    .attr("height", "5%")
+    .attr("x", 10)
+    .attr("y", 10);
+
+  // svgContainer.append("svg:image")
+  //   .attr('x',10)
+  //   .attr('y',10)
+  //   .attr('width', 30)
+  //   .attr('height', 30)
+  //   .attr("xlink:href","public/icons/add-button.svg")
+    // .attr("xlink:href","public/icons/add-button.svg")
+
+  // var rect00 = svgContainer.append("path")
+  //   .attr("d", rightRoundedRect(10, 10, 40, 40, 10))
+
+    // .attr("d", rightRoundedRect(toolbarPlacement+"em", toolbarPlacement+"em", buttonWidth+"em", buttonWidth+"em", 20));
+    // .attr("fill", "#00EADE")
+    // .on("click", function() {
+    //   eventNewComesFromNode()
+    // });
+  var rect00 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+"em")
+    .attr("y", toolbarPlacement+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      eventNewComesFromNode()
+    });
+
+  var rect01 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+buttonSpacing+"em")
+    .attr("y", toolbarPlacement+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+
+  var rect02 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+2*buttonSpacing+"em")
+    .attr("y", toolbarPlacement+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+
+  var rect03 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+3*buttonSpacing+"em")
+    .attr("y", toolbarPlacement+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+
+  var rect10 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+"em")
+    .attr("y", toolbarPlacement+buttonSpacing+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+
+  var rect11 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+buttonSpacing+"em")
+    .attr("y", toolbarPlacement+buttonSpacing+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+
+  var rect12 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+2*buttonSpacing+"em")
+    .attr("y", toolbarPlacement+buttonSpacing+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+
+  var rect13 = svgContainer.append("rect")
+    .attr("x", toolbarPlacement+3*buttonSpacing+"em")
+    .attr("y", toolbarPlacement+buttonSpacing+"em")
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .attr("fill", "#00EADE")
+    .on("click", function() {
+      // TODO: put appropriate function here
+    });
+}
+
 dragListener = d3.behavior.drag()
   .on("dragstart", function(){
     console.log("Drag starting.");
@@ -571,6 +695,7 @@ $(function() {
     hydrateData(root);
     root.depth = 0;
     setCurrentNode(root.children[0]);
+    drawToolbar();
     update(root);
     onSelect(root.children[0]);
 
@@ -805,7 +930,6 @@ function drawNode(node) {
 
     //TODO: compute height and where to wrap
     node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    // text = wrap(text, 200);
     var wrapTuple = wrap(text, nodeWidth, node.numLines);
     text = wrapTuple[0];
     node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
@@ -1033,7 +1157,7 @@ function update(root){
     id = 0; //clear id
     gGroup.selectAll("*").remove();
 
-    drawTree(root);
+    // drawTree(root);
 
     gGroup.selectAll("*").remove();
 
