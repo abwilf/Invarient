@@ -39,25 +39,39 @@ function drawToolbar() {
   var toolbarPlacement = 1;
   var buttonSpacing = 4.15;
 
-  console.log("toolbar function");
-  svgContainer.append("svg:pattern")
-    .attr("id", "add_icon")
-    .attr("width", "5%")
-    .attr("height", "5%")
-    .attr("patternUnits", "userSpaceOnUse")
-    .append("svg:image")
-    .attr("xlink:href", "public/icons/add-button.svg")
-    .attr("width", "5%")
-    .attr("height", "5%")
-    .attr("x", 10)
-    .attr("y", 10);
+  svgContainer.append("defs")
+    .append("pattern")
+    .attr("id", "add_button")
+    .attr('patternUnits', 'userSpaceOnUse')
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em")
+    .append("image")
+    // .attr("fill", "#00EADE")
+    .attr("xlink:href", '/icons/add-button.svg')
+    .attr("width", buttonWidth+"em")
+    .attr("height", buttonWidth+"em");
+
+  // svgContainer.append("image")
+
+  // console.log("toolbar function");
+  // svgContainer.append("svg:pattern")
+  //   .attr("id", "add_icon")
+  //   .attr("width", "5%")
+  //   .attr("height", "5%")
+  //   .attr("patternUnits", "userSpaceOnUse")
+  //   .append("svg:image")
+  //   .attr("xlink:href", "icons/add-button.svg")
+  //   .attr("width", "5%")
+  //   .attr("height", "5%")
+  //   .attr("x", 10)
+  //   .attr("y", 10);
 
   // svgContainer.append("svg:image")
   //   .attr('x',10)
   //   .attr('y',10)
   //   .attr('width', 30)
   //   .attr('height', 30)
-  //   .attr("xlink:href","public/icons/add-button.svg")
+  //   .attr("xlink:href","icons/add-button.svg")
     // .attr("xlink:href","public/icons/add-button.svg")
 
   // var rect00 = svgContainer.append("path")
@@ -74,6 +88,7 @@ function drawToolbar() {
     .attr("width", buttonWidth+"em")
     .attr("height", buttonWidth+"em")
     .attr("fill", "#00EADE")
+    .attr("fill", "url(#add_button)")
     .on("click", function() {
       eventNewComesFromNode()
     });
@@ -695,7 +710,7 @@ $(function() {
     hydrateData(root);
     root.depth = 0;
     setCurrentNode(root.children[0]);
-    drawToolbar();
+    // drawToolbar();
     update(root);
     onSelect(root.children[0]);
 

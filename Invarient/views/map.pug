@@ -18,8 +18,99 @@ html(lang='en')
     // Bootstrap Date-Picker Plugin
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css')
+      
+    style.
+      //- .angled-triangle {
+      //- width:100px;
+      //- height:100px;
+      //- background-image: -moz-radial-gradient(0 0, transparent 70%, black 71.5%);
+      //- background-image: -webkit-radial-gradient(0 0, transparent 70%, black 71.5%);
+      //- background-image: radial-gradient(top left, transparent 70%, black 71.5%);
+      //- background-position: 0px 0px;
+      //- background-repeat:no-repeat;
+      //- }
+      //- .rect {
+      //- height: 100px;
+      //- width: 100px;
+      //- background:rgba(0,0,0,0.5);
+      //- position:relative;
+      //- margin-top:100px;
+      //- margin-left:100px;
+      //- }
+      //- .circle {
+      //- display:block;
+      //- width: 100px;
+      //- height: 50px;
+      //- top:-50px;
+      //- left:0;
+      //- overflow:hidden;
+      //- position:absolute;
+      //- }
+      //- .circle:after {
+      //- content:'';
+      //- width: 100px;
+      //- height: 100px;
+      //- -moz-border-radius: 100px;
+      //- -webkit-border-radius: 100px;
+      //- border-radius: 100px;
+      //- background:rgba(0,0,0,0);
+      //- position:absolute;
+      //- top:-100px;
+      //- left:-40px;
+      //- border:40px solid rgba(0,0,0,0.5);
+      //- }
+      ._00 {
+      background-image: url(/icons/add-button.svg)
+      }
+      ._01 {
+      background-image: url(/icons/browser-visualization.svg)
+      }
+      ._02 {
+      background-image: url(/icons/close.svg)
+      }
+      ._03 {
+      background-image: url(/icons/connections.svg)
+      }
+      ._10 {
+      background-image: url(/icons/favorites-button.svg)
+      }
+      ._11 {
+      background-image: url(/icons/menu-button.svg)
+      }
+      ._12 {
+      background-image: url(/icons/upload-to-cloud.svg)
+      }
+      ._13 {
+      //- background-image: url(/icons/connections.svg)
+      }
+      button {
+      text-align: center;
+      border: 1px solid white; 
+      width: 4em;
+      height: 4em;
+      background-color: #00EADE; 
+      background-size: 3em;
+      background-position: center;
+      background-repeat: no-repeat;
+      }
 
   body
+    //- img(src='/icons/add-button.svg')
+    
+    #toolbar
+      #toolbarFirstRow
+        button._00
+        button._01
+        button._02
+        button._03
+      
+      #toolbarSecondRow  
+        button._10
+        button._11
+        button._12
+        button._13
+        //- .angled-triangle
+
     //#shortcuts_wrapper
       #shortcuts
         button#n(onclick='n_key()')  New Comes From Node (n)
@@ -45,7 +136,6 @@ html(lang='en')
         button#save(onclick='saveMap()')  SAVE 
         button#create(onclick='createMap()')  CREATE 
         
-
     #tree-container
         div
         // Modal
