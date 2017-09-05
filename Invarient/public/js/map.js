@@ -295,7 +295,9 @@ function eventSave() {
         console.log('Cannot save with null root');
     }
 
-    if ($('#sandboxVar').val()) {
+    console.log('MAP.JS SANDBOX: ' + sandbox);
+
+    if (sandbox == "true") {
         alert('Saving is not supported in sandbox.  If you want to save your map, please log in or sign up, and create a new map.')
         return;
     }
@@ -681,8 +683,9 @@ var sortByPriorityOn = false;
 var sortByDateOn = false;
 var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: [], filterByNodeOn: false, nodeFilteredBy: null};
 var uniqueId; // for finding map in db
-var nodeId; // for centering on a certain node when linked to           // MATT - HERE'S THE NODE ID <3
+var nodeId; // for centering on a certain node when linked to
 var permId = 0;
+var sandbox = false;
 
 var nodeWidthPercent = 16
 var nodeWidthMargin = $(document).width()*(nodeWidthPercent/700)
@@ -706,6 +709,9 @@ $(function() {
         console.log("CSRF IS: " + _csrf);
         nodeId = $('#nodeId').val();
         console.log("NODE ID : " + nodeId);
+        
+        sandbox = $('#sandBox').val();
+        console.log("MAP JS SANDBOX: " + sandbox)
     }
     else {
         console.log("ERROR: Didn't load correctly'");

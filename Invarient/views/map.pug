@@ -12,7 +12,7 @@ block linkChange
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
 
-block content    
+block content 
     #toolbar
       #toolbarFirstRow
         button.mapBut#_00(onclick="eventNewComesFromNode()")
@@ -65,5 +65,6 @@ block content
             input#mapId(type="hidden", value=mapId)
             input#_csrf(type="hidden", value=_csrf)
             input#nodeId(type="hidden", value=nodeId)
-            input#sandboxVar(type="hidden", value=sandbox)
+            input#sandBox(type="hidden", value=sandbox)
+            - console.log('MAP.PUG SANDBOX: ' + sandbox)
             script(src="/js/map.js")

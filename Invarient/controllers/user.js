@@ -363,7 +363,8 @@ function getMapHelper(req, res, next, id, sandbox) {
 
     // for sandbox
     var idTemp = req.params.urlId;
-    if (sandbox) {
+
+    if (sandbox == "true") {
       idTemp = id;
     }
     console.log('idTemp is: ' + idTemp)
@@ -406,8 +407,8 @@ exports.getMapById = (req, res, next) => {
 
 exports.getSandbox = (req, res, next) => {
   console.log('SANDBOX')
-  var idTemp = '59aeab8f8c32db83632edf6e';  // Stored map
-  getMapHelper(req, res, next, idTemp, true);
+  var idTemp = '59aefc526e8b8aa4e28c3ceb';  // Stored map
+  getMapHelper(req, res, next, idTemp, "true");
 }
 
 exports.saveCreateMap = (req, res, next) => {
