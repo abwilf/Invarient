@@ -295,6 +295,8 @@ hr {
     top: 20px;
 }
 
+
+
 #botButtonBox {
     margin: 0 auto;
     padding-top: 4%;
@@ -378,6 +380,12 @@ hr {
    
 }
 
+
+
+
+
+
+
 .button {
     background-color: #4CAF50; /* Green */
     border: none;
@@ -452,7 +460,6 @@ hr {
         color: white;
     }
 
-
 h1 {
     font-family:'Raleway', sans-serif;
 }
@@ -495,3 +502,116 @@ img {
     -moz-transition: -moz-transform 0.2s;
     -o-transition: -o-transform 0.2s;
 }
+
+
+
+
+
+#tree-container {
+    /*border: 1px solid black;*/
+    width: 100%;
+}
+
+.container {
+    width: 70%;
+    margin: 0 auto;
+}
+.ghostCircle.show{
+  display:block;
+}
+
+.ghostCircle, .activeDrag .ghostCircle{
+  display: none;
+}
+
+
+/*                                          */
+
+ #_00 {
+  background-image: url(/icons/add-button.svg)
+  }
+  #_01 {
+  background-image: url(/icons/browser-visualization.svg)
+  }
+  #_02 {
+  background-image: url(/icons/close.svg)
+  }
+  #_03 {
+  background-image: url(/icons/connections.svg)
+  }
+  #_10 {
+  background-image: url(/icons/favorites-button.svg)
+  }
+  #_11 {
+  background-image: url(/icons/menu-button.svg)
+  }
+  #_12 {
+  background-image: url(/icons/upload-to-cloud.svg)
+  }
+  #_13 {
+  //- background-image: url(/icons/connections.svg)
+  }
+
+.mapBut {
+  text-align: center;
+  border: 1px solid white; 
+  width: 4em;
+  height: 4em;
+  background-color: #00EADE; 
+  background-size: 3em;
+  background-position: center;
+  background-repeat: no-repeat;
+  }
+
+  /* mouse over button */
+
+.mapBut:hover {
+    transition: background-color 0.2s ease;
+    background-color: #008CBA;
+}
+
+
+.mapBut .mapButText {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.mapBut .mapButText::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.mapBut:hover .mapButText {
+    visibility: visible;
+    opacity: 1;
+}
+</style>
+<body style="text-align:center;">
+
+<h2>mapBut</h2>
+<p>Move the mouse over the text below:</p>
+
+<div class="mapBut">Hover over me
+  <span class="mapButText">mapBut text</span>
+</div>
+
+</body>
+</html>

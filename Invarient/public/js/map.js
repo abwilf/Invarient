@@ -294,13 +294,17 @@ function eventSave() {
     if (typeof(root) == 'undefined') {
         console.log('Cannot save with null root');
     }
+
+    if ($('#sandboxVar')) {
+        alert('Saving is not supported in sandbox.  If you want to save your map, please log in or sign up, and create a new map.')
+        return;
+    }
     else {
         saveMap();
     }
 }
 
 function eventEdit() {
-
     //Fetch the node corresponding to the currently selected svg element
     curr = getCurrentNode()
     var oldTxt = curr.data;
@@ -1227,7 +1231,8 @@ function update(root){
             onSelect(node);
             setCurrentNode(node);
 
-            toggleSubtree( getCurrentNode() );
+            // toggleSubtree( getCurrentNode() );
+            eventModal();
 
             update(root);
 
@@ -1364,7 +1369,7 @@ $(document).ready(function() {
         todayHighlight: true,
         autoclose: true,
     };
-    date_input.datepicker(options);
+    // date_input.datepicker(options);
 })
 
   // set node values: triggered when modal window closes

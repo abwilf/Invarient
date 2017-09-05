@@ -1,10 +1,7 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    title Invarient
+extends layout
 
-    link(rel='stylesheet', type='text/css', href='/css/map.css')
+block linkChange
+    link(rel='stylesheet', type='text/css', href='/css/site.css')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     script(src='https://d3js.org/d3-path.v1.min.js')
     script(src='https://d3js.org/d3-selection.v1.min.js')
@@ -15,126 +12,21 @@ html(lang='en')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-    // Bootstrap Date-Picker Plugin
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css')
-      
-    style.
-      //- .angled-triangle {
-      //- width:100px;
-      //- height:100px;
-      //- background-image: -moz-radial-gradient(0 0, transparent 70%, black 71.5%);
-      //- background-image: -webkit-radial-gradient(0 0, transparent 70%, black 71.5%);
-      //- background-image: radial-gradient(top left, transparent 70%, black 71.5%);
-      //- background-position: 0px 0px;
-      //- background-repeat:no-repeat;
-      //- }
-      //- .rect {
-      //- height: 100px;
-      //- width: 100px;
-      //- background:rgba(0,0,0,0.5);
-      //- position:relative;
-      //- margin-top:100px;
-      //- margin-left:100px;
-      //- }
-      //- .circle {
-      //- display:block;
-      //- width: 100px;
-      //- height: 50px;
-      //- top:-50px;
-      //- left:0;
-      //- overflow:hidden;
-      //- position:absolute;
-      //- }
-      //- .circle:after {
-      //- content:'';
-      //- width: 100px;
-      //- height: 100px;
-      //- -moz-border-radius: 100px;
-      //- -webkit-border-radius: 100px;
-      //- border-radius: 100px;
-      //- background:rgba(0,0,0,0);
-      //- position:absolute;
-      //- top:-100px;
-      //- left:-40px;
-      //- border:40px solid rgba(0,0,0,0.5);
-      //- }
-      ._00 {
-      background-image: url(/icons/add-button.svg)
-      }
-      ._01 {
-      background-image: url(/icons/browser-visualization.svg)
-      }
-      ._02 {
-      background-image: url(/icons/close.svg)
-      }
-      ._03 {
-      background-image: url(/icons/connections.svg)
-      }
-      ._10 {
-      background-image: url(/icons/favorites-button.svg)
-      }
-      ._11 {
-      background-image: url(/icons/menu-button.svg)
-      }
-      ._12 {
-      background-image: url(/icons/upload-to-cloud.svg)
-      }
-      ._13 {
-      //- background-image: url(/icons/connections.svg)
-      }
-      button {
-      text-align: center;
-      border: 1px solid white; 
-      width: 4em;
-      height: 4em;
-      background-color: #00EADE; 
-      background-size: 3em;
-      background-position: center;
-      background-repeat: no-repeat;
-      }
 
-  body
-    //- img(src='/icons/add-button.svg')
-    
+block content    
     #toolbar
       #toolbarFirstRow
-        button._00
-        button._01
-        button._02
-        button._03
+        button.mapBut#_00(onclick="eventNewComesFromNode()")
+        button.mapBut#_01(onclick="eventToggleSubtree()")
+        button.mapBut#_02(onclick="eventDelete()")
+        button.mapBut#_03(onclick="eventNewCustomNode()")
       
       #toolbarSecondRow  
-        button._10
-        button._11
-        button._12
-        button._13
+        button.mapBut#_10(onclick="eventEditConnection()")
+        button.mapBut#_11(onclick="eventModal()")
+        button.mapBut#_12(onclick="eventSave()")
+        button.mapBut#_13(onclick="eventNewDefinitionNode()")
         //- .angled-triangle
-
-    //#shortcuts_wrapper
-      #shortcuts
-        button#n(onclick='n_key()')  New Comes From Node (n)
-        button#d(onclick='d_key()')  New Definition Node (d) 
-        button#c(onclick='c_key()')  Custom (c) 
-        button#f(onclick='f_key()')  New Forested Node (f) 
-        button#y(onclick='y_key()')  Change Connection Type (y) 
-        button#e(onclick='e_key()')  Edit Node (e) 
-        button#sp(onclick='space_key()')  Toggle Subtree (space) 
-        button#del(onclick='del_key()')  Delete Node (delete) 
-        button(id='←', onclick='left_key()')  ← 
-        button(id='→', onclick='right_key()')  → 
-        button(id='↑', onclick='up_key()')  ↑ 
-        button(id='↓', onclick='down_key()')  ↓ 
-        button#o(onclick='o_key()')  Open Node (o) 
-        button#g(onclick='g_key()')  Render Task List (g) 
-        button#u(onclick='u_key()')  Sort List by Priority (u) 
-        button#i(onclick='i_key()')  Sort List by Due Date (i) 
-        button#h(onclick='h_key()')  Filter List by Actionable Items Only (h) 
-        button#j(onclick='j_key()')  Filter List by Completed Items (j) 
-        button#j(onclick='k_key()')  Filter List by Person Assigned (k) 
-        button#m(onclick='m_key()')  Filter List by Node (m) 
-        button#save(onclick='saveMap()')  SAVE 
-        button#create(onclick='createMap()')  CREATE 
         
     #tree-container
         div
@@ -174,6 +66,5 @@ html(lang='en')
             input#mapId(type="hidden", value=mapId)
             input#_csrf(type="hidden", value=_csrf)
             input#nodeId(type="hidden", value=nodeId)
+            input#sandboxVar(type="hidden", value=sandbox)
             script(src="/js/map.js")
-
-            img#imgYo(src="icons/add-button.svg")

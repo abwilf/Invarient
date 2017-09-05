@@ -5,6 +5,7 @@ html(lang='en')
     // Bootstrap
     // Core CSS
     link(rel='stylesheet', type='text/css', href='css/site.css')
+    link(href='https://fonts.googleapis.com/css?family=Raleway', rel='stylesheet')
     // Latest compiled and minified CSS
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     // jQuery library
@@ -15,19 +16,22 @@ html(lang='en')
     // To add a google font and paste the link
     style.
       @import url('https://fonts.googleapis.com/css?family=Raleway');
-    link(href='https://fonts.googleapis.com/css?family=Raleway', rel='stylesheet')
-  
+
+    block linkChange
+
     block titleChange
       title Invarient
 
   body
-    // - console.log('HEADERTYPE IS: ' + headerType); - NOTE: res.locals.user shows up as user variable in all pug dogs
+
+    // - console.log('HEADERTYPE IS: ' + headerType); - NOTE: res.locals.user shows up as user variable in all pug docs
     if headerType == "logged"
       include partials/headerLogged
     else 
       include partials/headerNotLogged
 
     include partials/flash
+    
     block content
 
     include partials/footer

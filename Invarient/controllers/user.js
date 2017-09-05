@@ -357,11 +357,18 @@ exports.postCreateMap = (req, res, next) => {
 
 
 // kind of a hacky fix to get around routing between exports functions
-function getMapHelper(req, res, next) {
+function getMapHelper(req, res, next, id, sandbox) {
     console.log("NODE ID IS: " + req.params.nodeId);
     console.log("URL ID IS: " + req.params.urlId);
 
-    Map.findOne({ _id: req.params.urlId}, function(err, m) {
+    // for sandbox
+    var idTemp = req.params.urlId;
+    if (sandbox) {
+      idTemp = id;
+    }
+    console.log('idTemp is: ' + idTemp)
+
+    Map.findOne({ _id: idTemp}, function(err, m) {
         if (err){
           console.log("ERROR IN FINDING MAP: " + err);
         }
@@ -371,23 +378,36 @@ function getMapHelper(req, res, next) {
             return;
         }
         console.log('CSRF SERVER: ' + res.locals._csrf);
+
+        if (req.isAuthenticated()) {
+          res.locals.headerType = 'logged';
+        }
+        else res.locals.headerType = 'notLogged';
+
         res.render('map', {
           mapId: m.id,
           mapData: JSON.parse(m.data)[0],
           _csrf: res.locals._csrf,
-          nodeId: req.params.nodeId
+          nodeId: req.params.nodeId,
+          sandbox: sandbox
         });
       })
 }
 
 exports.getMapNode = (req, res, next) => {
    console.log("NODE");
-   getMapHelper(req, res, next);
+   getMapHelper(req, res, next, 0, false);
 }
 
 exports.getMapById = (req, res, next) => {
   console.log('MAP');
-  getMapHelper(req, res, next);
+  getMapHelper(req, res, next, 0, false);
+}
+
+exports.getSandbox = (req, res, next) => {
+  console.log('SANDBOX')
+  var idTemp = '597635b82bdad664e8c989df';  // Stored map
+  getMapHelper(req, res, next, idTemp, true);
 }
 
 exports.saveCreateMap = (req, res, next) => {

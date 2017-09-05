@@ -18,3 +18,6 @@ Or
 3. Type ```node index.js```
 4. Open up a browser and go to ```localhost:3000/test``` to test the product out
 
+
+# Credit
+This project was made possible because of Sahat's Hackathon Starter
