@@ -406,7 +406,7 @@ exports.getMapById = (req, res, next) => {
 
 exports.getSandbox = (req, res, next) => {
   console.log('SANDBOX')
-  var idTemp = '597635b82bdad664e8c989df';  // Stored map
+  var idTemp = '59aeab8f8c32db83632edf6e';  // Stored map
   getMapHelper(req, res, next, idTemp, true);
 }
 

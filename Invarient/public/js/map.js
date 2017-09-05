@@ -1370,29 +1370,29 @@ $(document).ready(function() {
         autoclose: true,
     };
     // date_input.datepicker(options);
+
+      // set node values: triggered when modal window closes
+    $('#myModal').on('hidden.bs.modal', function() {
+        var curr = getCurrentNode();
+        modalopen = false;//when modal closes, stop suppressing keypresses
+        var title = document.getElementById("title").value;
+        var comment = document.getElementById("comment").value;
+        var newLink = $("#linkToText").val();
+
+        curr["data"] = title; // str
+        curr["comment"] = comment;  // str
+        curr["link"] = newLink;
+
+        console.log('title is: ' + curr.data);
+        console.log('comment is: ' + curr.comment);
+        console.log('link is: ' + curr.link);
+        // console.log("link to node url is: ");
+
+        //Update tree to display the changes.
+        update(root);
+    });
+
 })
-
-  // set node values: triggered when modal window closes
-$('#myModal').on('hidden.bs.modal', function() {
-
-    var curr = getCurrentNode();
-    modalopen = false;//when modal closes, stop suppressing keypresses
-    var title = document.getElementById("title").value;
-    var comment = document.getElementById("comment").value;
-    var newLink = $("#linkToText").val();
-
-    curr["data"] = title; // str
-    curr["comment"] = comment;  // str
-    curr["link"] = newLink;
-
-    console.log('title is: ' + curr.data);
-    console.log('comment is: ' + curr.comment);
-    console.log('link is: ' + curr.link);
-    // console.log("link to node url is: ");
-
-    //Update tree to display the changes.
-    update(root);
-});
 
 
 function saveMap() {

@@ -9,7 +9,7 @@ var mapSchema = new mongoose.Schema(
     }
 },
 { 
-    collection: 'random_maps' 
+    collection: 'maps' 
 }
 );
 
