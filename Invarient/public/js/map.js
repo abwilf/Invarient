@@ -295,7 +295,7 @@ function eventSave() {
         console.log('Cannot save with null root');
     }
 
-    if ($('#sandboxVar')) {
+    if ($('#sandboxVar').val()) {
         alert('Saving is not supported in sandbox.  If you want to save your map, please log in or sign up, and create a new map.')
         return;
     }
