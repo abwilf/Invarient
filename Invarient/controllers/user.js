@@ -324,12 +324,17 @@ exports.getForgot = (req, res) => {
 };
 
 // returns newURL
-function createNewMap() {
+function createNewMap(email) {
+  // console.log('EMAIL IS: ' + email);
     var newMap = new Map ({
-            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
+            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]",
+            userEmail: email
          });
         newMap.save(function(err) {
-            if (err) throw err;
+            if (err) {
+              console.log('user.js line 333');
+              throw err;
+            }
         })
         var newURL = ('/maps/' + newMap._id);
         console.log('new URL is: ' + newURL);
@@ -338,11 +343,16 @@ function createNewMap() {
 
 exports.postCreateMap = (req, res, next) => {
 
-  // NOTE: I used emailAddress here to remind myself that it's the "name" attribute in profile.pug that gets passed to req
-  User.findOne({ email: req.body.emailAddress }, (err, existingUser) => {
-    if (err) { return next(err); }
+  // NOTE: I used emailAddress here to remind myself that it's the "name" attribute in profile.pug that gets passed to req - deprecated
+  // console.log('REQ.BODY.EMAILADDRESS: ' + req.body.emailAddress + '\nRES.LOCALS: ' + res.locals.user.email)  // same thing!
+
+  User.findOne({ email: res.locals.user.email}, (err, existingUser) => {
+    if (err) { 
+      console.log('user.js/350');
+      return next(err); 
+    }
     if (existingUser) {
-      var newURL = createNewMap();
+      var newURL = createNewMap(res.locals.user.email);
       existingUser.maps.push({title: 'Untitled', url: newURL});
       existingUser.save(function(err) {
         if (err) throw err;
@@ -385,12 +395,33 @@ function getMapHelper(req, res, next, id, sandbox) {
         }
         else res.locals.headerType = 'notLogged';
 
+        // is allowed to edit
+        var canEdit = "false"; 
+        // console.log('OTHER USERS: ' + m.otherUsers);
+        // console.log('OWNER EMAIL: ' + m.userEmail);
+        // console.log('local user email: ' + function() {
+        //   if (res.locals.user) return res.locals.user.email;
+        //   else return null;
+        // });
+
+        if (req.isAuthenticated() && 
+              (  (res.locals.user.email == m.userEmail) || (m.otherUsers && m.otherUsers.find(function(user) {
+                return user.email === res.locals.user.email;
+              })) )   
+            ) {
+          canEdit = "true";
+        }
+
+        console.log('RESULT OF FIND: ' + canEdit);
+
         res.render('map', {
           mapId: m.id,
           mapData: JSON.parse(m.data)[0],
           _csrf: res.locals._csrf,
           nodeId: req.params.nodeId,
-          sandbox: sandbox
+          sandbox: sandbox,
+          canEdit: canEdit,
+          mapUser: m.userEmail
         });
       })
 }
@@ -430,30 +461,13 @@ exports.saveCreateMap = (req, res, next) => {
       }
 
       else if (req.body.type == "create") {
-          var newUrl = createNewMap();
+          var newUrl = createNewMap(res.locals.user.email); // ALSO REFERENCED IN postCreate
           console.log("Successfully created map");
           // redirect is in client portion b/c of ajax post request
           res.send({redirect: newUrl});
       }
       else console.log("req.body.type should be 'save' or 'create'. req.body: " + req.body);
   };
-
-
-// returns newURL
-function createNewMap() {
-    var newMap = new Map ({
-            // NOTE: if you ever need to get an updated version of this "starter json" just go into whatever test page you have and in the dev. console type saveToJSON(root) and it will give it to you
-            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]"
-         });
-        newMap.save(function(err) {
-            if (err) throw err;
-        })
-        var newURL = ('/maps/' + newMap._id);
-        console.log('new URL is: ' + newURL);
-        return newURL;
-}
-
-
 
 /**
  * POST /forgot

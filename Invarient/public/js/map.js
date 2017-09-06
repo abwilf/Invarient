@@ -271,8 +271,19 @@ dragListener = d3.behavior.drag()
     onSelect( node );
 });
 
+
+function goodToEdit() {
+    if (canEdit == "false") {
+        alert('You do not have permission to edit this map.  Please contact the owner of this map - ' + mapUser + '- for permission.');
+        return false;
+    }
+    return true;
+}
+
+
 function eventNewComesFromNode() {
 
+    goodToEdit();
     //Fetch the current active node.
     var curr = getCurrentNode();
     var txt = prompt("", "Enter comes from node text");
@@ -326,6 +337,7 @@ function eventEdit() {
 
 function eventNewDefinitionNode() {
 
+    goodToEdit();
     //Fetch the current active node.
     curr = getCurrentNode();
     var txt = prompt("", "Enter definition node text.");
@@ -340,21 +352,19 @@ function eventNewDefinitionNode() {
 }
 
 function eventToggleSubtree() {
-
+    goodToEdit();
     toggleSubtree( getCurrentNode() );
     update( root );
     onSelect( getCurrentNode() );
 }
 
 function eventTraverseUp() {
-
     if (getCurrentNode().parent != root) {
         onSelect( getCurrentNode().parent );
     }
 }
 
 function eventTraverseDown() {
-
     if (getCurrentNode().children.length > 0) {
         onSelect( getCurrentNode().children[0] );
     }
@@ -402,6 +412,7 @@ function eventTraverseRight() {
 
 function eventUndo() {
 
+    goodToEdit();
     var revived = null;
 
     if (removedNodes.length > 0) {
@@ -414,14 +425,14 @@ function eventUndo() {
 }
 
 function eventDelete() {
-
+    goodToEdit();
     remove( getCurrentNode() );
     update(root);
     onSelect(getCurrentNode().parent);
 }
 
 function eventNeoroot() {
-
+    goodToEdit();
     var txt = prompt("", "Enter node text here");
 
     if (txt) {
@@ -436,7 +447,7 @@ function eventNeoroot() {
 }
 
 function eventEditConnection() {
-
+    goodToEdit();
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter label connection type. [comes from], [definition], [custom]");
@@ -460,7 +471,7 @@ function eventEditConnection() {
 }
 
 function eventNewCustomNode() {
-
+    goodToEdit();
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter custom connection label");
@@ -481,7 +492,7 @@ function eventNewCustomNode() {
 }
 
 function eventLinkNode() {
-
+    goodToEdit();
     curr = getCurrentNode();
 
     var txt = prompt("", "Enter the link to the tree.");
@@ -509,7 +520,7 @@ function getParsedId(id){
 }
 
 function eventLinkClicked() {
-
+    goodToEdit();
     var node = getCurrentNode();
 
     if (!isLocalId(node.link)){
@@ -525,7 +536,7 @@ function eventLinkClicked() {
 }
 
 function eventModal() {
-
+    goodToEdit();
     curr = getCurrentNode();
     console.log(curr.link);
     modalopen = true;
@@ -685,7 +696,9 @@ var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, comp
 var uniqueId; // for finding map in db
 var nodeId; // for centering on a certain node when linked to
 var permId = 0;
-var sandbox = false;
+var sandbox = 'false';
+var canEdit = 'false';
+var mapUser = "";
 
 var nodeWidthPercent = 16
 var nodeWidthMargin = $(document).width()*(nodeWidthPercent/700)
@@ -698,7 +711,6 @@ var nodeHeightPadding = $(document).width()*(nodeHeightPercent/100)
 
 // BEGIN HERE
 $(function() {
-
     if ($('#mapData').val()) {
         console.log("Loaded!");
         root = JSON.parse($('#mapData').val());
@@ -712,6 +724,12 @@ $(function() {
         
         sandbox = $('#sandBox').val();
         console.log("MAP JS SANDBOX: " + sandbox)
+
+        canEdit = $('#canEdit').val();
+        console.log('CAN EDIT?: ' + canEdit);
+
+        mapUser = $('#mapUser').val();
+        console.log('MAP USER: ' + mapUser);
     }
     else {
         console.log("ERROR: Didn't load correctly'");
