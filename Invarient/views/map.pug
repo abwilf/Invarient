@@ -15,17 +15,16 @@ block linkChange
 block content 
     #toolbar
       #toolbarFirstRow
-        button.mapBut#_00(onclick="eventNewComesFromNode()")
-        button.mapBut#_01(onclick="eventToggleSubtree()")
-        button.mapBut#_02(onclick="eventDelete()")
-        button.mapBut#_03(onclick="eventNewCustomNode()")
+        button.mapBut.tooltip-top-right#_00(onclick="eventNewComesFromNode()", data-tooltip= "New \"Comes From\" Node")
+        button.mapBut.tooltip-top#_01(onclick="eventToggleSubtree()", data-tooltip="Toggle Subtree View")
+        button.mapBut.tooltip-top#_02(onclick="eventDelete()", data-tooltip="Delete Node")
+        button.mapBut.tooltip-top#_03(onclick="eventNewCustomNode()", data-tooltip="New \"Custom\" Node")
       
       #toolbarSecondRow  
-        button.mapBut#_10(onclick="eventEditConnection()")
-        button.mapBut#_11(onclick="eventModal()")
-        button.mapBut#_12(onclick="eventSave()")
-        button.mapBut#_13(onclick="eventNewDefinitionNode()")
-        //- .angled-triangle
+        button.mapBut.tooltip-bottom-right#_10(onclick="eventEditConnection()", data-tooltip="Edit Type of Connection")
+        button.mapBut.tooltip-bottom#_11(onclick="eventModal()", data-tooltip="Edit Node")
+        button.mapBut.tooltip-bottom#_12(onclick="eventSave()", data-tooltip="Save Map")
+        button.mapBut.tooltip-bottom#_13(onclick="eventNewDefinitionNode()", data-tooltip= "New \"Definition\" Node")
         
     #tree-container
         div
