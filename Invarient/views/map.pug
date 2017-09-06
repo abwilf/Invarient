@@ -65,5 +65,6 @@ block content
             input#_csrf(type="hidden", value=_csrf)
             input#nodeId(type="hidden", value=nodeId)
             input#sandBox(type="hidden", value=sandbox)
-            - console.log('MAP.PUG SANDBOX: ' + sandbox)
+            input#canEdit(type="hidden", value=canEdit)
+            //- - console.log('MAP.PUG SANDBOX: ' + sandbox)
             script(src="/js/map.js")
