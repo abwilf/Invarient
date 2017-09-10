@@ -273,7 +273,7 @@ dragListener = d3.behavior.drag()
 
 
 function goodToEdit() {
-    if (canEdit == "false") {
+    if (canEdit == "false" && sandbox != "true") {
         alert('You do not have permission to edit this map.  Please contact the owner of this map - ' + mapUser + '- for permission.');
         return false;
     }
