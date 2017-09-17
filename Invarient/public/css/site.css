@@ -537,10 +537,10 @@ img {
   background-image: url(/icons/close.svg)
   }
   #_03 {
-  background-image: url(/icons/connections.svg)
+  background-image: url(/icons/at.svg)
   }
   #_10 {
-  background-image: url(/icons/favorites-button.svg)
+  background-image: url(/icons/connections.svg)
   }
   #_11 {
   background-image: url(/icons/menu-button.svg)
@@ -549,7 +549,7 @@ img {
   background-image: url(/icons/upload-to-cloud.svg)
   }
   #_13 {
-  //- background-image: url(/icons/connections.svg)
+  background-image: url(/icons/minus.svg)
   }
 
 .mapBut {
