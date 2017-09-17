@@ -20,4 +20,4 @@ Or
 
 
 # Credit
-This project was made possible because of Sahat's Hackathon Starter
+This project was made possible because of Sahat's Hackathon Starter.   [Kenneth Steele](kennethvsteele.com) designed the webapp interface and [Rex Sae Lim](https://www.linkedin.com/in/khanin-rex-sae-lim-546247109) designed the rest of the website.  [Matthew Baptist](https://github.com/mbaptist34)coded the webapp and [Alex Wilf](http://www-personal.umich.edu/~abwilf/) coded the server.  [Keenan Tullis](github.com/keenanjt33) implemented the designs of the webapp.
