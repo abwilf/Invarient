@@ -9,7 +9,7 @@ You can read more about the system here.
 https://docs.google.com/document/d/1usStftdgOjQC3B79kf9zoBoXBhy6_Mf6qUp9FTjRlqc/edit#
 
 # Usage
-Go to invarient.io/sandbox to try out the prototype.
+Go to [invarient.io/sandbox](invarient.io/sandbox) to try out the prototype.
 
 Or, if you want to help us develop the app,
 
