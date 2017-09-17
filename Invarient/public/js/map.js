@@ -283,7 +283,7 @@ function goodToEdit() {
 
 function eventNewComesFromNode() {
 
-    goodToEdit();
+    if (!goodToEdit()) return;
     //Fetch the current active node.
     var curr = getCurrentNode();
     var txt = prompt("", "Enter comes from node text");
@@ -306,7 +306,7 @@ function eventSave() {
         console.log('Cannot save with null root');
     }
 
-    console.log('MAP.JS SANDBOX: ' + sandbox);
+    // console.log('MAP.JS SANDBOX: ' + sandbox);
 
     if (sandbox == "true") {
         alert('Saving is not supported in sandbox.  If you want to save your map, please log in or sign up, and create a new map.')
@@ -337,7 +337,7 @@ function eventEdit() {
 
 function eventNewDefinitionNode() {
 
-    goodToEdit();
+    if (!goodToEdit()) return;
     //Fetch the current active node.
     curr = getCurrentNode();
     var txt = prompt("", "Enter definition node text.");
@@ -352,7 +352,7 @@ function eventNewDefinitionNode() {
 }
 
 function eventToggleSubtree() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     toggleSubtree( getCurrentNode() );
     update( root );
     onSelect( getCurrentNode() );
@@ -412,7 +412,7 @@ function eventTraverseRight() {
 
 function eventUndo() {
 
-    goodToEdit();
+    if (!goodToEdit()) return;
     var revived = null;
 
     if (removedNodes.length > 0) {
@@ -425,14 +425,14 @@ function eventUndo() {
 }
 
 function eventDelete() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     remove( getCurrentNode() );
     update(root);
     onSelect(getCurrentNode().parent);
 }
 
 function eventNeoroot() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     var txt = prompt("", "Enter node text here");
 
     if (txt) {
@@ -447,7 +447,7 @@ function eventNeoroot() {
 }
 
 function eventEditConnection() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter label connection type. [comes from], [definition], [custom]");
@@ -471,7 +471,7 @@ function eventEditConnection() {
 }
 
 function eventNewCustomNode() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter custom connection label");
@@ -492,7 +492,7 @@ function eventNewCustomNode() {
 }
 
 function eventLinkNode() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var txt = prompt("", "Enter the link to the tree.");
@@ -520,7 +520,7 @@ function getParsedId(id){
 }
 
 function eventLinkClicked() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     var node = getCurrentNode();
 
     if (!isLocalId(node.link)){
@@ -536,7 +536,7 @@ function eventLinkClicked() {
 }
 
 function eventModal() {
-    goodToEdit();
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
     console.log(curr.link);
     modalopen = true;

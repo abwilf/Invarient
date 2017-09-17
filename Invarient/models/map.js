@@ -11,10 +11,10 @@ var mapSchema = new mongoose.Schema(
     	type: String,
     	required: true
     },
-    otherUsers: { 
-    	type: Array, 
-    	required: false 
-    }
+    otherUsers: [{
+        email: String,
+        permission: String
+    }]
 },
 { 
     collection: 'mapsUser' 
