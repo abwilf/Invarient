@@ -9,15 +9,16 @@ You can read more about the system here.
 https://docs.google.com/document/d/1usStftdgOjQC3B79kf9zoBoXBhy6_Mf6qUp9FTjRlqc/edit#
 
 # Usage
-Go to http://107.170.76.217:3000/test and try out the prototype
+Go to invarient.io/sandbox to try out the prototype.
 
-Or
+Or, if you want to help us develop the app,
 
-1. Clone or fork the repository.
-2. cd into the inner "Invarient" directory
-3. Type ```node index.js```
-4. Open up a browser and go to ```localhost:3000/test``` to test the product out
+1. Clone or fork the repository
+2. Create your own mongo style database and put its credentials in `.env`
+2. `cd Invarient`
+3. run `sudo node app.js`
 
+If you get any errors, there may be an issue in how you formatted your database or how it linked up to the code running in `app.js`.  To troubleshoot, start at line 50.
 
 # Credit
-This project was made possible because of Sahat's Hackathon Starter.   [Kenneth Steele](kennethvsteele.com) designed the webapp interface and [Rex Sae Lim](https://www.linkedin.com/in/khanin-rex-sae-lim-546247109) designed the rest of the website.  [Matthew Baptist](https://github.com/mbaptist34)coded the webapp and [Alex Wilf](http://www-personal.umich.edu/~abwilf/) coded the server.  [Keenan Tullis](github.com/keenanjt33) implemented the designs of the webapp.
+This project was made possible because of generous funding from the [Barger Leadership Institute](https://lsa.umich.edu/bli), [Ishaan Parikh](iparikh.co)'s course on [full stack node.js development](https://github.com/UMD-CS-STICs/389Kspring17) and [Sahat's Hackathon Starter](https://github.com/sahat/hackathon-starter).   [Kenneth Steele](kennethvsteele.com) designed the webapp interface and [Rex Sae Lim](https://www.linkedin.com/in/khanin-rex-sae-lim-546247109) designed the rest of the website.  [Matthew Baptist](https://github.com/mbaptist34) coded the webapp and [Alex Wilf](http://www-personal.umich.edu/~abwilf/) coded the server.  [Keenan Tullis](github.com/keenanjt33) implemented the designs of the webapp. 
