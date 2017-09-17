@@ -421,7 +421,8 @@ function getMapHelper(req, res, next, id, sandbox) {
           nodeId: req.params.nodeId,
           sandbox: sandbox,
           canEdit: canEdit,
-          mapUser: m.userEmail
+          mapUser: m.userEmail,
+          footerType: "map"
         });
       })
 }
