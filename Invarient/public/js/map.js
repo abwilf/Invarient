@@ -34,136 +34,6 @@ function rightRoundedRect(x, y, width, height, radius) {
        + "z";
 }
 
-function drawToolbar() {
-  var buttonWidth = 4;
-  var toolbarPlacement = 1;
-  var buttonSpacing = 4.15;
-
-  svgContainer.append("defs")
-    .append("pattern")
-    .attr("id", "add_button")
-    .attr('patternUnits', 'userSpaceOnUse')
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .append("image")
-    // .attr("fill", "#00EADE")
-    .attr("xlink:href", '/icons/add-button.svg')
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em");
-
-  // svgContainer.append("image")
-
-  // console.log("toolbar function");
-  // svgContainer.append("svg:pattern")
-  //   .attr("id", "add_icon")
-  //   .attr("width", "5%")
-  //   .attr("height", "5%")
-  //   .attr("patternUnits", "userSpaceOnUse")
-  //   .append("svg:image")
-  //   .attr("xlink:href", "icons/add-button.svg")
-  //   .attr("width", "5%")
-  //   .attr("height", "5%")
-  //   .attr("x", 10)
-  //   .attr("y", 10);
-
-  // svgContainer.append("svg:image")
-  //   .attr('x',10)
-  //   .attr('y',10)
-  //   .attr('width', 30)
-  //   .attr('height', 30)
-  //   .attr("xlink:href","icons/add-button.svg")
-    // .attr("xlink:href","public/icons/add-button.svg")
-
-  // var rect00 = svgContainer.append("path")
-  //   .attr("d", rightRoundedRect(10, 10, 40, 40, 10))
-
-    // .attr("d", rightRoundedRect(toolbarPlacement+"em", toolbarPlacement+"em", buttonWidth+"em", buttonWidth+"em", 20));
-    // .attr("fill", "#00EADE")
-    // .on("click", function() {
-    //   eventNewComesFromNode()
-    // });
-  var rect00 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+"em")
-    .attr("y", toolbarPlacement+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .attr("fill", "url(#add_button)")
-    .on("click", function() {
-      eventNewComesFromNode()
-    });
-
-  var rect01 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+buttonSpacing+"em")
-    .attr("y", toolbarPlacement+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-
-  var rect02 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+2*buttonSpacing+"em")
-    .attr("y", toolbarPlacement+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-
-  var rect03 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+3*buttonSpacing+"em")
-    .attr("y", toolbarPlacement+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-
-  var rect10 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+"em")
-    .attr("y", toolbarPlacement+buttonSpacing+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-
-  var rect11 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+buttonSpacing+"em")
-    .attr("y", toolbarPlacement+buttonSpacing+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-
-  var rect12 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+2*buttonSpacing+"em")
-    .attr("y", toolbarPlacement+buttonSpacing+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-
-  var rect13 = svgContainer.append("rect")
-    .attr("x", toolbarPlacement+3*buttonSpacing+"em")
-    .attr("y", toolbarPlacement+buttonSpacing+"em")
-    .attr("width", buttonWidth+"em")
-    .attr("height", buttonWidth+"em")
-    .attr("fill", "#00EADE")
-    .on("click", function() {
-      // TODO: put appropriate function here
-    });
-}
-
 dragListener = d3.behavior.drag()
   .on("dragstart", function(){
     console.log("Drag starting.");
@@ -700,14 +570,19 @@ var sandbox = 'false';
 var canEdit = 'false';
 var mapUser = "";
 
-var nodeWidthPercent = 16
-var nodeWidthMargin = $(document).width()*(nodeWidthPercent/700)
-var nodeHeightPercent = nodeWidthPercent/6
-var nodeHeightScale = 20;
+var maxDepth = 1;
 
-var nodeWidth = $(document).width()*(nodeWidthPercent/100)
-var nodeHalfWidth = ($(document).width()*(nodeWidthPercent/100)) / 2
-var nodeHeightPadding = $(document).width()*(nodeHeightPercent/100)
+let nodeTextSize = 14;
+let nodeWidth = 300;
+let nodeHalfWidth = nodeWidth / 2;
+let nodeWidthPadding = 20;
+let nodeHeight = 61;
+let nodeHeightScale = nodeTextSize * 1.1;
+let nodeHeightPadding = 40;
+
+let verticalNodeSpacePercent = 10;
+var maxNodeHeightForEachDepth = [nodeHeightPadding + nodeHeightScale];
+var yCoordForEachDepth = [50];
 
 // BEGIN HERE
 $(function() {
@@ -721,7 +596,7 @@ $(function() {
         console.log("CSRF IS: " + _csrf);
         nodeId = $('#nodeId').val();
         console.log("NODE ID : " + nodeId);
-        
+
         sandbox = $('#sandBox').val();
         console.log("MAP JS SANDBOX: " + sandbox)
 
@@ -739,7 +614,6 @@ $(function() {
     hydrateData(root);
     root.depth = 0;
     setCurrentNode(root.children[0]);
-    // drawToolbar();
     update(root);
     onSelect(root.children[0]);
 
@@ -940,99 +814,62 @@ function drawNode(node) {
         }
     }
 
-    //TODO: do we want a visual drag indicator? Maybe a rounded rectangle around the node
-    // var circle = gGroup.append("circle")
-    //    .attr("cx", node.x - 10)
-    //    .attr("cy", node.y - 5)
-    //    .attr("r", 5)
-    //    .attr("fill", function (d) {
-    //      return getColor(node);
-    //    })
-    //    .attr("stroke", "black")
-    //    .attr("stroke-width", 1)
-    //    .attr("id", "a" + id)
-    //
-    //
-    // if (node == root){
-    //     circle.attr("display", "none");
-    // }
-
     node_map["" + id] = node;
     node.id = id;
-
-    console.log(node.numLines);
-
     var text = gGroup.append("text")
                            .attr("x", node.x)
-                           .attr("y", node.y - (node.numLines - 1)*(nodeHeightScale/2))
-                          //  .attr("y", node.y - (node.numLines-1)*(nodeHeightScale/2))
+                           .attr("y", node.y + (nodeTextSize / 2.3) - (node.numLines - 1) * nodeHeightScale / 2)
+                        //    .attr("y", node.y + nodeTextSize / 2.3)
+                        //    .attr("y", node.y - (node.numLines - 1)*(nodeHeightScale/2))
                            .attr("text-anchor", "middle")
+                           .attr("alignment-baseline", "central")
                            // FIXME: change font
                            .attr("font-family", "sans-serif")
-                           .attr("font-size", "14px")
+                           .attr("font-size", nodeTextSize + "px")
                            .attr("font-color", "white")
                            .attr("fill", "white")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
-
-    //TODO: compute height and where to wrap
-    node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    var wrapTuple = wrap(text, nodeWidth-nodeWidthMargin, node.numLines);
+    // wrapTuple[0] is text and wrapTuple[1] is numLines
+    var wrapTuple = wrap(text, nodeWidth-nodeWidthPadding, node.y);
     text = wrapTuple[0];
     node.numLines = wrapTuple[1]
-    node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
-    // text = wrap(text, nodeWidth, node.numLines);
-
-    if (node.textsize > nodeWidth) {
-        //TODO: what is this for?
-        node.textsize = nodeWidth;
-        // node.height = 40*()
+    // node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
+    // text = wrap(text, nodeWidth);
+    // node.height based on number of lines of text
+    node.height = node.numLines * nodeHeightScale + nodeHeightPadding;
+    if (node.height > maxNodeHeightForEachDepth[node.depth]) {
+        maxNodeHeightForEachDepth[node.depth] = node.height;
+        // TODO:
+        // yCoordForEachDepth[node.depth] = calcYCoordForDepth()
     }
 
     var roundedRectangle = gGroup.append("rect")
-        //TODO: calculate numerical equivalent of 6%
-        // .attr("x", node.x - node.textsize/2)
-
-        // .attr("width", node.textsize)
-        .attr("width", nodeWidthPercent+"%")
-        // .attr("x", node.x - node.textsize/2)
+        .attr("width", nodeWidth)
         .attr("x", node.x - nodeHalfWidth)
-
-        // console.log(window.innerWidth)
-        // .attr("x", node.x - width/2)
-
         .attr("y", node.y - node.height/2)
-        //TODO: variable height based on numRows
-        //FIXME
-        // .attr("height", node.height)
         .attr("height", node.height)
         .attr("rx", 10)
         .attr("ry", 10)
         .attr("fill", function (d) {
           return getColor(node);
         })
-
         .attr("id", "a" + id)
+
+    // ---------------FOR TESTING---------------
+    // var marker = gGroup.append("rect")
+    //     .attr("x", node.x)
+    //     .attr("y", node.y)
+    //     .attr("height", 5)
+    //     .attr("width", 5)
+    //     .attr("fill", "black")
+    // ---------------END TESTING---------------
 
     if (node==root){
         roundedRectangle.attr("display", "none");
     }
-
-    if (node != root) {
-      var ghost = gGroup.append("circle")
-          .attr("cx", node.x - 10)
-          .attr("cy", node.y - 5)
-          .attr('class', 'ghostCircle')
-          .attr("r", 30)
-          .attr("opacity", 0.2) // change this to zero to hide the target area
-          .attr("id", "a" + id)
-          .style("fill", "red")
-          //.attr("pointer-events", "none");
-    }
-
     id++;
 }
-
 
 d3.selection.prototype.moveToFront = function() {
     return this.each(function(){
@@ -1077,21 +914,6 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
 }
 
 function nodeWidthFunctor(node) {
-    // console.log(node.textsize);
-    // if (node.textsize) {
-    //     if (node.textsize>300){
-    //         // console.log("Case A");
-    //         return 355;
-    //     }
-    //     else{
-    //         // console.log("Case B");
-    //         return node.textsize + 45;
-    //     }
-    // }
-    // else{
-    //     // console.log("Case C");
-    //     return 20;
-    // }
     return nodeWidth;
 }
 
@@ -1146,6 +968,24 @@ function balance(root){
     })
 }
 
+function updateSizeOfNodeHeightArrays() {
+
+    var length = yCoordForEachDepth.length;
+    if (maxDepth > length) {
+        for (var i = length; i < maxDepth; ++i) {
+            yCoordForEachDepth[i] = 0;
+            maxNodeHeightForEachDepth[i] = 0;
+        }
+    }
+    if (maxDepth < length) {
+        for (i = length - 1; i > maxDepth; --i) {
+            // pop end of array
+            yCoordForEachDepth.splice(-1, 1);
+            maxNodeHeightForEachDepth.splice(-1, 1);
+        }
+    }
+}
+
 function updateDepths(root) {
 
     root.depth = 0;
@@ -1153,9 +993,21 @@ function updateDepths(root) {
     traverseAndDo(root, function(node) {
         if (node.parent) {
             node.depth = node.parent.depth + 1;
+            if (node.depth > maxDepth) {
+              maxDepth = node.depth;
+            }
         }
     });
+
+    updateSizeOfNodeHeightArrays();
 }
+//
+// function updateHeights(root) {
+//
+//     traverseAndDo(root, function(node) {
+//         var tuple = wrap()
+//     });
+// }
 
 function getNodeByPermId(id) {
 
@@ -1220,7 +1072,10 @@ function update(root){
     id = 0;
 
     drawTree(root);
-
+    // called a second to fix text centering bug
+    id = 0; //clear id
+    gGroup.selectAll("*").remove();
+    drawTree(root);
     //gGroup.selectAll("circle")
     gGroup.selectAll("rect")
         .on("mouseover", function() {
@@ -1312,7 +1167,8 @@ function setCurrentNode(n) {
     currentNode = n;
 }
 
-function wrap(text, width) {
+// FIXME: account for long words
+function wrap(text, width, yCoord) {
 
     text.attr("dy",0);
     var x = text.attr("x");
@@ -1324,10 +1180,10 @@ function wrap(text, width) {
             line = [],
             lineNumber = 0,
             lineHeight = 1.1, // ems
+            // check this
             y = text.attr("y"),
             dy = parseFloat(text.attr("dy")),
             tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-          //console.log(dy);
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
@@ -1340,7 +1196,7 @@ function wrap(text, width) {
             }
         }
     });
-
+    // text.attr("y", yCoord + (nodeTextSize / 2.3) - (numberLines - 1) * nodeHeightScale / 2)
     return [text, numberLines];
 }
 
@@ -1375,10 +1231,6 @@ function onSelect(node) {
     d3.select("#a" + getCurrentNode().id).attr('fill', '#24A5F4');
     // center(node);
 }
-
-//set up tree with empty root node
-// var root = new Node($(document).width() / 2, 50, "I am Root.");
-
 
 var removedNodes = [];
 
@@ -1417,7 +1269,6 @@ $(document).ready(function() {
     });
 
 })
-
 
 function saveMap() {
     var dataTemp = saveToJSON(root);
