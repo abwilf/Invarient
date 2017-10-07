@@ -25,6 +25,15 @@ var svgContainer = d3.select("#tree-container").append("svg")
 
 var gGroup = d3.select("svg").append("g");
 
+function rightRoundedRect(x, y, width, height, radius) {
+  return "M" + (x+width) + "," + y
+       + "h" + (x + radius)
+       + "a" + radius + "," + radius + " 0 0 1 " + -radius + "," + radius
+       + "v" + (height - 2 * radius)
+       + "h" + (radius - width)
+       + "z";
+}
+
 dragListener = d3.behavior.drag()
   .on("dragstart", function(){
     console.log("Drag starting.");
@@ -45,7 +54,6 @@ dragListener = d3.behavior.drag()
     node.x = Number(d3.select(this).attr("cx"));
     node.y = Number(d3.select(this).attr("cy"));
 
-    d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
 
     dragStarted = true;
 
@@ -60,8 +68,8 @@ dragListener = d3.behavior.drag()
     }
 
     if (dragStarted == true) {
-
-      ( node );
+      // d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
+      dragStarted = false;
     }
 
     var svgnode = d3.select(this);
@@ -76,67 +84,78 @@ dragListener = d3.behavior.drag()
 
   })
   .on("dragend", function() {
-    var node = getClickedNode( this );
+    var node = getClickedNode(this);
 
     if (node == root) {
         return;
     }
 
     if (dragTarget && dragTarget != node){
-      console.log("Drag target present!")
-      //Remove node from previous parent
-      for (var i = 0; i < node.parent.children.length; i++) {
-          if (node.parent.children[i] === node) {
-              node.parent.children.splice(i, 1);
-          }
-      }
-      node.parent = null;
+        console.log("Drag target present!")
+        //Remove node from previous parent
+        for (var i = 0; i < node.parent.children.length; i++) {
+            if (node.parent.children[i] === node) {
+                node.parent.children.splice(i, 1);
+            }
+        }
+        node.parent = null;
 
-      if (node.connection == "neoroot"){
-        node.connection = "arrow";
-      }
+        if (node.connection == "neoroot"){
+            node.connection = "arrow";
+        }
 
-      add(dragTarget, node);
+        add(dragTarget, node);
 
-      dragTarget = null;
+        dragTarget = null;
     }
 
     else if (!dragTarget){
-      for (var i = 0; i < node.parent.children.length; i++) {
-          if (node.parent.children[i] === node) {
-              node.parent.children.splice(i, 1);
-          }
-      }
-      node.parent = null;
+        for (var i = 0; i < node.parent.children.length; i++) {
+            if (node.parent.children[i] === node) {
+                node.parent.children.splice(i, 1);
+            }
+        }
+        node.parent = null;
 
-      node.connection = "neoroot";
+        node.connection = "neoroot";
 
-      add(root, node);
+        add(root, node);
 
-      dragTarget = null;
-
+        dragTarget = null;
     }
     else{
-      console.log("Weird!");
-      console.log(dragTarget);
-
+        console.log("Weird!");
+        console.log(dragTarget);
     }
 
     if (nodeInitialState == 0) {
-      toggleSubtree( node );
-      nodeInitialState = -1;
+        toggleSubtree(node);
+        nodeInitialState = -1;
     }
 
-    d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
+    if (dragStarted == false){
+        d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
+        update( root );
 
-    update( root );
+    }
     onSelect( node );
 });
 
+
+function goodToEdit() {
+    if (canEdit == "false" && sandbox != "true") {
+        alert('You do not have permission to edit this map.  Please contact the owner of this map - ' + mapUser + '- for permission.');
+        return false;
+    }
+    return true;
+}
+
+
 function eventNewComesFromNode() {
 
+    if (!goodToEdit()) return;
     //Fetch the current active node.
-    curr = getCurrentNode();
+    var curr = getCurrentNode();
     var txt = prompt("", "Enter comes from node text");
 
     if (txt) {
@@ -144,10 +163,10 @@ function eventNewComesFromNode() {
 
         tmp.connection = "arrow";
 
-        add( curr, tmp );
+        add(curr, tmp);
 
         update(root);
-        onSelect( tmp );
+        onSelect(tmp);
     }
 }
 
@@ -156,13 +175,19 @@ function eventSave() {
     if (typeof(root) == 'undefined') {
         console.log('Cannot save with null root');
     }
+
+    // console.log('MAP.JS SANDBOX: ' + sandbox);
+
+    if (sandbox == "true") {
+        alert('Saving is not supported in sandbox.  If you want to save your map, please log in or sign up, and create a new map.')
+        return;
+    }
     else {
         saveMap();
     }
 }
 
 function eventEdit() {
-
     //Fetch the node corresponding to the currently selected svg element
     curr = getCurrentNode()
     var oldTxt = curr.data;
@@ -182,6 +207,7 @@ function eventEdit() {
 
 function eventNewDefinitionNode() {
 
+    if (!goodToEdit()) return;
     //Fetch the current active node.
     curr = getCurrentNode();
     var txt = prompt("", "Enter definition node text.");
@@ -196,21 +222,19 @@ function eventNewDefinitionNode() {
 }
 
 function eventToggleSubtree() {
-
+    if (!goodToEdit()) return;
     toggleSubtree( getCurrentNode() );
     update( root );
     onSelect( getCurrentNode() );
 }
 
 function eventTraverseUp() {
-
     if (getCurrentNode().parent != root) {
         onSelect( getCurrentNode().parent );
     }
 }
 
 function eventTraverseDown() {
-
     if (getCurrentNode().children.length > 0) {
         onSelect( getCurrentNode().children[0] );
     }
@@ -258,6 +282,7 @@ function eventTraverseRight() {
 
 function eventUndo() {
 
+    if (!goodToEdit()) return;
     var revived = null;
 
     if (removedNodes.length > 0) {
@@ -270,14 +295,14 @@ function eventUndo() {
 }
 
 function eventDelete() {
-
+    if (!goodToEdit()) return;
     remove( getCurrentNode() );
     update(root);
     onSelect(getCurrentNode().parent);
 }
 
 function eventNeoroot() {
-
+    if (!goodToEdit()) return;
     var txt = prompt("", "Enter node text here");
 
     if (txt) {
@@ -292,7 +317,7 @@ function eventNeoroot() {
 }
 
 function eventEditConnection() {
-
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter label connection type. [comes from], [definition], [custom]");
@@ -316,7 +341,7 @@ function eventEditConnection() {
 }
 
 function eventNewCustomNode() {
-
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter custom connection label");
@@ -337,7 +362,7 @@ function eventNewCustomNode() {
 }
 
 function eventLinkNode() {
-
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var txt = prompt("", "Enter the link to the tree.");
@@ -347,20 +372,54 @@ function eventLinkNode() {
     }
 }
 
-function eventModal() {
+function isLocalId(id) {
+  var arr = id.split("/");
 
+  //If the link is a local id
+  if (arr[0] === uniqueId){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+function getParsedId(id){
+  var arr = id.split("/");
+  return arr;
+}
+
+function eventLinkClicked() {
+    if (!goodToEdit()) return;
+    var node = getCurrentNode();
+
+    if (!isLocalId(node.link)){
+        openNewTabId(node.link);
+    }
+    else {
+        var localId = getParsedId(node.link)[1];
+        node = getNodeByPermId(localId);
+        setCurrentNode(node);
+        onSelect(node);
+        update(root);
+    }
+}
+
+function eventModal() {
+    if (!goodToEdit()) return;
     curr = getCurrentNode();
+    console.log(curr.link);
     modalopen = true;
     $('#myModal').modal('show');  // pop up window
 
     // set modal elements
     curr.data ? (document.getElementById("title").value = curr.data) :  (document.getElementById("title").value = "");
     curr.comment ? (document.getElementById("comment").value = curr.comment) : (document.getElementById("comment").value = "");
-
+    curr.link ? (document.getElementById("linkToText").value = curr.link) : (document.getElementById("linkToText").value = "");
 
     //////////////////////////////////////////////////////// MATTYB //////////////////////////////////////////////////////////////////////
     $("#getLinkText").empty();
-    // $("#getLinkText").append("DEM_BOYS");    // appends node's link
+    $("#getLinkText").append(uniqueId + "/" + curr.permId);    // appends node's link
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -375,6 +434,7 @@ function eventModal() {
     //     document.getElementById("act_2").checked = true;
     //     document.getElementById("act_1").checked = false;
     // }
+
 }
 
 window.addEventListener("keydown", keyPressed, false);
@@ -504,10 +564,28 @@ var sortByPriorityOn = false;
 var sortByDateOn = false;
 var filtersDict = {actionableFilterOn: false, notActionableFilterOn: false, completedFilterOn: false, notCompletedFilterOn: false, peopleOn: false, people: [], filterByNodeOn: false, nodeFilteredBy: null};
 var uniqueId; // for finding map in db
+var nodeId; // for centering on a certain node when linked to
+var permId = 0;
+var sandbox = 'false';
+var canEdit = 'false';
+var mapUser = "";
+
+var maxDepth = 1;
+
+let nodeTextSize = 14;
+let nodeWidth = 300;
+let nodeHalfWidth = nodeWidth / 2;
+let nodeWidthPadding = 20;
+let nodeHeight = 61;
+let nodeHeightScale = nodeTextSize * 1.1;
+let nodeHeightPadding = 40;
+
+let verticalNodeSpacePercent = 10;
+var maxNodeHeightForEachDepth = [nodeHeightPadding + nodeHeightScale];
+var yCoordForEachDepth = [50];
 
 // BEGIN HERE
 $(function() {
-
     if ($('#mapData').val()) {
         console.log("Loaded!");
         root = JSON.parse($('#mapData').val());
@@ -516,6 +594,17 @@ $(function() {
         console.log('UNIQUE ID: ' + uniqueId);
         _csrf = $('#_csrf').val();
         console.log("CSRF IS: " + _csrf);
+        nodeId = $('#nodeId').val();
+        console.log("NODE ID : " + nodeId);
+
+        sandbox = $('#sandBox').val();
+        console.log("MAP JS SANDBOX: " + sandbox)
+
+        canEdit = $('#canEdit').val();
+        console.log('CAN EDIT?: ' + canEdit);
+
+        mapUser = $('#mapUser').val();
+        console.log('MAP USER: ' + mapUser);
     }
     else {
         console.log("ERROR: Didn't load correctly'");
@@ -524,10 +613,16 @@ $(function() {
 
     hydrateData(root);
     root.depth = 0;
-    currentNode = root;
-
+    setCurrentNode(root.children[0]);
     update(root);
     onSelect(root.children[0]);
+
+    if (nodeId){
+      var temp = getNodeByPermId(nodeId);
+      setCurrentNode(temp);
+      onSelect(temp);
+      update(root);
+    }
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -545,11 +640,16 @@ function Node(x, y, data) {
     this.depth = null;
     this.parent = null;
     this.id = null;
+    this.permId = permId;
+    permId++;
     this.link = null;
 
     this.children = [];
 
     this.toggle = 0;
+
+    this.numLines = 1;
+    this.height = null;
 }
 
 // remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
@@ -576,12 +676,6 @@ function dehydrateNode(node_in) {
     node_in.parent = null;
     if (typeof(node_in.children) !== 'undefined')  {
         node_in.children.forEach(function(child, elem) {
-            child.parent = null;
-            dehydrateNode(child);
-        });
-    }
-    if (typeof(node_in._children) !== 'undefined')  {
-        node_in._children.forEach(function(child, elem) {
             child.parent = null;
             dehydrateNode(child);
         });
@@ -677,7 +771,7 @@ function dragOn(node) {
 // define marker
 d3.select("svg").append("svg:defs").selectAll("marker")
     .data(["end"])      // Different link/path types can be defined here
-    .enter().append("svg:marker")    // This section adds in the arrows
+    // .enter().append("svg:marker")    // This section adds in the arrows
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 15)
@@ -695,21 +789,22 @@ function drawNode(node) {
             if (node.children[i].connection != "neoroot") {
 
                 var line = gGroup.append("line")
-                   .attr("x1", node.x-10)
-                   .attr("y1", node.y-5)
-                   .attr("x2", node.children[i].x-10)
-                   .attr("y2", node.children[i].y-5)
+                   .attr("x1", node.x)
+                   .attr("y1", node.y + node.height/2)
+                   .attr("x2", node.children[i].x)
+                   .attr("y2", node.children[i].y + node.children[i].height/2)
                    .attr("stroke-width", 2)
-                   .attr("stroke", "black");
-
+                   .attr("stroke", "#00CEF4");
+                //Arrow connection
                 if (node.children[i].connection == "arrow") {
                     line.attr("marker-end", "url(#end)");
                 }
+                //Custom connection
                 else if (node.children[i].connection != "line"){
                     line.attr("marker-end", "url(#end)");
                     var lbl = gGroup.append("text")
                                      .attr("x", (node.x + node.children[i].x)/2 + 5)
-                                     .attr("y", (node.y + node.children[i].y)/2)
+                                     .attr("y", (node.y + node.children[i].y)/2 - 20)
                                      .attr("font-family", "sans-serif")
                                      .attr("font-size", "15px")
                                      .attr("font-style", "italic")
@@ -719,50 +814,68 @@ function drawNode(node) {
         }
     }
 
-    var circle = gGroup.append("circle")
-       .attr("cx", node.x - 10)
-       .attr("cy", node.y - 5)
-       .attr("r", 5)
-       .attr("fill", function (d) {
-         return getColor( node );
-       })
-       .attr("stroke", "black")
-       .attr("stroke-width", 1)
-       .attr("id", "a" + id);
-
-    if (node == root){
-        circle.attr("display", "none");
-    }
-
     node_map["" + id] = node;
     node.id = id;
-
     var text = gGroup.append("text")
                            .attr("x", node.x)
-                           .attr("y", node.y)
+                           .attr("y", node.y + (nodeTextSize / 2.3) - (node.numLines - 1) * nodeHeightScale / 2)
+                        //    .attr("y", node.y + nodeTextSize / 2.3)
+                        //    .attr("y", node.y - (node.numLines - 1)*(nodeHeightScale/2))
+                           .attr("text-anchor", "middle")
+                           .attr("alignment-baseline", "central")
+                           // FIXME: change font
                            .attr("font-family", "sans-serif")
-                           .attr("font-size", "15px")
-                           .attr("fill", "light-blue")
+                           .attr("font-size", nodeTextSize + "px")
+                           .attr("font-color", "white")
+                           .attr("fill", "white")
                            .attr("id", "b" + id)
                            .text( function(d) { return node.data });
-
-    node.textsize = document.getElementById("b" + id).getComputedTextLength();
-    text = wrap(text, 200);
-
-    if (node != root) {
-      var ghost = gGroup.append("circle")
-          .attr("cx", node.x - 10)
-          .attr("cy", node.y - 5)
-          .attr('class', 'ghostCircle')
-          .attr("r", 30)
-          .attr("opacity", 0.2) // change this to zero to hide the target area
-          .attr("id", "a" + id)
-          .style("fill", "red")
-          //.attr("pointer-events", "none");
+    // wrapTuple[0] is text and wrapTuple[1] is numLines
+    var wrapTuple = wrap(text, nodeWidth-nodeWidthPadding, node.y);
+    text = wrapTuple[0];
+    node.numLines = wrapTuple[1]
+    // node.height = wrapTuple[1]*nodeHeightScale+nodeHeightPadding;
+    // text = wrap(text, nodeWidth);
+    // node.height based on number of lines of text
+    node.height = node.numLines * nodeHeightScale + nodeHeightPadding;
+    if (node.height > maxNodeHeightForEachDepth[node.depth]) {
+        maxNodeHeightForEachDepth[node.depth] = node.height;
+        // TODO:
+        // yCoordForEachDepth[node.depth] = calcYCoordForDepth()
     }
 
+    var roundedRectangle = gGroup.append("rect")
+        .attr("width", nodeWidth)
+        .attr("x", node.x - nodeHalfWidth)
+        .attr("y", node.y - node.height/2)
+        .attr("height", node.height)
+        .attr("rx", 10)
+        .attr("ry", 10)
+        .attr("fill", function (d) {
+          return getColor(node);
+        })
+        .attr("id", "a" + id)
+
+    // ---------------FOR TESTING---------------
+    // var marker = gGroup.append("rect")
+    //     .attr("x", node.x)
+    //     .attr("y", node.y)
+    //     .attr("height", 5)
+    //     .attr("width", 5)
+    //     .attr("fill", "black")
+    // ---------------END TESTING---------------
+
+    if (node==root){
+        roundedRectangle.attr("display", "none");
+    }
     id++;
 }
+
+d3.selection.prototype.moveToFront = function() {
+    return this.each(function(){
+        this.parentNode.appendChild(this);
+    });
+};
 
 function drawTree(node){
   traverseAndDo(node, drawNode);
@@ -795,35 +908,24 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
         }
     }
     node.subtreeWidth = sum;
-    node.width = nodeWidthFunctor(node);
+    // node.width = nodeWidthFunctor(node
+    node.width = nodeWidth*1.5;
     node.subtreeWidth = Math.max(node.subtreeWidth, node.width);
 }
 
 function nodeWidthFunctor(node) {
-    // console.log(node.textsize);
-    if (node.textsize) {
-        if (node.textsize>300){
-            // console.log("Case A");
-            return 355;
-        }
-        else{
-            // console.log("Case B");
-            return node.textsize + 55;
-        }
-    }
-    else{
-        // console.log("Case C");
-        return 20;
-    }
+    return nodeWidth;
 }
 
 function calculateSubtreeWidths(node){
-    __calculateSubtreeWidths(node, nodeWidthFunctor);
+    postTraverseAndDo(root, function(node){
+        __calculateSubtreeWidths(node, nodeWidthFunctor);
+    });
 }
 
 function balance(root){
 
-    calculateSubtreeWidths(root, nodeWidthFunctor);
+    calculateSubtreeWidths(root);
 
     //toggling the root or its subtrees can move it around the page
     //instead we'll find the difference in position and then shift the whole
@@ -866,6 +968,24 @@ function balance(root){
     })
 }
 
+function updateSizeOfNodeHeightArrays() {
+
+    var length = yCoordForEachDepth.length;
+    if (maxDepth > length) {
+        for (var i = length; i < maxDepth; ++i) {
+            yCoordForEachDepth[i] = 0;
+            maxNodeHeightForEachDepth[i] = 0;
+        }
+    }
+    if (maxDepth < length) {
+        for (i = length - 1; i > maxDepth; --i) {
+            // pop end of array
+            yCoordForEachDepth.splice(-1, 1);
+            maxNodeHeightForEachDepth.splice(-1, 1);
+        }
+    }
+}
+
 function updateDepths(root) {
 
     root.depth = 0;
@@ -873,8 +993,31 @@ function updateDepths(root) {
     traverseAndDo(root, function(node) {
         if (node.parent) {
             node.depth = node.parent.depth + 1;
+            if (node.depth > maxDepth) {
+              maxDepth = node.depth;
+            }
         }
     });
+
+    updateSizeOfNodeHeightArrays();
+}
+//
+// function updateHeights(root) {
+//
+//     traverseAndDo(root, function(node) {
+//         var tuple = wrap()
+//     });
+// }
+
+function getNodeByPermId(id) {
+
+    var result = null;
+    traverseAndDo(root, function(node){
+        if (node.permId == id) {
+            result = node;
+        }
+    });
+    return result;
 }
 
 function sortByConnection(root) {
@@ -914,7 +1057,7 @@ function update(root){
     id = 0; //clear id
     gGroup.selectAll("*").remove();
 
-    drawTree(root);
+    // drawTree(root);
 
     gGroup.selectAll("*").remove();
 
@@ -926,19 +1069,26 @@ function update(root){
 
     balance(root, root.x - root.subtreeWidth/2);
 
-    drawTree(root);
+    id = 0;
 
-    gGroup.selectAll("circle")
+    drawTree(root);
+    // called a second to fix text centering bug
+    id = 0; //clear id
+    gGroup.selectAll("*").remove();
+    drawTree(root);
+    //gGroup.selectAll("circle")
+    gGroup.selectAll("rect")
         .on("mouseover", function() {
             this.style.cursor = "pointer";
-            d3.select(this).attr('fill', '#302E1C');
-            dragTarget = getClickedNode( this );
+            //TODO: pick a color for mouseover
+            // d3.select(this).attr('fill', '#302E1C');
+            dragTarget = getClickedNode(this);
         })
         .on("mouseout", function() {
             dragTarget = null;
             if (getCurrentNode() != getClickedNode( this )) {
                 d3.select(this).attr('fill', function (d) {
-                    return getColor(getClickedNode( this ));
+                    return getColor(getClickedNode(this));
                 });
             }
         })
@@ -946,21 +1096,30 @@ function update(root){
             var node = getClickedNode( this );
             onSelect(node);
             setCurrentNode(node);
+            console.log(node.link);
+
+            if (node.link) {
+              eventLinkClicked();
+            }
             // center( node );
         })
+        // TODO: change from toggling subtree to modal view
         .on("dblclick", function() {
 
             var node = getClickedNode( this );
             onSelect(node);
             setCurrentNode(node);
 
-            toggleSubtree( getCurrentNode() );
+            // toggleSubtree( getCurrentNode() );
+            eventModal();
 
             update(root);
 
             // center( node );
         })
         .call(dragListener);
+
+        gGroup.selectAll("text").moveToFront();
 
         gGroup.selectAll(".ghostcircle")
             .on("mouseover", function() {
@@ -977,17 +1136,24 @@ function update(root){
 
 function getColor(node) {
 
+    //If the node has a toggled subtree
     if (node.toggle == 1) {
         //console.log("#ADD8E6");
         return "#ADD8E6";
     }
+    //If the node is currently selected
     else if (node == getCurrentNode()) {
         //console.log("#302E1C");
-        return "#302E1C";
+        return "#24A5F4";
     }
+    //If the node is a definition node
+    else if (node.connection == "line") {
+        return "#03EB9B"
+    }
+    //Otherwise, fill white
     else {
         //console.log("white");
-        return "white";
+        return "#00CEF4";
     }
 }
 
@@ -1001,12 +1167,12 @@ function setCurrentNode(n) {
     currentNode = n;
 }
 
-function wrap(text, width) {
+// FIXME: account for long words
+function wrap(text, width, yCoord) {
 
     text.attr("dy",0);
     var x = text.attr("x");
-    //console.log(x);
-
+    var numberLines = 1;
     text.each(function() {
         var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
@@ -1014,10 +1180,10 @@ function wrap(text, width) {
             line = [],
             lineNumber = 0,
             lineHeight = 1.1, // ems
+            // check this
             y = text.attr("y"),
             dy = parseFloat(text.attr("dy")),
             tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
-          //console.log(dy);
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
@@ -1026,9 +1192,12 @@ function wrap(text, width) {
                 tspan.text(line.join(" "));
                 line = [word];
                 tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                numberLines = 1 + lineNumber;
             }
         }
     });
+    // text.attr("y", yCoord + (nodeTextSize / 2.3) - (numberLines - 1) * nodeHeightScale / 2)
+    return [text, numberLines];
 }
 
 function center(node) {
@@ -1048,7 +1217,7 @@ function center(node) {
     //console.log( d3.select("#a" + root.id).property("cy").baseVal.value );
 }
 
-function onSelect( node ) {
+function onSelect(node) {
 
     var temp = currentNode;
     currentNode = node;
@@ -1059,13 +1228,9 @@ function onSelect( node ) {
             return getColor(temp);
         });
     }
-    d3.select("#a" + getCurrentNode().id).attr('fill', '#302E1C');
+    d3.select("#a" + getCurrentNode().id).attr('fill', '#24A5F4');
     // center(node);
 }
-
-//set up tree with empty root node
-// var root = new Node($(document).width() / 2, 50, "I am Root.");
-
 
 var removedNodes = [];
 
@@ -1080,27 +1245,30 @@ $(document).ready(function() {
         todayHighlight: true,
         autoclose: true,
     };
-    date_input.datepicker(options);
+    // date_input.datepicker(options);
+
+      // set node values: triggered when modal window closes
+    $('#myModal').on('hidden.bs.modal', function() {
+        var curr = getCurrentNode();
+        modalopen = false;//when modal closes, stop suppressing keypresses
+        var title = document.getElementById("title").value;
+        var comment = document.getElementById("comment").value;
+        var newLink = $("#linkToText").val();
+
+        curr["data"] = title; // str
+        curr["comment"] = comment;  // str
+        curr["link"] = newLink;
+
+        console.log('title is: ' + curr.data);
+        console.log('comment is: ' + curr.comment);
+        console.log('link is: ' + curr.link);
+        // console.log("link to node url is: ");
+
+        //Update tree to display the changes.
+        update(root);
+    });
+
 })
-
-  // set node values: triggered when modal window closes
-$('#myModal').on('hidden.bs.modal', function() {
-
-    modalopen = false;//when modal closes, stop suppressing keypresses
-    var title = document.getElementById("title").value;
-    var comment = document.getElementById("comment").value;
-    var newLink = $("#linkToText").val();
-
-    curr["data"] = title; // str
-    curr["comment"] = comment;  // str
-
-    console.log('title is: ' + curr.data);
-    console.log('comment is: ' + curr.comment);
-    // console.log("link to node url is: ");
-
-    //Update tree to display the changes.
-    update(root);
-});
 
 function saveMap() {
     var dataTemp = saveToJSON(root);
@@ -1130,3 +1298,7 @@ function createMap() {
         window.location.pathname = data.redirect;
     });
 };
+
+function openNewTabId(id) {
+  window.open(id, "_blank");
+}
