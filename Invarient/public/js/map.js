@@ -543,9 +543,14 @@ function getClickedNode(clicked) {
 
 function hydrateData(data) {
 
-    traverseAndDo(data, function(d) {
+   traverseAndDo(data, function(d) {
         if( typeof(d.children) !== 'undefined') {
             d.children.forEach(function(child, elem){
+                child.parent = d;
+            })
+        }
+        if( typeof(d._children) !== 'undefined') {
+            d._children.forEach(function(child, elem){
                 child.parent = d;
             })
         }
@@ -672,7 +677,7 @@ function JSONHelper(node_in, nodes) {
 
 function dehydrateNode(node_in) {
 
-    // console.log("Dehydrating node:");
+   // console.log(“Dehydrating node:“);
     node_in.parent = null;
     if (typeof(node_in.children) !== 'undefined')  {
         node_in.children.forEach(function(child, elem) {
@@ -680,8 +685,15 @@ function dehydrateNode(node_in) {
             dehydrateNode(child);
         });
     }
+    if (typeof(node_in._children) !== 'undefined')  {
+        node_in._children.forEach(function(child, elem) {
+            child.parent = null;
+            dehydrateNode(child);
+        });
+    }
     return node_in;
 }
+
 
 //Helper function, iterates through tree and calls d on each node
 function traverseAndDo(node, d) {
