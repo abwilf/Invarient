@@ -25,15 +25,6 @@ var svgContainer = d3.select("#tree-container").append("svg")
 
 var gGroup = d3.select("svg").append("g");
 
-function rightRoundedRect(x, y, width, height, radius) {
-  return "M" + (x+width) + "," + y
-       + "h" + (x + radius)
-       + "a" + radius + "," + radius + " 0 0 1 " + -radius + "," + radius
-       + "v" + (height - 2 * radius)
-       + "h" + (radius - width)
-       + "z";
-}
-
 dragListener = d3.behavior.drag()
   .on("dragstart", function(){
     console.log("Drag starting.");
@@ -584,8 +575,8 @@ let nodeWidthPadding = 20;
 let nodeHeight = 61;
 let nodeHeightScale = nodeTextSize * 1.1;
 let nodeHeightPadding = 40;
+let horizontalNodeSpacingScalar = 1.2;
 
-let verticalNodeSpacePercent = 10;
 var maxNodeHeightForEachDepth = [nodeHeightPadding + nodeHeightScale];
 var yCoordForEachDepth = [50];
 
@@ -921,7 +912,8 @@ function __calculateSubtreeWidths(node, nodeWidthFunctor) {
     }
     node.subtreeWidth = sum;
     // node.width = nodeWidthFunctor(node
-    node.width = nodeWidth*1.5;
+    node.width = nodeWidth * horizontalNodeSpacingScalar;
+    // node.width = nodeWidth*1.5;
     node.subtreeWidth = Math.max(node.subtreeWidth, node.width);
 }
 
