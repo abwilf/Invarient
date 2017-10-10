@@ -575,7 +575,7 @@ let nodeWidthPadding = 20;
 let nodeHeight = 61;
 let nodeHeightScale = nodeTextSize * 1.1;
 let nodeHeightPadding = 40;
-let horizontalNodeSpacingScalar = 1.2;
+let horizontalNodeSpacingScalar = 1.1;
 
 var maxNodeHeightForEachDepth = [nodeHeightPadding + nodeHeightScale];
 var yCoordForEachDepth = [50];
