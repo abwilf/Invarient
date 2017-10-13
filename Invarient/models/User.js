@@ -1,13 +1,14 @@
 const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const Map = require('./Map');
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  maps: [{title: String, url: String}]
+  maps: [Map.schema]
   // facebook: String,
   // twitter: String,
   // google: String,
@@ -24,7 +25,7 @@ const userSchema = new mongoose.Schema({
   //   website: String,
   //   picture: String
   },
-  {collection: 'users'}, 
+  {collection: 'users2.0'}, 
   {timestamps: true }
   );
 

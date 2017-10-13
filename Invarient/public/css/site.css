@@ -524,9 +524,27 @@ img {
   display: none;
 }
 
+#barWrap {
+  margin: 0 auto;
+  width: 100%;
+  /*border: 1px dotted blue;*/
+  height: 120px;
+}
+/* titlebar */
+#titlebar {
+  display: block;
+  float: left;
+  /*border: 1px dotted green;*/
+  padding-left: 30%;
+  margin-top: 30px;
+}
+/*                     toolbar                     */
 
-/*                                          */
-
+ #toolbar {
+  display: block;
+  /*border: 1px dotted red;*/
+  float: left;
+ }
  #_00 {
   background-image: url(/icons/add-button.svg)
   }
@@ -570,6 +588,7 @@ img {
     background-color: #008CBA;
 }
 
+/* END TOOLBAR */
 
 /* ALL CREDIT FOR THE BELOW TO https://chrisbracco.com/a-simple-css-tooltip/ */
 

@@ -323,23 +323,30 @@ exports.getForgot = (req, res) => {
   });
 };
 
-// returns newURL
-function createNewMap(email) {
-  // console.log('EMAIL IS: ' + email);
+// returns new map object
+function _createMap(email) {
+    // console.log('EMAIL IS: ' + email);
     var newMap = new Map ({
-            data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]",
-            userEmail: email
-         });
-        newMap.save(function(err) {
-            if (err) {
-              console.log('user.js line 333');
-              throw err;
-            }
-        })
-        var newURL = ('/maps/' + newMap._id);
-        console.log('new URL is: ' + newURL);
-        return newURL;
+        data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]",
+        userEmail: email,
+        title: "Untitled"
+     });
+    newMap.save(function(err) {
+        if (err) {
+          console.log('user.js line 336');
+          throw err;
+        }
+    })
+    return newMap;
 }
+
+// // creates new map and returns url
+// function createMapURL(email) {
+//     var newMap = createMapId(email);
+//     var newURL = ('/maps/' + newMap._id);
+//     console.log('new URL is: ' + newURL);
+//     return newURL;
+// }
 
 exports.postCreateMap = (req, res, next) => {
 
@@ -352,19 +359,20 @@ exports.postCreateMap = (req, res, next) => {
       return next(err); 
     }
     if (existingUser) {
-      var newURL = createNewMap(res.locals.user.email);
-      existingUser.maps.push({title: 'Untitled', url: newURL});
+      // var id = createMapId(res.locals.user.email);
+      // var newURL = '/maps/' + id;
+      var newMap = _createMap(res.locals.user.email);
+      existingUser.maps.push(newMap);
       existingUser.save(function(err) {
         if (err) throw err;
       })
-      return res.redirect(newURL);
+      return res.redirect('/maps/' + newMap._id);
     }
     else {
       throw('SHOULD HAVE FOUND USER - user.js. Probably a problem with req.body.emailAddress or mlab username');
     }
   });
 }
-
 
 // kind of a hacky fix to get around routing between exports functions
 function getMapHelper(req, res, next, id, sandbox) {
@@ -397,12 +405,6 @@ function getMapHelper(req, res, next, id, sandbox) {
 
         // is allowed to edit
         var canEdit = "false"; 
-        // console.log('OTHER USERS: ' + m.otherUsers);
-        // console.log('OWNER EMAIL: ' + m.userEmail);
-        // console.log('local user email: ' + function() {
-        //   if (res.locals.user) return res.locals.user.email;
-        //   else return null;
-        // });
 
         if (req.isAuthenticated() && 
               (  (res.locals.user.email == m.userEmail) || (m.otherUsers && m.otherUsers.find(function(user) {
@@ -415,14 +417,15 @@ function getMapHelper(req, res, next, id, sandbox) {
         console.log('RESULT OF FIND: ' + canEdit);
 
         res.render('map', {
-          mapId: m.id,
+          mapId: m._id,
           mapData: JSON.parse(m.data)[0],
           _csrf: res.locals._csrf,
           nodeId: req.params.nodeId,
           sandbox: sandbox,
           canEdit: canEdit,
           mapUser: m.userEmail,
-          footerType: "map"
+          footerType: "map",
+          mapTitle: m.title
         });
       })
 }
@@ -454,6 +457,8 @@ exports.saveCreateMap = (req, res, next) => {
                 return;
             }
             m.data = req.body.data;
+            m.title = req.body.title;
+            console.log('TITLE IS: ' + m.title)
             m.save(function(err) {
                 if (err) throw err;
             });
@@ -462,7 +467,8 @@ exports.saveCreateMap = (req, res, next) => {
       }
 
       else if (req.body.type == "create") {
-          var newUrl = createNewMap(res.locals.user.email); // ALSO REFERENCED IN postCreate
+          var newUrl = '/maps/' + _createMap(res.locals.user.email)._id; // ALSO REFERENCED IN postCreate
+          console.log('NEW URL IS: ' + newURL)
           console.log("Successfully created map");
           // redirect is in client portion b/c of ajax post request
           res.send({redirect: newUrl});

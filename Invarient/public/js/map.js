@@ -428,11 +428,20 @@ function eventModal() {
 
 }
 
+var editingText = false;
+$("#mapTitleIn").on("focus", function(){
+    editingText = true;
+})
+$("#mapTitleIn").on("focusout", function(){
+    editingText = false;
+})
+
 window.addEventListener("keydown", keyPressed, false);
 
 function keyPressed(e) {
 
-    if (modalopen) {
+    console.log('editing text: ' + editingText)
+    if (modalopen || editingText) {
         return;
     }
 
@@ -547,6 +556,18 @@ function hydrateData(data) {
         }
     })
 }
+
+// CREDIT: http://jsfiddle.net/MadLittleMods/2LG8f/
+var timeoutId;
+$('form input, form textarea').on('input propertychange change', function() {
+    console.log('Textarea Change');
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function() {
+        // Runs 1 second (1000 ms) after the last change    
+        eventSave();
+    }, 1000);
+});
 
 var root;
 var _csrf;
@@ -1277,12 +1298,16 @@ $(document).ready(function() {
 function saveMap() {
     var dataTemp = saveToJSON(root);
     var URL = window.location.pathname;
+    var title = $("#mapTitleIn").val();
+    if (!title) title = "Untitled"
+    console.log('TITLE IS: ' + title)
     $.post(URL,
     {
         _csrf: _csrf,
         type: "save", // save or create
         data: dataTemp,
-        id: uniqueId
+        id: uniqueId,
+        title: title
     },
     function(data, status){
         console.log("client side check save");
