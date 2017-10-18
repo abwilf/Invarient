@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  maps: [Map.schema]
+  maps: [{title: String, url: String, mapId: String}]
   // facebook: String,
   // twitter: String,
   // google: String,

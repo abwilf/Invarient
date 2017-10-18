@@ -19,7 +19,6 @@ block content
     // Link 1
     .container-fluid
       each val in user.maps
-        - var url = '/maps/' + val._id;
-        a(class='userMaps', href=url, target="_blank") 
+        a(class='userMaps', href=val.url, target="_blank") 
           img(src='css/mat/0076a3.jpg', width='250px', height='150px')
           figcaption #{val.title}

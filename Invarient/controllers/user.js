@@ -360,13 +360,13 @@ exports.postCreateMap = (req, res, next) => {
     }
     if (existingUser) {
       // var id = createMapId(res.locals.user.email);
-      // var newURL = '/maps/' + id;
       var newMap = _createMap(res.locals.user.email);
-      existingUser.maps.push(newMap);
+      var newUrl = '/maps/' + newMap._id;
+      existingUser.maps.push({title: newMap.title, url: newUrl, mapId: newMap._id});
       existingUser.save(function(err) {
         if (err) throw err;
       })
-      return res.redirect('/maps/' + newMap._id);
+      return res.redirect(newUrl);
     }
     else {
       throw('SHOULD HAVE FOUND USER - user.js. Probably a problem with req.body.emailAddress or mlab username');
@@ -376,8 +376,8 @@ exports.postCreateMap = (req, res, next) => {
 
 // kind of a hacky fix to get around routing between exports functions
 function getMapHelper(req, res, next, id, sandbox) {
-    console.log("NODE ID IS: " + req.params.nodeId);
-    console.log("URL ID IS: " + req.params.urlId);
+    // console.log("NODE ID IS: " + req.params.nodeId);
+    // console.log("URL ID IS: " + req.params.urlId);
 
     // for sandbox
     var idTemp = req.params.urlId;
@@ -385,7 +385,7 @@ function getMapHelper(req, res, next, id, sandbox) {
     if (sandbox == "true") {
       idTemp = id;
     }
-    console.log('idTemp is: ' + idTemp)
+    // console.log('idTemp is: ' + idTemp)
 
     Map.findOne({ _id: idTemp}, function(err, m) {
         if (err){
@@ -396,7 +396,7 @@ function getMapHelper(req, res, next, id, sandbox) {
             res.send("Sorry!  No map found with that ID.");
             return;
         }
-        console.log('CSRF SERVER: ' + res.locals._csrf);
+        // console.log('CSRF SERVER: ' + res.locals._csrf);
 
         if (req.isAuthenticated()) {
           res.locals.headerType = 'logged';
@@ -448,6 +448,7 @@ exports.getSandbox = (req, res, next) => {
 
 exports.saveCreateMap = (req, res, next) => {
   console.log("SAVECREATE");
+
      if (req.body.type == "save") {
         Map.findOne({ _id: req.body.id}, function(err, m) {
             if (err) throw err;
@@ -466,13 +467,14 @@ exports.saveCreateMap = (req, res, next) => {
           });
       }
 
-      else if (req.body.type == "create") {
-          var newUrl = '/maps/' + _createMap(res.locals.user.email)._id; // ALSO REFERENCED IN postCreate
-          console.log('NEW URL IS: ' + newURL)
-          console.log("Successfully created map");
-          // redirect is in client portion b/c of ajax post request
-          res.send({redirect: newUrl});
-      }
+      /* used for in map creation */
+      // else if (req.body.type == "create") {
+      //     var newUrl = '/maps/' + _createMap(res.locals.user.email)._id; // ALSO REFERENCED IN postCreate
+      //     console.log('NEW URL IS: ' + newURL)
+      //     console.log("Successfully created map");
+      //     // redirect is in client portion b/c of ajax post request
+      //     res.send({redirect: newUrl});
+      // }
       else console.log("req.body.type should be 'save' or 'create'. req.body: " + req.body);
   };
 

@@ -22,7 +22,7 @@ var mapSchema = new mongoose.Schema(
     }]
 },
 { 
-    collection: 'mapsUser' 
+    collection: 'maps2.0' 
 }
 );
 
