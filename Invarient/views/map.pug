@@ -16,16 +16,16 @@ block content
     #barWrap  
       #toolbar
         #toolbarFirstRow
-          button.mapBut.tooltip-top-right#_00(onclick="eventNewComesFromNode()", data-tooltip= "New \"Comes From\" Node")
-          button.mapBut.tooltip-top#_01(onclick="eventToggleSubtree()", data-tooltip="Toggle Subtree View")
-          button.mapBut.tooltip-top#_02(onclick="eventDelete()", data-tooltip="Delete Node")
-          button.mapBut.tooltip-top#_03(onclick="eventNewCustomNode()", data-tooltip="New \"Custom\" Node")
+          button.mapBut.tooltip-top-right#_00(onclick="eventNewComesFromNode()", data-tooltip= "New \"Comes From\" Node (n)")
+          button.mapBut.tooltip-top#_01(onclick="eventToggleSubtree()", data-tooltip="Toggle Subtree View (space)")
+          button.mapBut.tooltip-top#_02(onclick="eventDelete()", data-tooltip="Delete Node (del)")
+          button.mapBut.tooltip-top#_03(onclick="eventNewCustomNode()", data-tooltip="New \"Custom\" Node (c)")
         
         #toolbarSecondRow  
-          button.mapBut.tooltip-bottom-right#_10(onclick="eventEditConnection()", data-tooltip="Edit Type of Connection")
-          button.mapBut.tooltip-bottom#_11(onclick="eventModal()", data-tooltip="Edit Node")
-          button.mapBut.tooltip-bottom#_12(onclick="eventSave()", data-tooltip="Save Map")
-          button.mapBut.tooltip-bottom#_13(onclick="eventNewDefinitionNode()", data-tooltip= "New \"Definition\" Node")
+          button.mapBut.tooltip-bottom-right#_10(onclick="eventEditConnection()", data-tooltip="Edit Type of Connection (y)")
+          button.mapBut.tooltip-bottom#_11(onclick="eventModal()", data-tooltip="Edit Node (o)")
+          button.mapBut.tooltip-bottom#_12(onclick="eventSave()", data-tooltip="Save Map (s)")
+          button.mapBut.tooltip-bottom#_13(onclick="eventNewDefinitionNode()", data-tooltip= "New \"Definition\" Node (d)")
       #titlebar
         form#titleForm
           .form-group
