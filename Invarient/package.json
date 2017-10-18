@@ -15,6 +15,7 @@
     "eslint": "eslint **/*.js"
   },
   "dependencies": {
+    "async": "^2.5.0",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
