@@ -116,12 +116,16 @@ input[id=deletebutton]:hover {
     background-color: white;
     color: black;
     border: 2px solid #e7e7e7;
-    text-align: left;
-    content: 20px 200px;
-    padding: 20px 200px;
+    text-align: center;
+    content: 20px 10px;
+    padding: 20px px;
+    border-radius: 5px;
+    border-color: #7dc4ea;
+    font-family: 'Raleway', sans-serif;
 }
 
-.button4:hover {background-color: #e7e7e7;}
+.button4:hover {background-color: #3c96ad !important;
+                color: white;}
 
 .button5 {
     background-color: white;
@@ -260,8 +264,11 @@ h5{
     margin-left: auto;
     margin-right: auto;
     display:flex;
+    font-size: 20px;
+    margin-bottom: 40px;
     max-width: 25em;
     margin-top: -80px;
+    font-family: 'Raleway', san-serif !important;
 }
 #TreeTry {
     display: flex;
@@ -284,15 +291,20 @@ hr {
 }
 
 #Synthesizebox{
-    margin-top: 60px;
+    margin-top: 160px;
 }
 #Synword {
-    font-family: 'Raleway', sans-serif;
-    color: #3c96ad;
+    font-family: "Georgia", serif !important;
+    font-style: italic !important;
+    
+    color: #22819a !important;
 }
 
 #subpar {
     top: 20px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    margin-bottom: 100px;
 }
 
 
@@ -371,94 +383,21 @@ hr {
     text-align: right;
 }
 
-#test {
-    
-}
-
-#boop2 {
-    margin-top:10px;
-   
+#mapButtons {
+    width: 75%;
+    margin:auto;
+    display:block;
 }
 
 
+#deletebtn {
+    top:32px;
+    left:9%;
+    position:relative;
+}
 
 
 
-
-
-.button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 8px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    cursor: pointer;
-    }
-
-    .button1 {
-        background-color: #3c96ad;
-        padding: 8px 15px;
-        color: white; 
-        border: 2px solid #e6841a;
-        border-radius: 8px;
-        min-width: 92px;
-    }
-
-    .button1:hover {
-        background-color: #e6841a;
-        color: white;
-    }
-
-    .button2 {
-        background-color: #3c96ad; 
-        color: white; 
-        border: 2px solid #3c96ad;
-        border-radius: 8px;
-    }
-
-    .button2:hover {
-        background-color: #1c6a7e;
-        color: white;
-    }
-
-    .button3 {
-        background-color: #3c96ad; 
-        color: white; 
-        border: 3px solid #e6841a;
-        border-radius: 10px;
-        font-size: 28px;
-        padding: 12px 36px;
-    }
-
-    .button3:hover {
-        background-color: #e6841a;
-        color: white;
-    }
-
-    .button4 {
-        background-color: white;
-        color: black;
-        border: 2px solid #e7e7e7;
-    }
-
-    .button4:hover {background-color: #e7e7e7;}
-
-    .button5 {
-        background-color: white;
-        color: black;
-        border: 2px solid #555555;
-    }
-
-    .button5:hover {
-        background-color: #555555;
-        color: white;
-    }
 
 h1 {
     font-family:'Raleway', sans-serif;
@@ -524,27 +463,9 @@ img {
   display: none;
 }
 
-#barWrap {
-  margin: 0 auto;
-  width: 100%;
-  /*border: 1px dotted blue;*/
-  height: 120px;
-}
-/* titlebar */
-#titlebar {
-  display: block;
-  float: left;
-  /*border: 1px dotted green;*/
-  padding-left: 30%;
-  margin-top: 30px;
-}
-/*                     toolbar                     */
 
- #toolbar {
-  display: block;
-  /*border: 1px dotted red;*/
-  float: left;
- }
+/*                                          */
+
  #_00 {
   background-image: url(/icons/add-button.svg)
   }
@@ -588,7 +509,6 @@ img {
     background-color: #008CBA;
 }
 
-/* END TOOLBAR */
 
 /* ALL CREDIT FOR THE BELOW TO https://chrisbracco.com/a-simple-css-tooltip/ */
 
@@ -853,4 +773,20 @@ img {
 .tooltip-right:after {
   margin-left: 0;
   margin-bottom: -16px;
+}
+
+/*delete button for maps */
+.close-icon
+{
+  display:block;
+  box-sizing:border-box;
+  width:20px;
+  height:20px;
+  border-width:3px;
+  border-style: solid;
+  border-color:#df4444;
+  border-radius:100%;
+  background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 46%, white 46%,  white 56%,transparent 56%, transparent 100%), -webkit-linear-gradient(45deg, transparent 0%, transparent 46%, white 46%,  white 56%,transparent 56%, transparent 100%);
+  background-color:#df4444;
+  transition: all 0.3s ease;
 }
