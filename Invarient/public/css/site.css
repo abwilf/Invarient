@@ -118,7 +118,7 @@ input[id=deletebutton]:hover {
     border: 2px solid #e7e7e7;
     text-align: center;
     content: 20px 10px;
-    padding: 20px px;
+    padding: 20px 20px;
     border-radius: 5px;
     border-color: #7dc4ea;
     font-family: 'Raleway', sans-serif;
@@ -389,11 +389,56 @@ hr {
     display:block;
 }
 
+/* KEENAN ENTRY POINT (fixme delete) */
+#titleBar {
+
+}
+#toolBar {
+
+}
+#barWrap {
+
+}
 
 #deletebtn {
-    top:32px;
+    top:40px;
     left:9%;
     position:relative;
+}
+
+#mapTitleIn {
+    border: 0px;
+    text-align: center;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
+input[type=text] {
+    width: 30%;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+    background-color: #e7f5ff;
+    width: 70%;
+}
+
+#test_box_2 {
+    border: none;
+    border-bottom: 2px solid #e6841a;
+    text-align: center;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
+
+#test_box_3 {
+    border: none;
+    border-left: 2px solid #74619a;
+    border-right: 2px solid #74619a;
+    text-align: center;
+    outline: none;
+    padding: 8px 15px;
+
 }
 
 
