@@ -76,7 +76,7 @@ input[id=deletebutton]:hover {
 .button1 {
             background-color: #3c96ad;
             padding: 8px 15px;
-            color: white; 
+            color: white;
             border: 2px solid #e6841a;
             border-radius: 8px;
         }
@@ -87,8 +87,8 @@ input[id=deletebutton]:hover {
 }
 
 .button2 {
-    background-color: #3c96ad; 
-    color: white; 
+    background-color: #3c96ad;
+    color: white;
     border: 2px solid #3c96ad;
     border-radius: 8px;
 }
@@ -99,8 +99,8 @@ input[id=deletebutton]:hover {
 }
 
 .button3 {
-    background-color: #3c96ad; 
-    color: white; 
+    background-color: #3c96ad;
+    color: white;
     border: 3px solid #e6841a;
     border-radius: 10px;
     font-size: 28px;
@@ -193,13 +193,13 @@ input[id=deletebutton]:hover {
         }
 
 
-label { 
+label {
     font-family: "Georgia",serif;
     font-style: italic;
     color: grey;
 }
 
-p { 
+p {
     color: black;
     font-family: "Georgia", serif;
     font-style: italic;
@@ -214,7 +214,7 @@ hr {
             width: 80% !important;
             border-color: #e6841a !important;
             border-bottom: 3px solid #e6841a !important;
-            
+
         }
 
 #h3 {
@@ -235,7 +235,7 @@ h5{
     line-height: 1.5em;
     height: 145px;
     /*    Set the font in white color */
-    
+
     background-image: url(mat/Color.jpg);
 }
 
@@ -296,7 +296,7 @@ hr {
 #Synword {
     font-family: "Georgia", serif !important;
     font-style: italic !important;
-    
+
     color: #22819a !important;
 }
 
@@ -325,7 +325,7 @@ hr {
     line-height: 1.5em;
     height: 145px;
     /*    Set the font in white color */
-    
+
     background-image: url(mat/Color.jpg);
     background-size: cover;
 }
@@ -337,7 +337,7 @@ hr {
     line-height: 1.5em;
     height: 145px;
     /*    Set the font in white color */
-    
+
     background-image: url(mat/Color.jpg);
     background-size: cover;
 }
@@ -351,7 +351,7 @@ hr {
 
 #Changepwtitle {
     margin-top: 30px;
-    
+
 }
 
 #Deletetitle {
@@ -389,9 +389,12 @@ hr {
     display:block;
 }
 
-/* KEENAN ENTRY POINT (fixme delete) */
 #titleBar {
-
+  position: relative;
+  top: -100px;
+  /*toolbar width is 225px*/
+  left: 30%; /* fallback if needed */
+  left: calc(225px + 20%);
 }
 #toolBar {
 
@@ -452,7 +455,7 @@ hr {
     width: 80% !important;
     border-color: #e6841a !important;
     border-bottom: 3px solid #e6841a !important;
-    
+
 }
 
 a, figure {
@@ -468,7 +471,7 @@ figcaption {
     max-width: 240px;
     color: black;
     padding-bottom: 0px;
-    
+
 }
 figure {
     padding: 0 0 0 0;
@@ -538,10 +541,10 @@ img {
 
 .mapBut {
   text-align: center;
-  border: 1px solid white; 
+  border: 1px solid white;
   width: 4em;
   height: 4em;
-  background-color: #00EADE; 
+  background-color: #00EADE;
   background-size: 3em;
   background-position: center;
   background-repeat: no-repeat;
@@ -593,15 +596,15 @@ img {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
-  -webkit-transition: 
+  -webkit-transition:
       opacity 0.2s ease-in-out,
         visibility 0.2s ease-in-out,
         -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    -moz-transition:    
+    -moz-transition:
         opacity 0.2s ease-in-out,
         visibility 0.2s ease-in-out,
         -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    transition:         
+    transition:
         opacity 0.2s ease-in-out,
         visibility 0.2s ease-in-out,
         transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
@@ -692,7 +695,7 @@ img {
 .tooltip-top:focus:after {
   -webkit-transform: translateY(-12px);
   -moz-transform:    translateY(-12px);
-  transform:         translateY(-12px); 
+  transform:         translateY(-12px);
 }*/
 
 
@@ -754,7 +757,7 @@ img {
 .tooltip-left:focus:after {
   -webkit-transform: translateX(-12px);
   -moz-transform:    translateX(-12px);
-  transform:         translateX(-12px); 
+  transform:         translateX(-12px);
 }*/
 
 
@@ -780,7 +783,7 @@ img {
 .tooltip-bottom:focus:after {
   -webkit-transform: translateY(12px);
   -moz-transform:    translateY(12px);
-  transform:         translateY(12px); 
+  transform:         translateY(12px);
 }*/
 
 /* Right */
@@ -804,7 +807,7 @@ img {
 .tooltip-right:focus:after {
   -webkit-transform: translateX(12px);
   -moz-transform:    translateX(12px);
-  transform:         translateX(12px); 
+  transform:         translateX(12px);
 }*/
 
 /* Move directional arrows down a bit for left/right tooltips */
