@@ -390,10 +390,11 @@ hr {
 }
 
 #titleBar {
-  position: relative;
-  top: -100px;
-  /*toolbar width is 225px*/
-  left: 235px;
+  position: absolute;
+  left: 55%;
+  top: 175px;
+  width: auto;
+  transform: translateX(-50%);
 }
 #mapTitleIn {
   width: auto;
