@@ -9,6 +9,19 @@
 // SCRIPT BELOW HERE
 // what I changed: got rid of all socket stuff, altered saveMap(), createMap(), "begin here" section
 
+// Credit: http://jsfiddle.net/nrabinowitz/NvynC/
+function resizeInput() {
+    $(this).attr('size', $(this).val().length);
+}
+
+$('input[type="text"]')
+    // event handler
+    .keyup(resizeInput)
+    // resize on page load
+    .each(resizeInput);
+
+// ~~~~~~~~~~~~~~
+
 
 function zoom() {
     //console.log("zoooom");
@@ -564,7 +577,7 @@ $('form input, form textarea').on('input propertychange change', function() {
 
     clearTimeout(timeoutId);
     timeoutId = setTimeout(function() {
-        // Runs 1 second (1000 ms) after the last change    
+        // Runs 1 second (1000 ms) after the last change
         eventSave();
     }, 1000);
 });

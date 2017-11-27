@@ -393,8 +393,10 @@ hr {
   position: relative;
   top: -100px;
   /*toolbar width is 225px*/
-  left: 30%; /* fallback if needed */
-  left: calc(225px + 20%);
+  left: 235px;
+}
+#mapTitleIn {
+  width: auto;
 }
 #toolBar {
 
