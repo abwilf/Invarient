@@ -389,7 +389,7 @@ hr {
     display:block;
 }
 
-#titleBar {
+.titleBar {
   position: absolute;
   left: 55%;
   top: 175px;
@@ -418,13 +418,13 @@ hr {
     box-sizing:border-box;
     -moz-box-sizing:border-box;
 }
-input[type=text] {
+.titleBar input[type=text] {
     width: 30%;
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
 }
 
-input[type=text]:focus {
+.titleBar input[type=text]:focus {
     background-color: #e7f5ff;
     width: 70%;
 }
