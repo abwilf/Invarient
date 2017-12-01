@@ -27,7 +27,7 @@ block content
           button.mapBut.tooltip-bottom#_12(onclick="eventSave()", data-tooltip="Save Map (s)")
           button.mapBut.tooltip-bottom#_13(onclick="eventNewDefinitionNode()", data-tooltip= "New \"Definition\" Node (d)")
       .titleBar
-        form
+        form(autocomplete='off')
           input#mapTitleIn.form-control(type='text', placeholder="Untitled", value=mapTitle)
           
     #tree-container
