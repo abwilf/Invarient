@@ -570,6 +570,23 @@ function hydrateData(data) {
     })
 }
 
+// auto save every 1s
+function autoSave() {
+    setTimeout(function() {
+        eventSave();
+        autoSave();
+    }, 1000);
+}
+
+// disable enter input for title form
+$('#mapTitleIn').on('keyup keypress', function(e) {
+  var keyCode = e.keyCode || e.which;
+  if (keyCode === 13) { 
+    e.preventDefault();
+    return false;
+  }
+});
+
 // CREDIT: http://jsfiddle.net/MadLittleMods/2LG8f/
 var timeoutId;
 $('form input, form textarea').on('input propertychange change', function() {
@@ -577,9 +594,8 @@ $('form input, form textarea').on('input propertychange change', function() {
 
     clearTimeout(timeoutId);
     timeoutId = setTimeout(function() {
-        // Runs 1 second (1000 ms) after the last change
         eventSave();
-    }, 1000);
+    }, 0);
 });
 
 var root;
@@ -646,6 +662,7 @@ $(function() {
     setCurrentNode(root.children[0]);
     update(root);
     onSelect(root.children[0]);
+    autoSave();
 
     if (nodeId){
       var temp = getNodeByPermId(nodeId);
