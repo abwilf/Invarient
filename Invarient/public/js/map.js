@@ -570,13 +570,13 @@ function hydrateData(data) {
     })
 }
 
-// auto save every 1s
-function autoSave() {
-    setTimeout(function() {
-        eventSave();
-        autoSave();
-    }, 1000);
-}
+// // auto save every 1s
+// function autoSave() {
+//     setTimeout(function() {
+//         eventSave();
+//         autoSave();
+//     }, 1000);
+// }
 
 // disable enter input for title form
 $('#mapTitleIn').on('keyup keypress', function(e) {
