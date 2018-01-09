@@ -140,6 +140,7 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 
 // ADDED
 app.post('/account/createMap', passportConfig.isAuthenticated, userController.postCreateMap);
+app.get('/account/deleteMap', passportConfig.isAuthenticated, userController.postDeleteMap);
 app.get('/maps/:urlId', userController.getMapById);
 app.get('/maps/:urlId/:nodeId', userController.getMapNode);
 app.post('/maps/:id/:nodeId', userController.saveCreateMap);

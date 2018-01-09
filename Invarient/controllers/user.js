@@ -207,6 +207,72 @@ exports.postDeleteAccount = (req, res, next) => {
   });
 };
 
+
+exports.postDeleteMap = function(req, res, next) {
+  let mapId = '5a3ac8952a39900309f9fdb7'; // FIXME WITH REQ
+
+  User.findOne({ _id: req.user.id }, function(err, u) {
+    if (err) { return next(err); }
+    
+    let mapindex = u.maps.findIndex(function(elt) {
+      return elt.mapId === mapId;
+    });
+
+    let map = u.maps.find(function(elt) {
+      return elt.mapId === mapId;
+    });
+
+    if (map) {
+      console.log('REMOVED MAP ' + map.title);
+    }
+
+    Map.remove( {_id: mapId }, function(err, m) {
+      if (err) return next(err);
+    })
+
+    // remove map
+    u.maps.splice(mapindex, 1);
+
+    u.save(function(err) {
+      if (err) throw err;
+    });
+
+    req.flash('info', {msg: 'Map has been deleted'})
+    res.redirect('/');
+  })
+}
+
+exports.saveCreateMap = (req, res, next) => {
+  console.log("SAVECREATE");
+     if (req.body.type == "save") {
+        Map.findOne({ _id: req.body.id}, function(err, m) {
+            if (err) throw err;
+            if (!m) {
+                console.log('No map found with that ID.');
+                res.send("Sorry!  No map found with that ID.");
+                return;
+            }
+            m.data = req.body.data;
+            m.title = req.body.title;
+            console.log('TITLE IS: ' + m.title)
+            m.save(function(err) {
+                if (err) throw err;
+            });
+                console.log("Successfully saved map");
+          });
+      }
+
+      /* used for in map creation */
+      // else if (req.body.type == "create") {
+      //     var newUrl = '/maps/' + _createMap(res.locals.user.email)._id; // ALSO REFERENCED IN postCreate
+      //     console.log('NEW URL IS: ' + newURL)
+      //     console.log("Successfully created map");
+      //     // redirect is in client portion b/c of ajax post request
+      //     res.send({redirect: newUrl});
+      // }
+      else console.log("req.body.type should be 'save' or 'create'. req.body: " + req.body);
+  };
+
 /**
  * GET /account/unlink/:provider
  * Unlink OAuth provider.
@@ -446,37 +512,8 @@ exports.getSandbox = (req, res, next) => {
   getMapHelper(req, res, next, idTemp, "true");
 }
 
-exports.saveCreateMap = (req, res, next) => {
-  console.log("SAVECREATE");
 
-     if (req.body.type == "save") {
-        Map.findOne({ _id: req.body.id}, function(err, m) {
-            if (err) throw err;
-            if (!m) {
-                console.log('No map found with that ID.');
-                res.send("Sorry!  No map found with that ID.");
-                return;
-            }
-            m.data = req.body.data;
-            m.title = req.body.title;
-            console.log('TITLE IS: ' + m.title)
-            m.save(function(err) {
-                if (err) throw err;
-            });
-                console.log("Successfully saved map");
-          });
-      }
 
-      /* used for in map creation */
-      // else if (req.body.type == "create") {
-      //     var newUrl = '/maps/' + _createMap(res.locals.user.email)._id; // ALSO REFERENCED IN postCreate
-      //     console.log('NEW URL IS: ' + newURL)
-      //     console.log("Successfully created map");
-      //     // redirect is in client portion b/c of ajax post request
-      //     res.send({redirect: newUrl});
-      // }
-      else console.log("req.body.type should be 'save' or 'create'. req.body: " + req.body);
-  };
 
 /**
  * POST /forgot

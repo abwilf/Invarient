@@ -662,7 +662,7 @@ $(function() {
     setCurrentNode(root.children[0]);
     update(root);
     onSelect(root.children[0]);
-    autoSave();
+    // autoSave();
 
     if (nodeId){
       var temp = getNodeByPermId(nodeId);
