@@ -581,7 +581,7 @@ function hydrateData(data) {
 // disable enter input for title form
 $('#mapTitleIn').on('keyup keypress', function(e) {
   var keyCode = e.keyCode || e.which;
-  if (keyCode === 13) { 
+  if (keyCode === 13) {
     e.preventDefault();
     return false;
   }
@@ -883,7 +883,14 @@ function drawNode(node) {
                            .attr("font-color", "white")
                            .attr("fill", "white")
                            .attr("id", "b" + id)
+                           .attr('text-decoration', function(d){
+                             if (node.link) {
+                               return 'underline'
+                             }
+                              return null;
+                            })
                            .text( function(d) { return node.data });
+
     // wrapTuple[0] is text and wrapTuple[1] is numLines
     var wrapTuple = wrap(text, nodeWidth-nodeWidthPadding, node.y);
     text = wrapTuple[0];
