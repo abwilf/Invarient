@@ -163,14 +163,19 @@ function eventNewComesFromNode() {
     var txt = prompt("", "Enter comes from node text");
 
     if (txt) {
+        // unhide if subtree hidden
+        if (curr.toggle) {
+            eventToggleSubtree();
+        }
         var tmp = new Node(root.x, 0, txt);
 
         tmp.connection = "arrow";
 
         add(curr, tmp);
 
-        update(root);
         onSelect(tmp);
+        update(root)
+
     }
 }
 
@@ -944,7 +949,6 @@ function drawTree(node){
 
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node) {
-
     if (node.toggle == 0) {
         node._children = node.children;
         node.children = [];
