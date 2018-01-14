@@ -1198,15 +1198,22 @@ function update(root){
 
 function getColor(node) {
 
+    //If the node is currently selected
+    if (node == getCurrentNode()) {
+        //Selected definition node
+        if (node.connection == "line") {
+          return "#00CC88"
+        }
+        return "#24A5F4";
+    }
     //If the node has a toggled subtree
-    if (node.toggle == 1) {
+    else if (node.toggle == 1) {
+      // toggled definition node
+      if (node.connection == "line") {
+        return "#ADE6BB"
+      }
         //console.log("#ADD8E6");
         return "#ADD8E6";
-    }
-    //If the node is currently selected
-    else if (node == getCurrentNode()) {
-        //console.log("#302E1C");
-        return "#24A5F4";
     }
     //If the node is a definition node
     else if (node.connection == "line") {
@@ -1290,7 +1297,7 @@ function onSelect(node) {
             return getColor(temp);
         });
     }
-    d3.select("#a" + getCurrentNode().id).attr('fill', '#24A5F4');
+    d3.select("#a" + getCurrentNode().id).attr('fill', getColor(getCurrentNode()));
     // center(node);
 }
 
