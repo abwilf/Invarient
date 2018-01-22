@@ -947,9 +947,31 @@ function drawTree(node){
   traverseAndDo(node, drawNode);
 }
 
+// return 1 if node has no children
+function noChildren(node) {
+    if (node.children.length === 0) {
+        if (node._children) {
+            if (node._children.length === 0) {
+                node.toggle = 0;
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+        node.toggle = 0;
+        return 1;
+    }
+    return 0;
+}
+
 //Hide/Show the subtree of the selected node
 function toggleSubtree(node) {
-    if (node.toggle == 0) {
+    // don't toggle node with no children
+    if (noChildren(node)) {
+        return
+    }
+    else if (node.toggle == 0) {
         node._children = node.children;
         node.children = [];
         node.toggle = 1;
