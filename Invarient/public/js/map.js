@@ -58,7 +58,6 @@ dragListener = d3.behavior.drag()
     node.x = Number(d3.select(this).attr("cx"));
     node.y = Number(d3.select(this).attr("cy"));
 
-
     dragStarted = true;
 
     d3.event.sourceEvent.stopPropagation();
@@ -79,7 +78,6 @@ dragListener = d3.behavior.drag()
     var svgnode = d3.select(this);
 
     scale = zoomListener.scale();
-
 
     node.x += d3.event.dx;
     node.y += d3.event.dy;
@@ -196,9 +194,124 @@ function eventSave() {
     }
 }
 
+function eventPaste(e) {
+    console.log("Paste Event");
+    var curr = getCurrentNode();
+
+    /* Guard against modal open, alert open? */
+    paste(curr);
+}
+
+function eventCut() {
+    console.log("Cut Event");
+    var curr = getCurrentNode();
+
+    /* Guard against modal open, alert open? */
+    cut(curr);
+}
+
+function eventCopy() {
+    console.log("Copy Event");
+    var curr = getCurrentNode();
+
+    /* Guard against modal open, alert open? */
+    copy(curr);
+}
+
+/* Abstract away from future clipboard implementation */
+function storeToClipboard(obj) {
+    
+    clipboard = obj;
+
+    // /* Internet Explorer */
+    // if (window.clipboardData) {
+    //     window.clipboard.setData('text/plain', obj)
+    // } 
+    // /* Non Internet Explorer */
+    // else {
+    //     e.clipboardData.setData('text/plain', obj);
+    // }
+    
+}
+
+/* Abstract away from future clipboard implementation */
+function getFromClipboard() {
+    var data = "";
+
+    // /* Internet Explorer */
+    // if (window.clipboardData) {
+    //     data = window.clipboardData.getData('Text');
+    // } 
+    // /* Non Internet Explorer */
+    // else {
+    //     data = e.clipboardData.getData('text');
+    // }
+    
+    return clipboard;
+}
+
+function copy(nodeIn) {
+
+    /*Toggle cut/paste flags? */
+    var clone = JSON.parse(saveToJSON(nodeIn));
+    hydrateData(clone);
+
+    /* For a copy we null out permIds. These will have to be reassigned at paste. */
+    /* This allows multiple pastes to work off one copy. */
+    traverseAndDo(clone, function(node) {
+        node.permId = -1;
+    });
+
+    clone = saveToJSON(clone);
+    storeToClipboard(clone);
+
+}
+
+function cut(nodeIn) {
+    /* Toggle cut/paste flags? */
+    var clone = JSON.parse(saveToJSON(nodeIn)); /* Cut preserves permId */
+    hydrateData(clone);
+    clone = saveToJSON(clone);
+
+    if (nodeIn.link == "neoroot") {
+        var parent = nodeIn.parent;
+    }
+    else {
+        var parent = root;
+    }
+    
+    remove(nodeIn);
+    storeToClipboard(clone);
+    update(root);
+    onSelect(parent);
+}
+
+function paste(nodeIn) {
+    if (!nodeIn) {
+        return
+    }
+
+    var clone = JSON.parse(getFromClipboard())[0][0];
+    console.log(clone);
+    hydrateData(clone);
+
+    /* Assign permIds if copy */
+    traverseAndDo(clone, function(node) {
+        if (node.permId == -1) {
+            node.permId = permId;
+            permId++;
+        }
+    });
+
+    add(nodeIn, clone);
+    console.log(root);
+    update(root);
+    onSelect(clone);
+}
+
 function eventEdit() {
     //Fetch the node corresponding to the currently selected svg element
-    curr = getCurrentNode()
+    var curr = getCurrentNode();
     var oldTxt = curr.data;
     var txt = prompt("Enter new node text.", curr.data);
 
@@ -329,6 +442,8 @@ function eventEditConnection() {
     if (!goodToEdit()) return;
     curr = getCurrentNode();
 
+    if (curr.connection == "neoroot") return;
+
     var lbl = prompt("", "Enter label connection type. [comes from], [definition], [custom]");
     if (!lbl){
         lbl = curr.connection;
@@ -342,8 +457,6 @@ function eventEditConnection() {
     else if (lbl == "custom" || lbl == "c") {
         var lbl = prompt("", "Enter custom connection type");
     }
-
-    curr.connection = lbl;
 
     update(root);
     onSelect(curr);
@@ -408,6 +521,14 @@ function eventLinkClicked() {
     else {
         var localId = getParsedId(node.link)[1];
         node = getNodeByPermId(localId);
+
+        if (isHidden(node)) {
+            console.log("It's hidden!");
+            show(node);
+        } else {
+            console.log("It's not hidden :'(");
+        }
+
         setCurrentNode(node);
         onSelect(node);
         update(root);
@@ -469,11 +590,13 @@ function keyPressed(e) {
         case 78:
             console.log("The 'n' key is pressed.");
             eventNewComesFromNode();
+            eventSave();
             break;
 
         case 79:
             console.log("The 'o' key is pressed.");
             eventModal();
+            eventSave();
             break;
 
         case 83:
@@ -485,66 +608,99 @@ function keyPressed(e) {
             // 1
             console.log("The 'e' key is pressed.");
             eventEdit();
+            eventSave();
             break;
 
         case 68:
             console.log("The 'd' key is pressed.");
             eventNewDefinitionNode();
+            eventSave();
             break;
 
         case 32:
             console.log("The '(space)' key is pressed.");
             e.preventDefault();
             eventToggleSubtree();
+            eventSave();
             break;
 
         case 38:
             console.log("The 'up arrow' key is pressed.");
             eventTraverseUp();
+            eventSave();
             break;
 
         case 40:
             console.log("The 'down arrow' key is pressed.");
             eventTraverseDown();
+            eventSave();
             break;
 
         case 37:
             console.log("The 'left arrow' key is pressed.");
             eventTraverseLeft();
+            eventSave();
             break;
 
         case 39:
             console.log("The 'right arrow' key is pressed.");
             eventTraverseRight();
+            eventSave();
             break;
 
         case 90:
             console.log("The 'z' key is pressed.");
             eventUndo();
+            eventSave();
             break;
 
         case 8:
             console.log("The 'delete' key is pressed.");
             eventDelete();
+            eventSave();
             break;
 
         case 70:
             console.log("The 'f' key is pressed.");
             eventNeoroot();
+            eventSave();
             break;
 
         case 89:
             console.log("The 'y' key is pressed.");
             eventEditConnection();
+            eventSave();
+            break;
+
+        case 86:
+            if (e.ctrlKey || e.metaKey) {
+                console.log("'Ctrl+v' or 'Cmd+v' pressed.");
+                eventPaste();
+            }
+            break;
+
+        case 88: 
+            if (e.ctrlKey || e.metaKey) {
+                console.log("'Ctrl+x' or 'Cmd+x' pressed.");
+                eventCut();
+            }
             break;
 
         case 67:
-            console.log("The 'c' key is pressed.");
-            eventNewCustomNode();
+            if (e.ctrlKey || e.metaKey) {
+                console.log("'Ctrl+c' or 'Cmd+c' pressed.");
+                eventCopy();
+            } 
+            else {
+                console.log("The 'c' key is pressed.");
+                eventNewCustomNode();
+                eventSave();
+            }
             break;
 
         default:
             console.log("Pressed an unrecognized key!");
+            eventSave(); //Why not
             break;
     }
     // console.log("about to run list actions!");
@@ -620,6 +776,7 @@ var permId = 0;
 var sandbox = 'false';
 var canEdit = 'false';
 var mapUser = "";
+var clipboard = "";
 
 var maxDepth = 1;
 
@@ -705,21 +862,46 @@ function Node(x, y, data) {
 }
 
 // remember that it has to be saved as an array because you get it as an array (root = root[0] on get)
-function saveToJSON(node_in) {
+function saveToJSON(nodeIn) {
 
-    var obj = JSONHelper(root, []);
+    var obj = JSONHelper(nodeIn, []);
     obj = JSON.stringify(obj);
-        //console.log(root);
     hydrateData(root);
     return obj;
 }
 
 // call with root
-function JSONHelper(node_in, nodes) {
+function JSONHelper(nodeIn, nodes) {
 
-    newNodes = dehydrateNode(node_in);
+    newNodes = dehydrateNode(nodeIn);
     nodes.push(newNodes);
     return nodes;
+}
+
+function show(node) {
+    if (node == root) return ;
+
+    /* Find the highest level node with a toggled subtree */
+    if (isHidden(node)) {
+        // console.log("Doing the stuff");
+        show(node.parent)
+    }
+    else {
+        toggleSubtree(node);
+    }
+}
+
+function isHidden(node) {
+    /* Protect against root */
+    if (node == root) return false;
+
+    if (node.parent.toggle == 1 || isHidden(node.parent)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }
 
 function dehydrateNode(node_in) {
@@ -752,10 +934,16 @@ function traverseAndDo(node, d) {
         if (node.children) {
             node.children.forEach(traverseAndDo);
         }
+        if (node._children) {
+            node._children.forEach(traverseAndDo)
+        }
     }
 
     if (node.children) {
-      node.children.forEach(traverseAndDo);
+        node.children.forEach(traverseAndDo);
+    }
+    if (node._children) {
+        node._children.forEach(traverseAndDo);
     }
 
     traverseAndDo = temp;
@@ -770,11 +958,17 @@ function postTraverseAndDo(node, d) {
         if (node.children) {
             node.children.forEach(postTraverseAndDo);
         }
+        if (node._children) {
+            node._children.forEach(postTraverseAndDo);
+        }
         d(node);
     }
 
     if (node.children) {
         node.children.forEach(postTraverseAndDo);
+    }
+    if (node._children) {
+        node._children.forEach(postTraverseAndDo);
     }
     d(node);
 
@@ -842,6 +1036,8 @@ d3.select("svg").append("svg:defs").selectAll("marker")
     .attr("d", "M0,-5L10,0L0,5");
 
 function drawNode(node) {
+
+    if (isHidden(node)) return;
 
     if (node.children) {
         for (var i = 0; i < node.children.length; ++i) {
@@ -1111,7 +1307,6 @@ function getNodeByPermId(id) {
 function sortByConnection(root) {
 
     traverseAndDo(root, function(node){
-
         node.children.sort(function(a,b){
 
             if (a.connection == "arrow" && b.connection == "line"){
@@ -1270,7 +1465,7 @@ function wrap(text, width, yCoord) {
     var numberLines = 1;
     text.each(function() {
         var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
+            words = text.text().trim().split(/\s+/).reverse(),
             word,
             line = [],
             lineNumber = 0,
