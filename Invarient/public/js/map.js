@@ -143,19 +143,8 @@ dragListener = d3.behavior.drag()
     onSelect( node );
 });
 
-
-function goodToEdit() {
-    if (canEdit == "false" && sandbox != "true") {
-        alert('You do not have permission to edit this map.  Please contact the owner of this map - ' + mapUser + '- for permission.');
-        return false;
-    }
-    return true;
-}
-
-
 function eventNewComesFromNode() {
 
-    if (!goodToEdit()) return;
     //Fetch the current active node.
     var curr = getCurrentNode();
     var txt = prompt("", "Enter comes from node text");
@@ -182,11 +171,7 @@ function eventSave() {
     if (typeof(root) == 'undefined') {
         console.log('Cannot save with null root');
     }
-
-    // console.log('MAP.JS SANDBOX: ' + sandbox);
-
     if (sandbox == "true") {
-        alert('Saving is not supported in sandbox.  If you want to save your map, please log in or sign up, and create a new map.')
         return;
     }
     else {
@@ -329,7 +314,6 @@ function eventEdit() {
 
 function eventNewDefinitionNode() {
 
-    if (!goodToEdit()) return;
     //Fetch the current active node.
     curr = getCurrentNode();
     var txt = prompt("", "Enter definition node text.");
@@ -344,7 +328,6 @@ function eventNewDefinitionNode() {
 }
 
 function eventToggleSubtree() {
-    if (!goodToEdit()) return;
     toggleSubtree( getCurrentNode() );
     update( root );
     onSelect( getCurrentNode() );
@@ -404,7 +387,6 @@ function eventTraverseRight() {
 
 function eventUndo() {
 
-    if (!goodToEdit()) return;
     var revived = null;
 
     if (removedNodes.length > 0) {
@@ -417,14 +399,12 @@ function eventUndo() {
 }
 
 function eventDelete() {
-    if (!goodToEdit()) return;
     remove( getCurrentNode() );
     update(root);
     onSelect(getCurrentNode().parent);
 }
 
 function eventNeoroot() {
-    if (!goodToEdit()) return;
     var txt = prompt("", "Enter node text here");
 
     if (txt) {
@@ -439,7 +419,6 @@ function eventNeoroot() {
 }
 
 function eventEditConnection() {
-    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     if (curr.connection == "neoroot") return;
@@ -463,7 +442,6 @@ function eventEditConnection() {
 }
 
 function eventNewCustomNode() {
-    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var lbl = prompt("", "Enter custom connection label");
@@ -484,7 +462,6 @@ function eventNewCustomNode() {
 }
 
 function eventLinkNode() {
-    if (!goodToEdit()) return;
     curr = getCurrentNode();
 
     var txt = prompt("", "Enter the link to the tree.");
@@ -512,7 +489,6 @@ function getParsedId(id){
 }
 
 function eventLinkClicked() {
-    if (!goodToEdit()) return;
     var node = getCurrentNode();
 
     if (!isLocalId(node.link)){
@@ -536,7 +512,6 @@ function eventLinkClicked() {
 }
 
 function eventModal() {
-    if (!goodToEdit()) return;
     curr = getCurrentNode();
     console.log(curr.link);
     modalopen = true;
@@ -774,7 +749,6 @@ var uniqueId; // for finding map in db
 var nodeId; // for centering on a certain node when linked to
 var permId = 0;
 var sandbox = 'false';
-var canEdit = 'false';
 var mapUser = "";
 var clipboard = "";
 
@@ -807,9 +781,6 @@ $(function() {
 
         sandbox = $('#sandBox').val();
         console.log("MAP JS SANDBOX: " + sandbox)
-
-        canEdit = $('#canEdit').val();
-        console.log('CAN EDIT?: ' + canEdit);
 
         mapUser = $('#mapUser').val();
         console.log('MAP USER: ' + mapUser);
@@ -1576,6 +1547,9 @@ function saveMap() {
     },
     function(data, status){
         console.log("client side check save");
+        if (data === 'No.') {
+            alert('You do not have permission to edit this map.  Please contact the owner of this map - ' + mapUser + '- for permission.');
+        }
     });
 };
 

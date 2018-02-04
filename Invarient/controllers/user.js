@@ -243,7 +243,6 @@ exports.postDeleteMap = function(req, res, next) {
 }
 
 exports.saveCreateMap = (req, res, next) => {
-  console.log("SAVECREATE");
      if (req.body.type == "save") {
         Map.findOne({ _id: req.body.id}, function(err, m) {
             if (err) throw err;
@@ -254,24 +253,28 @@ exports.saveCreateMap = (req, res, next) => {
             }
             m.data = req.body.data;
             m.title = req.body.title;
-            console.log('TITLE IS: ' + m.title)
-            m.save(function(err) {
-                if (err) throw err;
-            });
-                console.log("Successfully saved map");
+
+            let canEdit =   req.isAuthenticated() && 
+                            ( (res.locals.user.email == m.userEmail) || (m.otherUsers && m.otherUsers.find(function(user) {
+                                 return user.email === res.locals.user.email;
+                               })));
+            if (canEdit) {
+              m.save(function(err) {
+                  if (err) throw err;
+              });
+              console.log("Successfully saved map");
+            }
+            else {
+              console.log("You can't do that!!!");
+              res.send("No.");
+            }
           });
       }
-
-      /* used for in map creation */
-      // else if (req.body.type == "create") {
-      //     var newUrl = '/maps/' + _createMap(res.locals.user.email)._id; // ALSO REFERENCED IN postCreate
-      //     console.log('NEW URL IS: ' + newURL)
-      //     console.log("Successfully created map");
-      //     // redirect is in client portion b/c of ajax post request
-      //     res.send({redirect: newUrl});
-      // }
       else console.log("req.body.type should be 'save' or 'create'. req.body: " + req.body);
   };
+
+
+
 
 /**
  * GET /account/unlink/:provider
@@ -469,26 +472,12 @@ function getMapHelper(req, res, next, id, sandbox) {
         }
         else res.locals.headerType = 'notLogged';
 
-        // is allowed to edit
-        var canEdit = "false"; 
-
-        if (req.isAuthenticated() && 
-              (  (res.locals.user.email == m.userEmail) || (m.otherUsers && m.otherUsers.find(function(user) {
-                return user.email === res.locals.user.email;
-              })) )   
-            ) {
-          canEdit = "true";
-        }
-
-        console.log('RESULT OF FIND: ' + canEdit);
-
         res.render('map', {
           mapId: m._id,
           mapData: JSON.parse(m.data)[0],
           _csrf: res.locals._csrf,
           nodeId: req.params.nodeId,
           sandbox: sandbox,
-          canEdit: canEdit,
           mapUser: m.userEmail,
           footerType: "map",
           mapTitle: m.title
