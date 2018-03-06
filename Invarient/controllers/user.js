@@ -395,17 +395,6 @@ exports.getForgot = (req, res) => {
 // returns new map object
 function _createMap(email) {
     // console.log('EMAIL IS: ' + email);
-    var newMap = new Map ({
-        data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]",
-        userEmail: email,
-        title: "Untitled"
-     });
-    newMap.save(function(err) {
-        if (err) {
-          console.log('user.js line 336');
-          throw err;
-        }
-    })
     return newMap;
 }
 
@@ -420,7 +409,6 @@ function _createMap(email) {
 exports.postCreateMap = (req, res, next) => {
 
   // NOTE: I used emailAddress here to remind myself that it's the "name" attribute in profile.pug that gets passed to req - deprecated
-  // console.log('REQ.BODY.EMAILADDRESS: ' + req.body.emailAddress + '\nRES.LOCALS: ' + res.locals.user.email)  // same thing!
 
   User.findOne({ email: res.locals.user.email}, (err, existingUser) => {
     if (err) { 
@@ -428,14 +416,26 @@ exports.postCreateMap = (req, res, next) => {
       return next(err); 
     }
     if (existingUser) {
-      // var id = createMapId(res.locals.user.email);
-      var newMap = _createMap(res.locals.user.email);
-      var newUrl = '/maps/' + newMap._id;
-      existingUser.maps.push({title: newMap.title, url: newUrl, mapId: newMap._id});
-      existingUser.save(function(err) {
-        if (err) throw err;
-      })
-      return res.redirect(newUrl);
+      var newMap = new Map ({
+          data: "[{\"x\":724,\"y\":50,\"connection\":\"line\",\"data\":\"\",\"depth\":0,\"parent\":null,\"id\":0,\"permId\":0,\"children\":[{\"x\":724,\"y\":150,\"connection\":\"neoroot\",\"data\":\"Enter your text here.\",\"depth\":1,\"parent\":null,\"id\":1,\"permId\":1,\"children\":[],\"toggle\":0,\"textsize\":135.90087890625,\"subtreeWidth\":155.90087890625,\"width\":155.90087890625}],\"toggle\":0,\"textsize\":0,\"subtreeWidth\":155.90087890625,\"width\":20}]",
+          userEmail: res.locals.user.email,
+          title: "Untitled"
+      });
+      let newUrl;
+      newMap.save()
+        .then( (msg) => {
+            console.log('MSG IS: ', msg);
+            newUrl = '/maps/' + newMap._id;
+            existingUser.maps.push({title: newMap.title, url: newUrl, mapId: newMap._id});
+            return existingUser.save();
+        })
+        .then( (msg) => {
+          console.log('MSG 2 IS: ', msg);
+          return res.redirect(newUrl);
+         })
+        .catch( (e) => {
+          throw e;
+        });
     }
     else {
       throw('SHOULD HAVE FOUND USER - user.js. Probably a problem with req.body.emailAddress or mlab username');

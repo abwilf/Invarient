@@ -50,6 +50,8 @@ const app = express();
  */
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI);
+
+
 console.log("DB URL IS: " + process.env.MONGODB_URI)
 mongoose.connection.on('error', (err) => {
   console.error(err);
@@ -139,7 +141,12 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 
 
 // ADDED
-app.post('/account/createMap', passportConfig.isAuthenticated, userController.postCreateMap);
+// app.post('/account/createMap', passportConfig.isAuthenticated, userController.postCreateMap);
+
+// FIXME: DELETE
+app.post('/account/createMap', userController.postCreateMap);
+
+
 app.get('/account/deleteMap', passportConfig.isAuthenticated, userController.postDeleteMap);
 app.get('/maps/:urlId', userController.getMapById);
 app.get('/maps/:urlId/:nodeId', userController.getMapNode);

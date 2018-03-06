@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   //   website: String,
   //   picture: String
   },
-  {collection: 'users2.0'}, 
+  {collection: 'users2.0', usePushEach: true}, 
   {timestamps: true }
   );
 

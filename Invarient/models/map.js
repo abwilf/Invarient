@@ -22,7 +22,8 @@ var mapSchema = new mongoose.Schema(
     }]
 },
 { 
-    collection: 'maps2.0' 
+    collection: 'maps2.0',
+    usePushEach: true
 }
 );
 
